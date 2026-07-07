@@ -537,10 +537,6 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type ReminderCreateNestedOneWithoutRecipientsInput = {
   create?: Prisma.XOR<Prisma.ReminderCreateWithoutRecipientsInput, Prisma.ReminderUncheckedCreateWithoutRecipientsInput>
   connectOrCreate?: Prisma.ReminderCreateOrConnectWithoutRecipientsInput

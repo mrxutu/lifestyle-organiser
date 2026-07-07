@@ -619,14 +619,6 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EventCreateNestedManyWithoutEventTypeInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutEventTypeInput, Prisma.EventUncheckedCreateWithoutEventTypeInput> | Prisma.EventCreateWithoutEventTypeInput[] | Prisma.EventUncheckedCreateWithoutEventTypeInput[]
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutEventTypeInput | Prisma.EventCreateOrConnectWithoutEventTypeInput[]
