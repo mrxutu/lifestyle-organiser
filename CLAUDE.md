@@ -15,12 +15,21 @@ Full scope is in `docs/v1_scope.md` — treat it as the source of truth for what
 
 - **Framework**: Next.js, App Router, TypeScript
 - **Styling**: Tailwind CSS
+- **Components**: shadcn/ui — install individual components as needed (`npx shadcn@latest add <component>`), don't hand-roll equivalents that already exist in the library
 - **Database**: Postgres — local for dev, Neon for production — via Prisma ORM
 - **Auth**: Auth.js (NextAuth)
 - **Calendar UI**: FullCalendar (react wrapper)
 - **Hosting**: Vercel
 
 Schema lives in `prisma/schema.prisma` (already defined — extend it, don't restructure it, without discussing the change first).
+
+## Design & UI
+
+Full visual direction is in `docs/DESIGN.md` — treat it as the source of truth for palette, typography, layout, and component approach. Key points to always apply:
+- Clean/minimal style — muted colours, generous whitespace, no heavy shadows/gradients
+- Use theme colours defined in `tailwind.config.ts` (e.g. `bg-primary`, `text-foreground`) — never raw hex codes inline in components
+- Event type colours come from the database (`EventType.color`), never hardcoded in components
+- Mobile-first responsive layout — design for phone/tablet constraints first, then expand for laptop
 
 ## Conventions
 
@@ -44,4 +53,3 @@ Schema lives in `prisma/schema.prisma` (already defined — extend it, don't res
 - Confirm the plan for a feature briefly before writing large amounts of code, especially anything touching the schema or auth.
 - After implementing a feature, note what was added/changed in plain terms rather than assuming it's obvious from the diff.
 - If a request seems to conflict with `docs/v1_scope.md`, flag the conflict rather than silently expanding scope.
-
