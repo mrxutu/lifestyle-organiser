@@ -1,13 +1,147 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// schema.prisma
+// Lifestyle Organiser — Neon/local Postgres schema
 
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// ---------- USERS & HOUSEHOLDS ----------
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  household     Household? @relation(fields: [householdId], references: [id])
+  householdId   String?
+  createdAt     DateTime  @default(now())
+
+  reminders     ReminderRecipient[]
+  eventsCreated Event[]   @relation("EventCreator")
+  eventInvites  EventAttendee[]
+  recipes       Recipe[]
+}
+
+model Household {
+  id        String @id @default(cuid())
+  name      String
+  users     User[]
+  events    Event[]
+  reminders Reminder[]
+  recipes   Recipe[]
+}
+
+// ---------- REMINDERS ----------
+
+model Reminder {
+  id             String    @id @default(cuid())
+  title          String
+  category       String
+  dueDate        DateTime
+  recurrence     Recurrence @default(NONE)
+  notes          String?
+  leadTimeDays   Int       @default(7)
+  lastNotifiedAt DateTime?
+  household      Household @relation(fields: [householdId], references: [id])
+  householdId    String
+  recipients     ReminderRecipient[]
+  createdAt      DateTime  @default(now())
+}
+
+enum Recurrence {
+  NONE
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+model ReminderRecipient {
+  id         String   @id @default(cuid())
+  reminder   Reminder @relation(fields: [reminderId], references: [id], onDelete: Cascade)
+  reminderId String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+
+  @@unique([reminderId, userId])
+}
+
+// ---------- EVENTS ----------
+
+model Event {
+  id                  String    @id @default(cuid())
+  title               String
+  description         String?
+  startAt             DateTime
+  endAt               DateTime?
+  allDay              Boolean   @default(false)
+  location            String?
+  eventType           EventType @relation(fields: [eventTypeId], references: [id])
+  eventTypeId         String
+  household           Household @relation(fields: [householdId], references: [id])
+  householdId         String
+  creator             User      @relation("EventCreator", fields: [creatorId], references: [id])
+  creatorId           String
+  attendees           EventAttendee[]
+  remindMinutesBefore Int?
+  createdAt           DateTime  @default(now())
+}
+
+model EventType {
+  id     String  @id @default(cuid())
+  name   String
+  color  String
+  events Event[]
+}
+
+model EventAttendee {
+  id      String @id @default(cuid())
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+
+  @@unique([eventId, userId])
+}
+
+// ---------- RECIPES ----------
+
+model Recipe {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String?
+  servings    Int?
+  prepMinutes Int?
+  cookMinutes Int?
+  tags        String[]
+  ingredients Ingredient[]
+  steps       Step[]
+  household   Household @relation(fields: [householdId], references: [id])
+  householdId String
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  createdAt   DateTime  @default(now())
+}
+
+model Ingredient {
+  id       String  @id @default(cuid())
+  recipe   Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String
+  name     String
+  amount   Float?
+  unit     String?
+  order    Int     @default(0)
+}
+
+model Step {
+  id          String  @id @default(cuid())
+  recipe      Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId    String
+  order       Int
+  instruction String
 }
