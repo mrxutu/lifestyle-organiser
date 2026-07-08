@@ -1,11 +1,12 @@
 import type { EventInput } from '@fullcalendar/core'
-import { CalendarView } from '@/components/calendar/calendar-view'
+import { CalendarBoard } from '@/components/calendar/calendar-board'
 import { getCurrentUser } from '@/lib/current-user'
 import { listEvents } from '@/lib/events'
+import { listEventTypes } from '@/lib/event-types'
 
 export default async function CalendarPage() {
   const { householdId } = await getCurrentUser()
-  const events = await listEvents(householdId)
+  const [events, eventTypes] = await Promise.all([listEvents(householdId), listEventTypes()])
 
   const calendarEvents: EventInput[] = events.map((event) => ({
     id: event.id,
@@ -25,7 +26,7 @@ export default async function CalendarPage() {
           No events yet — plans and appointments will appear here once added.
         </p>
       )}
-      <CalendarView events={calendarEvents} />
+      <CalendarBoard events={calendarEvents} eventsRaw={events} eventTypes={eventTypes} />
     </div>
   )
 }
