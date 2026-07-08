@@ -41,6 +41,12 @@ Full visual direction is in `docs/DESIGN.md` — treat it as the source of truth
 - Use Zod (or similar) to validate input on API routes before hitting the database.
 - Prefer small, focused components over large multi-purpose ones.
 - Run `npx prisma format` after any schema edit, and generate a migration (`npx prisma migrate dev --name <description>`) rather than editing the DB by hand.
+- **API responses**: use a consistent shape across all routes — success: `{ data: ... }`, error: `{ error: { message: string, code?: string } }` with an appropriate HTTP status. Don't invent a different shape per route.
+- **Loading/empty states**: every list/data view must handle zero-results gracefully (a clear empty state, not a blank or broken layout) and show a loading indicator while fetching — this applies to every feature, not just ones where it's explicitly requested.
+
+## Decisions log
+
+`docs/DECISIONS.md` holds a running, dated log of specific choices made along the way (e.g. constraints on a colour picker, a feature deliberately deferred). Check it if unsure whether something's already been decided, and add an entry when a new non-obvious decision is made during a session.
 
 ## Environment
 
