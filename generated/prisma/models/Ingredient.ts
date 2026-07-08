@@ -41,7 +41,7 @@ export type IngredientMinAggregateOutputType = {
   recipeId: string | null
   name: string | null
   amount: number | null
-  unit: string | null
+  unit: $Enums.MeasurementUnit | null
   order: number | null
 }
 
@@ -50,7 +50,7 @@ export type IngredientMaxAggregateOutputType = {
   recipeId: string | null
   name: string | null
   amount: number | null
-  unit: string | null
+  unit: $Enums.MeasurementUnit | null
   order: number | null
 }
 
@@ -194,7 +194,7 @@ export type IngredientGroupByOutputType = {
   recipeId: string
   name: string
   amount: number | null
-  unit: string | null
+  unit: $Enums.MeasurementUnit | null
   order: number
   _count: IngredientCountAggregateOutputType | null
   _avg: IngredientAvgAggregateOutputType | null
@@ -226,7 +226,7 @@ export type IngredientWhereInput = {
   recipeId?: Prisma.StringFilter<"Ingredient"> | string
   name?: Prisma.StringFilter<"Ingredient"> | string
   amount?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
-  unit?: Prisma.StringNullableFilter<"Ingredient"> | string | null
+  unit?: Prisma.EnumMeasurementUnitNullableFilter<"Ingredient"> | $Enums.MeasurementUnit | null
   order?: Prisma.IntFilter<"Ingredient"> | number
   recipe?: Prisma.XOR<Prisma.RecipeScalarRelationFilter, Prisma.RecipeWhereInput>
 }
@@ -249,7 +249,7 @@ export type IngredientWhereUniqueInput = Prisma.AtLeast<{
   recipeId?: Prisma.StringFilter<"Ingredient"> | string
   name?: Prisma.StringFilter<"Ingredient"> | string
   amount?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
-  unit?: Prisma.StringNullableFilter<"Ingredient"> | string | null
+  unit?: Prisma.EnumMeasurementUnitNullableFilter<"Ingredient"> | $Enums.MeasurementUnit | null
   order?: Prisma.IntFilter<"Ingredient"> | number
   recipe?: Prisma.XOR<Prisma.RecipeScalarRelationFilter, Prisma.RecipeWhereInput>
 }, "id">
@@ -276,7 +276,7 @@ export type IngredientScalarWhereWithAggregatesInput = {
   recipeId?: Prisma.StringWithAggregatesFilter<"Ingredient"> | string
   name?: Prisma.StringWithAggregatesFilter<"Ingredient"> | string
   amount?: Prisma.FloatNullableWithAggregatesFilter<"Ingredient"> | number | null
-  unit?: Prisma.StringNullableWithAggregatesFilter<"Ingredient"> | string | null
+  unit?: Prisma.EnumMeasurementUnitNullableWithAggregatesFilter<"Ingredient"> | $Enums.MeasurementUnit | null
   order?: Prisma.IntWithAggregatesFilter<"Ingredient"> | number
 }
 
@@ -284,7 +284,7 @@ export type IngredientCreateInput = {
   id?: string
   name: string
   amount?: number | null
-  unit?: string | null
+  unit?: $Enums.MeasurementUnit | null
   order?: number
   recipe: Prisma.RecipeCreateNestedOneWithoutIngredientsInput
 }
@@ -294,7 +294,7 @@ export type IngredientUncheckedCreateInput = {
   recipeId: string
   name: string
   amount?: number | null
-  unit?: string | null
+  unit?: $Enums.MeasurementUnit | null
   order?: number
 }
 
@@ -302,7 +302,7 @@ export type IngredientUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableEnumMeasurementUnitFieldUpdateOperationsInput | $Enums.MeasurementUnit | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   recipe?: Prisma.RecipeUpdateOneRequiredWithoutIngredientsNestedInput
 }
@@ -312,7 +312,7 @@ export type IngredientUncheckedUpdateInput = {
   recipeId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableEnumMeasurementUnitFieldUpdateOperationsInput | $Enums.MeasurementUnit | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -321,7 +321,7 @@ export type IngredientCreateManyInput = {
   recipeId: string
   name: string
   amount?: number | null
-  unit?: string | null
+  unit?: $Enums.MeasurementUnit | null
   order?: number
 }
 
@@ -329,7 +329,7 @@ export type IngredientUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableEnumMeasurementUnitFieldUpdateOperationsInput | $Enums.MeasurementUnit | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -338,7 +338,7 @@ export type IngredientUncheckedUpdateManyInput = {
   recipeId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableEnumMeasurementUnitFieldUpdateOperationsInput | $Enums.MeasurementUnit | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -439,6 +439,10 @@ export type NullableFloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type NullableEnumMeasurementUnitFieldUpdateOperationsInput = {
+  set?: $Enums.MeasurementUnit | null
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -451,7 +455,7 @@ export type IngredientCreateWithoutRecipeInput = {
   id?: string
   name: string
   amount?: number | null
-  unit?: string | null
+  unit?: $Enums.MeasurementUnit | null
   order?: number
 }
 
@@ -459,7 +463,7 @@ export type IngredientUncheckedCreateWithoutRecipeInput = {
   id?: string
   name: string
   amount?: number | null
-  unit?: string | null
+  unit?: $Enums.MeasurementUnit | null
   order?: number
 }
 
@@ -497,7 +501,7 @@ export type IngredientScalarWhereInput = {
   recipeId?: Prisma.StringFilter<"Ingredient"> | string
   name?: Prisma.StringFilter<"Ingredient"> | string
   amount?: Prisma.FloatNullableFilter<"Ingredient"> | number | null
-  unit?: Prisma.StringNullableFilter<"Ingredient"> | string | null
+  unit?: Prisma.EnumMeasurementUnitNullableFilter<"Ingredient"> | $Enums.MeasurementUnit | null
   order?: Prisma.IntFilter<"Ingredient"> | number
 }
 
@@ -505,7 +509,7 @@ export type IngredientCreateManyRecipeInput = {
   id?: string
   name: string
   amount?: number | null
-  unit?: string | null
+  unit?: $Enums.MeasurementUnit | null
   order?: number
 }
 
@@ -513,7 +517,7 @@ export type IngredientUpdateWithoutRecipeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableEnumMeasurementUnitFieldUpdateOperationsInput | $Enums.MeasurementUnit | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -521,7 +525,7 @@ export type IngredientUncheckedUpdateWithoutRecipeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableEnumMeasurementUnitFieldUpdateOperationsInput | $Enums.MeasurementUnit | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -529,7 +533,7 @@ export type IngredientUncheckedUpdateManyWithoutRecipeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.NullableEnumMeasurementUnitFieldUpdateOperationsInput | $Enums.MeasurementUnit | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -595,7 +599,7 @@ export type $IngredientPayload<ExtArgs extends runtime.Types.Extensions.Internal
     recipeId: string
     name: string
     amount: number | null
-    unit: string | null
+    unit: $Enums.MeasurementUnit | null
     order: number
   }, ExtArgs["result"]["ingredient"]>
   composites: {}
@@ -1025,7 +1029,7 @@ export interface IngredientFieldRefs {
   readonly recipeId: Prisma.FieldRef<"Ingredient", 'String'>
   readonly name: Prisma.FieldRef<"Ingredient", 'String'>
   readonly amount: Prisma.FieldRef<"Ingredient", 'Float'>
-  readonly unit: Prisma.FieldRef<"Ingredient", 'String'>
+  readonly unit: Prisma.FieldRef<"Ingredient", 'MeasurementUnit'>
   readonly order: Prisma.FieldRef<"Ingredient", 'Int'>
 }
     

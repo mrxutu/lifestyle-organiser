@@ -390,8 +390,7 @@ export const ModelName = {
   EventType: 'EventType',
   EventAttendee: 'EventAttendee',
   Recipe: 'Recipe',
-  Ingredient: 'Ingredient',
-  Step: 'Step'
+  Ingredient: 'Ingredient'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "household" | "event" | "eventType" | "eventAttendee" | "recipe" | "ingredient" | "step"
+    modelProps: "user" | "household" | "event" | "eventType" | "eventAttendee" | "recipe" | "ingredient"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -929,80 +928,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Step: {
-      payload: Prisma.$StepPayload<ExtArgs>
-      fields: Prisma.StepFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.StepFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.StepFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
-        }
-        findFirst: {
-          args: Prisma.StepFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.StepFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
-        }
-        findMany: {
-          args: Prisma.StepFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>[]
-        }
-        create: {
-          args: Prisma.StepCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
-        }
-        createMany: {
-          args: Prisma.StepCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.StepCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>[]
-        }
-        delete: {
-          args: Prisma.StepDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
-        }
-        update: {
-          args: Prisma.StepUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
-        }
-        deleteMany: {
-          args: Prisma.StepDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.StepUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.StepUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>[]
-        }
-        upsert: {
-          args: Prisma.StepUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StepPayload>
-        }
-        aggregate: {
-          args: Prisma.StepAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateStep>
-        }
-        groupBy: {
-          args: Prisma.StepGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StepGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.StepCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StepCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -1109,6 +1034,7 @@ export const RecipeScalarFieldEnum = {
   prepMinutes: 'prepMinutes',
   cookMinutes: 'cookMinutes',
   tags: 'tags',
+  method: 'method',
   householdId: 'householdId',
   authorId: 'authorId',
   createdAt: 'createdAt'
@@ -1127,16 +1053,6 @@ export const IngredientScalarFieldEnum = {
 } as const
 
 export type IngredientScalarFieldEnum = (typeof IngredientScalarFieldEnum)[keyof typeof IngredientScalarFieldEnum]
-
-
-export const StepScalarFieldEnum = {
-  id: 'id',
-  recipeId: 'recipeId',
-  order: 'order',
-  instruction: 'instruction'
-} as const
-
-export type StepScalarFieldEnum = (typeof StepScalarFieldEnum)[keyof typeof StepScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1243,6 +1159,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MeasurementUnit'
+ */
+export type EnumMeasurementUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeasurementUnit'>
+    
+
+
+/**
+ * Reference to a field of type 'MeasurementUnit[]'
+ */
+export type ListEnumMeasurementUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeasurementUnit[]'>
     
 
 /**
@@ -1362,7 +1292,6 @@ export type GlobalOmitConfig = {
   eventAttendee?: Prisma.EventAttendeeOmit
   recipe?: Prisma.RecipeOmit
   ingredient?: Prisma.IngredientOmit
-  step?: Prisma.StepOmit
 }
 
 /* Types for Logging */

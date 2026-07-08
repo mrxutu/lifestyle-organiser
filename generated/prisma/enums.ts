@@ -17,3 +17,17 @@ export const Recurrence = {
 } as const
 
 export type Recurrence = (typeof Recurrence)[keyof typeof Recurrence]
+
+
+export const MeasurementUnit = {
+  TSP: 'TSP',
+  TBSP: 'TBSP',
+  G: 'G',
+  ML: 'ML',
+  LITRE: 'LITRE',
+  PINT: 'PINT',
+  OZ: 'OZ',
+  LB: 'LB'
+} as const
+
+export type MeasurementUnit = (typeof MeasurementUnit)[keyof typeof MeasurementUnit]

@@ -14,21 +14,21 @@ datasource db {
 // ---------- USERS & HOUSEHOLDS ----------
 
 model User {
-  id            String     @id @default(cuid())
-  email         String     @unique
-  name          String?
-  passwordHash  String?
-  household     Household? @relation(fields: [householdId], references: [id])
-  householdId   String?
-  createdAt     DateTime   @default(now())
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String?
+  passwordHash String?
+  household    Household? @relation(fields: [householdId], references: [id])
+  householdId  String?
+  createdAt    DateTime   @default(now())
 
-  eventsCreated Event[]    @relation("EventCreator")
+  eventsCreated Event[]         @relation("EventCreator")
   eventInvites  EventAttendee[]
   recipes       Recipe[]
 }
 
 model Household {
-  id      String @id @default(cuid())
+  id      String   @id @default(cuid())
   name    String
   users   User[]
   events  Event[]
@@ -38,18 +38,18 @@ model Household {
 // ---------- EVENTS (colour-coded calendar — reminders are events too) ----------
 
 model Event {
-  id          String    @id @default(cuid())
+  id          String          @id @default(cuid())
   title       String
   description String?
   startAt     DateTime
   endAt       DateTime?
-  allDay      Boolean   @default(false)
+  allDay      Boolean         @default(false)
   location    String?
-  eventType   EventType @relation(fields: [eventTypeId], references: [id])
+  eventType   EventType       @relation(fields: [eventTypeId], references: [id])
   eventTypeId String
-  household   Household @relation(fields: [householdId], references: [id])
+  household   Household       @relation(fields: [householdId], references: [id])
   householdId String
-  creator     User      @relation("EventCreator", fields: [creatorId], references: [id])
+  creator     User            @relation("EventCreator", fields: [creatorId], references: [id])
   creatorId   String
   attendees   EventAttendee[]
 
@@ -59,10 +59,10 @@ model Event {
   // FORM should default the input to 0 (opt-out design: new events show on the
   // Reminders page unless this is manually cleared to null, e.g. for "Weekend Away").
   recurrence          Recurrence @default(NONE)
-  leadTimeDays        Int?       // null = excluded from Reminders page; 0+ = included, due-soon window in days
-  remindMinutesBefore Int?       // for same-day nudges on regular events, if ever needed
+  leadTimeDays        Int? // null = excluded from Reminders page; 0+ = included, due-soon window in days
+  remindMinutesBefore Int? // for same-day nudges on regular events, if ever needed
 
-  createdAt   DateTime  @default(now())
+  createdAt DateTime @default(now())
 }
 
 enum Recurrence {
@@ -74,8 +74,8 @@ enum Recurrence {
 
 model EventType {
   id     String  @id @default(cuid())
-  name   String  // e.g. "Weekend Away", "Appointment", "Insurance", "Bill"
-  color  String  // hex code — drives calendar colour-coding
+  name   String // e.g. "Weekend Away", "Appointment", "Insurance", "Bill"
+  color  String // hex code — drives calendar colour-coding
   events Event[]
 }
 
@@ -92,7 +92,7 @@ model EventAttendee {
 // ---------- RECIPES ----------
 
 model Recipe {
-  id          String   @id @default(cuid())
+  id          String       @id @default(cuid())
   title       String
   description String?
   imageUrl    String?
@@ -101,28 +101,31 @@ model Recipe {
   cookMinutes Int?
   tags        String[]
   ingredients Ingredient[]
-  steps       Step[]
-  household   Household @relation(fields: [householdId], references: [id])
+  method      String? // single multi-line text field, pasted in — not a repeatable Step model
+  household   Household    @relation(fields: [householdId], references: [id])
   householdId String
-  author      User      @relation(fields: [authorId], references: [id])
+  author      User         @relation(fields: [authorId], references: [id])
   authorId    String
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime     @default(now())
 }
 
 model Ingredient {
-  id       String  @id @default(cuid())
-  recipe   Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  id       String           @id @default(cuid())
+  recipe   Recipe           @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId String
-  name     String
-  amount   Float?
-  unit     String?
-  order    Int     @default(0)
+  name     String // e.g. "Sugar", "Lemon", "Milk"
+  amount   Float? // supports decimals, e.g. 1.5 — null if the ingredient has no quantity (rare)
+  unit     MeasurementUnit? // null = no unit, e.g. "1 lemon" rather than "1 whole lemon"
+  order    Int              @default(0)
 }
 
-model Step {
-  id          String  @id @default(cuid())
-  recipe      Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
-  recipeId    String
-  order       Int
-  instruction String
+enum MeasurementUnit {
+  TSP
+  TBSP
+  G
+  ML
+  LITRE
+  PINT
+  OZ
+  LB
 }

@@ -76,8 +76,3 @@ export type Recipe = Prisma.RecipeModel
  * 
  */
 export type Ingredient = Prisma.IngredientModel
-/**
- * Model Step
- * 
- */
-export type Step = Prisma.StepModel
