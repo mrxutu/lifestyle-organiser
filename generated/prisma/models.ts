@@ -9,12 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
-export type * from './models/Account'
-export type * from './models/Session'
-export type * from './models/VerificationToken'
 export type * from './models/Household'
-export type * from './models/Reminder'
-export type * from './models/ReminderRecipient'
 export type * from './models/Event'
 export type * from './models/EventType'
 export type * from './models/EventAttendee'

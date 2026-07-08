@@ -8,7 +8,7 @@ import type { EventType } from '@/generated/prisma/client'
 import type { EventWithType } from '@/lib/events'
 import { Button } from '@/components/ui/button'
 import { CalendarView } from '@/components/calendar/calendar-view'
-import { ResponsiveDialog } from '@/components/calendar/responsive-dialog'
+import { ResponsiveDialog } from '@/components/responsive-dialog'
 import { EventForm } from '@/components/calendar/event-form'
 import { EventTypeManager } from '@/components/calendar/event-type-manager'
 

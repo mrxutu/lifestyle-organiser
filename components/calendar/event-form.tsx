@@ -2,7 +2,9 @@
 
 import { useState, type FormEvent } from 'react'
 import type { EventType } from '@/generated/prisma/client'
+import type { Recurrence } from '@/generated/prisma/enums'
 import type { EventWithType } from '@/lib/events'
+import { recurrenceLabel } from '@/lib/reminder-urgency'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -70,8 +72,9 @@ export function EventForm({
   const [endTime, setEndTime] = useState(baseEnd ? toTimeValue(baseEnd) : '')
   const [location, setLocation] = useState(initialEvent?.location ?? '')
   const [description, setDescription] = useState(initialEvent?.description ?? '')
-  const [remindMinutesBefore, setRemindMinutesBefore] = useState(
-    initialEvent?.remindMinutesBefore != null ? String(initialEvent.remindMinutesBefore) : ''
+  const [recurrence, setRecurrence] = useState<Recurrence>(initialEvent?.recurrence ?? 'NONE')
+  const [leadTimeDays, setLeadTimeDays] = useState(
+    initialEvent ? (initialEvent.leadTimeDays != null ? String(initialEvent.leadTimeDays) : '') : '0'
   )
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -93,7 +96,8 @@ export function EventForm({
       allDay,
       location: location || null,
       eventTypeId,
-      remindMinutesBefore: remindMinutesBefore ? Number(remindMinutesBefore) : null,
+      recurrence,
+      leadTimeDays: leadTimeDays === '' ? null : Number(leadTimeDays),
     }
 
     const res = await fetch(initialEvent ? `/api/events/${initialEvent.id}` : '/api/events', {
@@ -232,13 +236,29 @@ export function EventForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="event-remind">Remind me (minutes before, optional)</Label>
+        <Label htmlFor="event-recurrence">Recurrence</Label>
+        <Select value={recurrence} onValueChange={(value) => setRecurrence(value as Recurrence)}>
+          <SelectTrigger id="event-recurrence" className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(recurrenceLabel).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="event-lead-time">Show on Reminders (days before, blank to exclude)</Label>
         <Input
-          id="event-remind"
+          id="event-lead-time"
           type="number"
           min={0}
-          value={remindMinutesBefore}
-          onChange={(e) => setRemindMinutesBefore(e.target.value)}
+          value={leadTimeDays}
+          onChange={(e) => setLeadTimeDays(e.target.value)}
         />
       </div>
 

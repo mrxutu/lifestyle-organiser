@@ -4,7 +4,7 @@ import { UserMenu } from '@/components/nav/user-menu'
 export function TopNav({
   user,
 }: {
-  user: { name: string | null; email: string; image: string | null }
+  user: { name: string | null; email: string }
 }) {
   return (
     <header className="border-b border-border">
@@ -13,7 +13,7 @@ export function TopNav({
           <span className="hidden text-sm font-semibold sm:inline">Lifestyle Organiser</span>
           <NavLinks />
         </div>
-        <UserMenu name={user.name} email={user.email} image={user.image} />
+        <UserMenu name={user.name} email={user.email} />
       </div>
     </header>
   )

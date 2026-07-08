@@ -1,5 +1,6 @@
 // schema.prisma
-// Lifestyle Organiser — Neon/local Postgres schema
+// Lifestyle Organiser — Postgres schema (Prisma 7)
+// Run: npx prisma migrate dev --name merge-reminders-into-events
 
 generator client {
   provider = "prisma-client"
@@ -15,82 +16,53 @@ datasource db {
 model User {
   id            String     @id @default(cuid())
   email         String     @unique
-  emailVerified DateTime?
   name          String?
-  image         String?
   passwordHash  String?
   household     Household? @relation(fields: [householdId], references: [id])
   householdId   String?
   createdAt     DateTime   @default(now())
 
-  accounts      Account[]
-  sessions      Session[]
-  reminders     ReminderRecipient[]
-  eventsCreated Event[]             @relation("EventCreator")
+  eventsCreated Event[]    @relation("EventCreator")
   eventInvites  EventAttendee[]
   recipes       Recipe[]
 }
 
-// ---------- AUTH.JS ----------
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
 model Household {
-  id        String     @id @default(cuid())
-  name      String
-  users     User[]
-  events    Event[]
-  reminders Reminder[]
-  recipes   Recipe[]
+  id      String @id @default(cuid())
+  name    String
+  users   User[]
+  events  Event[]
+  recipes Recipe[]
 }
 
-// ---------- REMINDERS ----------
+// ---------- EVENTS (colour-coded calendar — reminders are events too) ----------
 
-model Reminder {
-  id             String              @id @default(cuid())
-  title          String
-  category       String
-  dueDate        DateTime
-  recurrence     Recurrence          @default(NONE)
-  notes          String?
-  leadTimeDays   Int                 @default(7)
-  lastNotifiedAt DateTime?
-  household      Household           @relation(fields: [householdId], references: [id])
-  householdId    String
-  recipients     ReminderRecipient[]
-  createdAt      DateTime            @default(now())
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  startAt     DateTime
+  endAt       DateTime?
+  allDay      Boolean   @default(false)
+  location    String?
+  eventType   EventType @relation(fields: [eventTypeId], references: [id])
+  eventTypeId String
+  household   Household @relation(fields: [householdId], references: [id])
+  householdId String
+  creator     User      @relation("EventCreator", fields: [creatorId], references: [id])
+  creatorId   String
+  attendees   EventAttendee[]
+
+  // Reminder-style fields — set these to make an event behave as a reminder
+  // (e.g. "Car Insurance Renewal"): recurring, with a lead-time "due soon" window.
+  // leadTimeDays stays nullable at the DB level (no @default here) — the event
+  // FORM should default the input to 0 (opt-out design: new events show on the
+  // Reminders page unless this is manually cleared to null, e.g. for "Weekend Away").
+  recurrence          Recurrence @default(NONE)
+  leadTimeDays        Int?       // null = excluded from Reminders page; 0+ = included, due-soon window in days
+  remindMinutesBefore Int?       // for same-day nudges on regular events, if ever needed
+
+  createdAt   DateTime  @default(now())
 }
 
 enum Recurrence {
@@ -100,41 +72,10 @@ enum Recurrence {
   YEARLY
 }
 
-model ReminderRecipient {
-  id         String   @id @default(cuid())
-  reminder   Reminder @relation(fields: [reminderId], references: [id], onDelete: Cascade)
-  reminderId String
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-
-  @@unique([reminderId, userId])
-}
-
-// ---------- EVENTS ----------
-
-model Event {
-  id                  String          @id @default(cuid())
-  title               String
-  description         String?
-  startAt             DateTime
-  endAt               DateTime?
-  allDay              Boolean         @default(false)
-  location            String?
-  eventType           EventType       @relation(fields: [eventTypeId], references: [id])
-  eventTypeId         String
-  household           Household       @relation(fields: [householdId], references: [id])
-  householdId         String
-  creator             User            @relation("EventCreator", fields: [creatorId], references: [id])
-  creatorId           String
-  attendees           EventAttendee[]
-  remindMinutesBefore Int?
-  createdAt           DateTime        @default(now())
-}
-
 model EventType {
   id     String  @id @default(cuid())
-  name   String
-  color  String
+  name   String  // e.g. "Weekend Away", "Appointment", "Insurance", "Bill"
+  color  String  // hex code — drives calendar colour-coding
   events Event[]
 }
 
@@ -151,7 +92,7 @@ model EventAttendee {
 // ---------- RECIPES ----------
 
 model Recipe {
-  id          String       @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
   imageUrl    String?
@@ -161,11 +102,11 @@ model Recipe {
   tags        String[]
   ingredients Ingredient[]
   steps       Step[]
-  household   Household    @relation(fields: [householdId], references: [id])
+  household   Household @relation(fields: [householdId], references: [id])
   householdId String
-  author      User         @relation(fields: [authorId], references: [id])
+  author      User      @relation(fields: [authorId], references: [id])
   authorId    String
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime  @default(now())
 }
 
 model Ingredient {
@@ -179,8 +120,8 @@ model Ingredient {
 }
 
 model Step {
-  id          String @id @default(cuid())
-  recipe      Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  id          String  @id @default(cuid())
+  recipe      Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId    String
   order       Int
   instruction String

@@ -18,3 +18,25 @@ CRUD popups (add/edit event, add/edit event type) use shadcn Dialog on tablet/la
 
 **2026-07 — v1.0 "functional first" approach**
 Priority is a working end-to-end version across all three features before revisiting styling/layout polish. Polish pass planned as v1.1, distinct from the "out of scope" feature list in `v1_scope.md` (which covers things not being built at all yet, e.g. meal planning) — v1.1 covers things that ARE built but rough.
+
+**2026-07 — Reminders merged into Events**
+Reminders are not a separate data model — a reminder is an Event with `recurrence` and `leadTimeDays` set. Removed the standalone `Reminder`/`ReminderRecipient` models from the schema. The Reminders page is a read-only, date-sorted (ascending `startAt`) view of Events, with this exact visibility rule:
+- `leadTimeDays` is `null` → never shown on Reminders
+- `leadTimeDays` is `0` → shown from creation until `startAt` passes into the past (always visible while upcoming)
+- `leadTimeDays` is `N` (N > 0) → shown only once `daysUntil(startAt) < N` (inside the window); not shown before that
+- Past events (`startAt < now()`) are never shown, regardless of `leadTimeDays`
+
+`leadTimeDays` defaults to `0` on the event form (UI-level default, not a DB default — schema field stays nullable) — opt-out design: new events are visible on Reminders immediately unless the field is cleared to null. No separate "add reminder" form; reminders are created/edited via the normal event form.
+
+`remindMinutesBefore` exists in the schema but is NOT exposed on the event form in v1.0 — it's unused (no notification system yet) and was causing confusing duplication with the "Show on Reminders" (`leadTimeDays`) field. Reserved for a possible future notifications feature.
+
+Reminders page displays the event's time alongside the date when the event is not all-day.
+
+**2026-07 — Recipe ingredients: fixed unit list, decimal amounts**
+`Ingredient.unit` is a constrained enum (`MeasurementUnit`: TSP, TBSP, G, ML, LITRE, PINT, OZ, LB), nullable — null means no unit (e.g. "1 lemon" rather than forcing a unit). `Ingredient.amount` is `Float` (not Prisma `Decimal`) — supports fractional amounts like 1.5 without the added complexity of the Decimal type in application code.
+
+**2026-07 — Recipe add/edit is a full page, not a popup**
+Unlike Calendar/Reminders (which use dialogs), Recipes has a dedicated `/recipes/new` and `/recipes/[id]/edit` page — too much content (image upload, repeatable ingredient rows, repeatable step rows) for a popup to work well.
+
+**2026-07 — Recipe image is optional**
+`imageUrl` is nullable in the schema and must stay optional in the form and Zod validation — a recipe can be saved without a photo. The recipe list/card view needs a sensible placeholder for recipes with no image, not a broken image icon or forced blank space.

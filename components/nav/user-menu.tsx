@@ -1,7 +1,7 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,17 +25,14 @@ function getInitials(name: string | null, email: string) {
 export function UserMenu({
   name,
   email,
-  image,
 }: {
   name: string | null
   email: string
-  image: string | null
 }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
         <Avatar>
-          {image && <AvatarImage src={image} alt={name ?? email} />}
           <AvatarFallback>{getInitials(name, email)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

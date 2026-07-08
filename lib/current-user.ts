@@ -10,7 +10,7 @@ export const getCurrentUser = cache(async () => {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, email: true, name: true, image: true, householdId: true },
+    select: { id: true, email: true, name: true, householdId: true },
   })
   if (!user) {
     throw new Error(`Session user ${session.user.id} has no matching User row`)

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"/Users/paulcozens/Projects/lifestyle-organiser/app/api/reminders/[id]\")",
+      "Bash(npx shadcn@latest add skeleton)"
+    ],
+    "additionalDirectories": [
+      "/Users/paulcozens/Projects/lifestyle-organiser/app/api/reminders"
+    ]
+  }
+}

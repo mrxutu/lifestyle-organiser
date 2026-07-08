@@ -1,12 +1,12 @@
 import { BellOff } from 'lucide-react'
 import { EmptyState } from '@/components/empty-state'
-import { ReminderList } from '@/components/reminders/reminder-list'
+import { UpcomingReminderRow } from '@/components/reminders/upcoming-reminder-row'
 import { getCurrentUser } from '@/lib/current-user'
-import { listReminders } from '@/lib/reminders'
+import { listUpcomingReminders } from '@/lib/events'
 
 export default async function RemindersPage() {
   const { householdId } = await getCurrentUser()
-  const reminders = await listReminders(householdId)
+  const reminders = await listUpcomingReminders(householdId)
 
   return (
     <div className="flex flex-col gap-6">
@@ -15,10 +15,14 @@ export default async function RemindersPage() {
         <EmptyState
           icon={BellOff}
           title="No reminders yet"
-          description="Renewals, bills, and other recurring to-dos will show up here once they're added."
+          description="Events with a lead time set will show up here once they're added — set one from the Calendar's event form."
         />
       ) : (
-        <ReminderList reminders={reminders} />
+        <div className="grid grid-cols-1 gap-3">
+          {reminders.map((reminder) => (
+            <UpcomingReminderRow key={reminder.id} reminder={reminder} />
+          ))}
+        </div>
       )}
     </div>
   )

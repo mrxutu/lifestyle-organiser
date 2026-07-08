@@ -4,12 +4,11 @@ This file gives Claude Code persistent context for this project. Read it at the 
 
 ## Project
 
-A shared lifestyle organiser web app for two users (household of two). v1.0 covers three features only:
-1. Reminders (recurring renewals/bills, e.g. car/house insurance, MOT)
-2. Colour-coded events calendar
-3. Recipe storage (structured template: ingredients, method, image, tags)
+A shared lifestyle organiser web app for two users (household of two). v1.0 covers two data areas plus recipes:
+1. Colour-coded events calendar — a single `Event` model. Reminders are NOT a separate model: a "reminder" is just an Event with `leadTimeDays` set. The Reminders page is a filtered, read-only, date-sorted view of upcoming events that have a lead time — it does not have its own add/edit form.
+2. Recipe storage (structured template: ingredients, method, image, tags)
 
-Full scope is in `docs/v1_scope.md` — treat it as the source of truth for what is in and out of scope. Do not add features from the "out of scope" list (email notifications, attachments, meal planning, offline sync, budget tracking, contacts) unless explicitly asked.
+Full scope is in `docs/v1_scope.md` — treat it as the source of truth for what is in and out of scope. Do not add features from the "out of scope" list (email notifications, attachments, meal planning, offline sync, budget tracking, contacts) unless explicitly asked. See `docs/DECISIONS.md` for the specifics of how Reminders/Events work together — check it before touching either page.
 
 ## Stack — do not deviate without asking
 
@@ -52,6 +51,7 @@ Full visual direction is in `docs/DESIGN.md` — treat it as the source of truth
 
 - `.env` holds `DATABASE_URL` (local Postgres) and is gitignored — never commit secrets or print them in full.
 - Two users only (no multi-household logic needed) — see `Household` and `User` models in the schema.
+- No permission levels between users — both Paul and Nick see and can edit everything (reminders, events, recipes) within the household. Don't build per-user visibility restrictions or ownership-based access control anywhere in the app.
 - No email sending in v1.0 — reminders/events surface via an in-app "due soon" view, not notifications. Don't build email infrastructure unless asked.
 
 ## Working style

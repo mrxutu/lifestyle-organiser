@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
+import { Recurrence } from '@/generated/prisma/enums'
+import { isVisibleOnReminders } from '@/lib/reminder-urgency'
 
 export async function listEvents(householdId: string) {
   return prisma.event.findMany({
@@ -15,6 +17,24 @@ export async function listEvents(householdId: string) {
 
 export type EventWithType = Awaited<ReturnType<typeof listEvents>>[number]
 
+export async function listUpcomingReminders(householdId: string) {
+  const startOfToday = new Date()
+  startOfToday.setHours(0, 0, 0, 0)
+
+  // DB query fetches a cheap superset (Prisma can't compare startAt against
+  // now() + leadTimeDays days where leadTimeDays is itself a column) — the
+  // exact per-event visibility window is applied in isVisibleOnReminders below.
+  const candidates = await prisma.event.findMany({
+    where: { householdId, leadTimeDays: { not: null }, startAt: { gte: startOfToday } },
+    include: { eventType: true },
+    orderBy: { startAt: 'asc' },
+  })
+
+  return candidates.filter(isVisibleOnReminders)
+}
+
+export type UpcomingReminder = Awaited<ReturnType<typeof listUpcomingReminders>>[number]
+
 export const eventInputSchema = z
   .object({
     title: z.string().trim().min(1, 'Title is required').max(200),
@@ -25,6 +45,8 @@ export const eventInputSchema = z
     location: z.string().trim().max(200).optional().nullable(),
     eventTypeId: z.string().min(1, 'Event type is required'),
     remindMinutesBefore: z.coerce.number().int().min(0).optional().nullable(),
+    recurrence: z.enum(Recurrence).default('NONE'),
+    leadTimeDays: z.coerce.number().int().min(0).optional().nullable(),
   })
   .refine((data) => !data.endAt || data.endAt >= data.startAt, {
     message: 'End time must be after start time',

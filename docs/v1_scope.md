@@ -5,19 +5,20 @@ A shared web app for a household of two (you + Nick) to manage renewal reminders
 
 ## In scope for v1.0
 
-### 1. Reminders
-- Add/edit/delete reminders (e.g. Car Insurance, House Insurance, MOT, subscriptions)
-- Category field per reminder
-- Recurrence: none / monthly / quarterly / yearly
-- Configurable lead time (e.g. notify 7 days before due)
-- Notes field
-- "Due soon" view on the dashboard (in-app, not email)
-
-### 2. Events calendar
-- Add/edit/delete events (weekends away, appointments, etc.)
+### 1. Events calendar (includes reminders)
+Reminders are not a separate feature — they're events with a lead time set. One data model, two views.
+- Add/edit/delete events (weekends away, appointments, insurance renewals, bills, etc.)
 - Event type/category with an assigned colour, calendar renders colour-coded
 - Start/end date-time, all-day option, location field
+- Recurrence: none / monthly / quarterly / yearly
+- "Remind Me" lead-time field (in days) — defaults to 0 (shown on Reminders page, due-soon only on the day itself); clear it to null to exclude an event from the Reminders page entirely (e.g. a trip)
 - Month/week/day calendar views
+
+### 2. Reminders (read-only view of the calendar)
+- Lists events that have a lead-time value set and whose start date/time is now or in the future — past events never appear
+- Sorted ascending by start date
+- Events within their lead-time window are visually distinct ("due soon")
+- No separate add/edit form — reminders are created and edited via the normal event form on the Calendar
 
 ### 3. Recipes
 - Add/edit/delete recipes via a structured template
@@ -25,7 +26,7 @@ A shared web app for a household of two (you + Nick) to manage renewal reminders
 - Browse/search recipe collection
 
 ### 4. Access & sharing
-- Two user accounts (you + Nick), shared household — both see the same reminders, calendar, and recipes
+- Two user accounts (you + Nick), shared household — both see and can edit everything, no permission levels
 - Responsive web app — works on phone, tablet, laptop from one deployment
 - Installable to home screen (PWA-style), always-online (no offline sync)
 
@@ -44,4 +45,4 @@ A shared web app for a household of two (you + Nick) to manage renewal reminders
 - FullCalendar (or similar) for the colour-coded calendar UI
 
 ## Definition of done for v1.0
-Two users can log in, each independently add/edit reminders, events, and recipes, and see a shared, up-to-date view of all three across any device — with no email sending required to consider v1.0 complete.
+Two users can log in, each independently add/edit calendar events (including reminder-style ones with a lead time), see them colour-coded on the calendar and reflected on the Reminders view, manage recipes, and see a shared, up-to-date view of all of it across any device — with no email sending required to consider v1.0 complete.

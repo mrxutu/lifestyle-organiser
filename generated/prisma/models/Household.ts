@@ -160,7 +160,6 @@ export type HouseholdWhereInput = {
   name?: Prisma.StringFilter<"Household"> | string
   users?: Prisma.UserListRelationFilter
   events?: Prisma.EventListRelationFilter
-  reminders?: Prisma.ReminderListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
 }
 
@@ -169,7 +168,6 @@ export type HouseholdOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
-  reminders?: Prisma.ReminderOrderByRelationAggregateInput
   recipes?: Prisma.RecipeOrderByRelationAggregateInput
 }
 
@@ -181,7 +179,6 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Household"> | string
   users?: Prisma.UserListRelationFilter
   events?: Prisma.EventListRelationFilter
-  reminders?: Prisma.ReminderListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
 }, "id">
 
@@ -206,7 +203,6 @@ export type HouseholdCreateInput = {
   name: string
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
 }
 
@@ -215,7 +211,6 @@ export type HouseholdUncheckedCreateInput = {
   name: string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
@@ -224,7 +219,6 @@ export type HouseholdUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
 }
 
@@ -233,7 +227,6 @@ export type HouseholdUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
@@ -293,20 +286,6 @@ export type HouseholdUpdateOneWithoutUsersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutUsersInput, Prisma.HouseholdUpdateWithoutUsersInput>, Prisma.HouseholdUncheckedUpdateWithoutUsersInput>
 }
 
-export type HouseholdCreateNestedOneWithoutRemindersInput = {
-  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutRemindersInput, Prisma.HouseholdUncheckedCreateWithoutRemindersInput>
-  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutRemindersInput
-  connect?: Prisma.HouseholdWhereUniqueInput
-}
-
-export type HouseholdUpdateOneRequiredWithoutRemindersNestedInput = {
-  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutRemindersInput, Prisma.HouseholdUncheckedCreateWithoutRemindersInput>
-  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutRemindersInput
-  upsert?: Prisma.HouseholdUpsertWithoutRemindersInput
-  connect?: Prisma.HouseholdWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutRemindersInput, Prisma.HouseholdUpdateWithoutRemindersInput>, Prisma.HouseholdUncheckedUpdateWithoutRemindersInput>
-}
-
 export type HouseholdCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.HouseholdCreateWithoutEventsInput, Prisma.HouseholdUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutEventsInput
@@ -339,7 +318,6 @@ export type HouseholdCreateWithoutUsersInput = {
   id?: string
   name: string
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
 }
 
@@ -347,7 +325,6 @@ export type HouseholdUncheckedCreateWithoutUsersInput = {
   id?: string
   name: string
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
@@ -371,62 +348,12 @@ export type HouseholdUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutHouseholdNestedInput
-  recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
-}
-
-export type HouseholdCreateWithoutRemindersInput = {
-  id?: string
-  name: string
-  users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
-  events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
-  recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
-}
-
-export type HouseholdUncheckedCreateWithoutRemindersInput = {
-  id?: string
-  name: string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
-  recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
-}
-
-export type HouseholdCreateOrConnectWithoutRemindersInput = {
-  where: Prisma.HouseholdWhereUniqueInput
-  create: Prisma.XOR<Prisma.HouseholdCreateWithoutRemindersInput, Prisma.HouseholdUncheckedCreateWithoutRemindersInput>
-}
-
-export type HouseholdUpsertWithoutRemindersInput = {
-  update: Prisma.XOR<Prisma.HouseholdUpdateWithoutRemindersInput, Prisma.HouseholdUncheckedUpdateWithoutRemindersInput>
-  create: Prisma.XOR<Prisma.HouseholdCreateWithoutRemindersInput, Prisma.HouseholdUncheckedCreateWithoutRemindersInput>
-  where?: Prisma.HouseholdWhereInput
-}
-
-export type HouseholdUpdateToOneWithWhereWithoutRemindersInput = {
-  where?: Prisma.HouseholdWhereInput
-  data: Prisma.XOR<Prisma.HouseholdUpdateWithoutRemindersInput, Prisma.HouseholdUncheckedUpdateWithoutRemindersInput>
-}
-
-export type HouseholdUpdateWithoutRemindersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
-  events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
-  recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
-}
-
-export type HouseholdUncheckedUpdateWithoutRemindersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
 }
@@ -435,7 +362,6 @@ export type HouseholdCreateWithoutEventsInput = {
   id?: string
   name: string
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
 }
 
@@ -443,7 +369,6 @@ export type HouseholdUncheckedCreateWithoutEventsInput = {
   id?: string
   name: string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
@@ -467,7 +392,6 @@ export type HouseholdUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
 }
 
@@ -475,7 +399,6 @@ export type HouseholdUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
@@ -484,7 +407,6 @@ export type HouseholdCreateWithoutRecipesInput = {
   name: string
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdUncheckedCreateWithoutRecipesInput = {
@@ -492,7 +414,6 @@ export type HouseholdUncheckedCreateWithoutRecipesInput = {
   name: string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
-  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutHouseholdInput
 }
 
 export type HouseholdCreateOrConnectWithoutRecipesInput = {
@@ -516,7 +437,6 @@ export type HouseholdUpdateWithoutRecipesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUpdateManyWithoutHouseholdNestedInput
 }
 
 export type HouseholdUncheckedUpdateWithoutRecipesInput = {
@@ -524,7 +444,6 @@ export type HouseholdUncheckedUpdateWithoutRecipesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
-  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutHouseholdNestedInput
 }
 
 
@@ -535,14 +454,12 @@ export type HouseholdUncheckedUpdateWithoutRecipesInput = {
 export type HouseholdCountOutputType = {
   users: number
   events: number
-  reminders: number
   recipes: number
 }
 
 export type HouseholdCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | HouseholdCountOutputTypeCountUsersArgs
   events?: boolean | HouseholdCountOutputTypeCountEventsArgs
-  reminders?: boolean | HouseholdCountOutputTypeCountRemindersArgs
   recipes?: boolean | HouseholdCountOutputTypeCountRecipesArgs
 }
 
@@ -573,13 +490,6 @@ export type HouseholdCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Type
 /**
  * HouseholdCountOutputType without action
  */
-export type HouseholdCountOutputTypeCountRemindersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReminderWhereInput
-}
-
-/**
- * HouseholdCountOutputType without action
- */
 export type HouseholdCountOutputTypeCountRecipesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.RecipeWhereInput
 }
@@ -590,7 +500,6 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   name?: boolean
   users?: boolean | Prisma.Household$usersArgs<ExtArgs>
   events?: boolean | Prisma.Household$eventsArgs<ExtArgs>
-  reminders?: boolean | Prisma.Household$remindersArgs<ExtArgs>
   recipes?: boolean | Prisma.Household$recipesArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["household"]>
@@ -614,7 +523,6 @@ export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Household$usersArgs<ExtArgs>
   events?: boolean | Prisma.Household$eventsArgs<ExtArgs>
-  reminders?: boolean | Prisma.Household$remindersArgs<ExtArgs>
   recipes?: boolean | Prisma.Household$recipesArgs<ExtArgs>
   _count?: boolean | Prisma.HouseholdCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -626,7 +534,6 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     users: Prisma.$UserPayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
-    reminders: Prisma.$ReminderPayload<ExtArgs>[]
     recipes: Prisma.$RecipePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1028,7 +935,6 @@ export interface Prisma__HouseholdClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   users<T extends Prisma.Household$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.Household$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  reminders<T extends Prisma.Household$remindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recipes<T extends Prisma.Household$recipesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$recipesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecipePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1499,30 +1405,6 @@ export type Household$eventsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
-}
-
-/**
- * Household.reminders
- */
-export type Household$remindersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Reminder
-   */
-  select?: Prisma.ReminderSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Reminder
-   */
-  omit?: Prisma.ReminderOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReminderInclude<ExtArgs> | null
-  where?: Prisma.ReminderWhereInput
-  orderBy?: Prisma.ReminderOrderByWithRelationInput | Prisma.ReminderOrderByWithRelationInput[]
-  cursor?: Prisma.ReminderWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ReminderScalarFieldEnum | Prisma.ReminderScalarFieldEnum[]
 }
 
 /**

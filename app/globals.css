@@ -25,6 +25,8 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -69,6 +71,9 @@
 
   --destructive: #b3403a;
   --destructive-foreground: #fafafa;
+
+  --warning: #b8935b;
+  --warning-foreground: #fafafa;
 
   --border: #e5e5e5;
   --input: #e5e5e5;

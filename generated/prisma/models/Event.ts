@@ -27,10 +27,12 @@ export type AggregateEvent = {
 }
 
 export type EventAvgAggregateOutputType = {
+  leadTimeDays: number | null
   remindMinutesBefore: number | null
 }
 
 export type EventSumAggregateOutputType = {
+  leadTimeDays: number | null
   remindMinutesBefore: number | null
 }
 
@@ -45,6 +47,8 @@ export type EventMinAggregateOutputType = {
   eventTypeId: string | null
   householdId: string | null
   creatorId: string | null
+  recurrence: $Enums.Recurrence | null
+  leadTimeDays: number | null
   remindMinutesBefore: number | null
   createdAt: Date | null
 }
@@ -60,6 +64,8 @@ export type EventMaxAggregateOutputType = {
   eventTypeId: string | null
   householdId: string | null
   creatorId: string | null
+  recurrence: $Enums.Recurrence | null
+  leadTimeDays: number | null
   remindMinutesBefore: number | null
   createdAt: Date | null
 }
@@ -75,6 +81,8 @@ export type EventCountAggregateOutputType = {
   eventTypeId: number
   householdId: number
   creatorId: number
+  recurrence: number
+  leadTimeDays: number
   remindMinutesBefore: number
   createdAt: number
   _all: number
@@ -82,10 +90,12 @@ export type EventCountAggregateOutputType = {
 
 
 export type EventAvgAggregateInputType = {
+  leadTimeDays?: true
   remindMinutesBefore?: true
 }
 
 export type EventSumAggregateInputType = {
+  leadTimeDays?: true
   remindMinutesBefore?: true
 }
 
@@ -100,6 +110,8 @@ export type EventMinAggregateInputType = {
   eventTypeId?: true
   householdId?: true
   creatorId?: true
+  recurrence?: true
+  leadTimeDays?: true
   remindMinutesBefore?: true
   createdAt?: true
 }
@@ -115,6 +127,8 @@ export type EventMaxAggregateInputType = {
   eventTypeId?: true
   householdId?: true
   creatorId?: true
+  recurrence?: true
+  leadTimeDays?: true
   remindMinutesBefore?: true
   createdAt?: true
 }
@@ -130,6 +144,8 @@ export type EventCountAggregateInputType = {
   eventTypeId?: true
   householdId?: true
   creatorId?: true
+  recurrence?: true
+  leadTimeDays?: true
   remindMinutesBefore?: true
   createdAt?: true
   _all?: true
@@ -232,6 +248,8 @@ export type EventGroupByOutputType = {
   eventTypeId: string
   householdId: string
   creatorId: string
+  recurrence: $Enums.Recurrence
+  leadTimeDays: number | null
   remindMinutesBefore: number | null
   createdAt: Date
   _count: EventCountAggregateOutputType | null
@@ -270,6 +288,8 @@ export type EventWhereInput = {
   eventTypeId?: Prisma.StringFilter<"Event"> | string
   householdId?: Prisma.StringFilter<"Event"> | string
   creatorId?: Prisma.StringFilter<"Event"> | string
+  recurrence?: Prisma.EnumRecurrenceFilter<"Event"> | $Enums.Recurrence
+  leadTimeDays?: Prisma.IntNullableFilter<"Event"> | number | null
   remindMinutesBefore?: Prisma.IntNullableFilter<"Event"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   eventType?: Prisma.XOR<Prisma.EventTypeScalarRelationFilter, Prisma.EventTypeWhereInput>
@@ -289,6 +309,8 @@ export type EventOrderByWithRelationInput = {
   eventTypeId?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  leadTimeDays?: Prisma.SortOrderInput | Prisma.SortOrder
   remindMinutesBefore?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   eventType?: Prisma.EventTypeOrderByWithRelationInput
@@ -311,6 +333,8 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   eventTypeId?: Prisma.StringFilter<"Event"> | string
   householdId?: Prisma.StringFilter<"Event"> | string
   creatorId?: Prisma.StringFilter<"Event"> | string
+  recurrence?: Prisma.EnumRecurrenceFilter<"Event"> | $Enums.Recurrence
+  leadTimeDays?: Prisma.IntNullableFilter<"Event"> | number | null
   remindMinutesBefore?: Prisma.IntNullableFilter<"Event"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   eventType?: Prisma.XOR<Prisma.EventTypeScalarRelationFilter, Prisma.EventTypeWhereInput>
@@ -330,6 +354,8 @@ export type EventOrderByWithAggregationInput = {
   eventTypeId?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  leadTimeDays?: Prisma.SortOrderInput | Prisma.SortOrder
   remindMinutesBefore?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.EventCountOrderByAggregateInput
@@ -353,6 +379,8 @@ export type EventScalarWhereWithAggregatesInput = {
   eventTypeId?: Prisma.StringWithAggregatesFilter<"Event"> | string
   householdId?: Prisma.StringWithAggregatesFilter<"Event"> | string
   creatorId?: Prisma.StringWithAggregatesFilter<"Event"> | string
+  recurrence?: Prisma.EnumRecurrenceWithAggregatesFilter<"Event"> | $Enums.Recurrence
+  leadTimeDays?: Prisma.IntNullableWithAggregatesFilter<"Event"> | number | null
   remindMinutesBefore?: Prisma.IntNullableWithAggregatesFilter<"Event"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
 }
@@ -365,6 +393,8 @@ export type EventCreateInput = {
   endAt?: Date | string | null
   allDay?: boolean
   location?: string | null
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   eventType: Prisma.EventTypeCreateNestedOneWithoutEventsInput
@@ -384,6 +414,8 @@ export type EventUncheckedCreateInput = {
   eventTypeId: string
   householdId: string
   creatorId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
@@ -397,6 +429,8 @@ export type EventUpdateInput = {
   endAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   allDay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventType?: Prisma.EventTypeUpdateOneRequiredWithoutEventsNestedInput
@@ -416,6 +450,8 @@ export type EventUncheckedUpdateInput = {
   eventTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
@@ -432,6 +468,8 @@ export type EventCreateManyInput = {
   eventTypeId: string
   householdId: string
   creatorId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
 }
@@ -444,6 +482,8 @@ export type EventUpdateManyMutationInput = {
   endAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   allDay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -459,6 +499,8 @@ export type EventUncheckedUpdateManyInput = {
   eventTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -484,11 +526,14 @@ export type EventCountOrderByAggregateInput = {
   eventTypeId?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  leadTimeDays?: Prisma.SortOrder
   remindMinutesBefore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type EventAvgOrderByAggregateInput = {
+  leadTimeDays?: Prisma.SortOrder
   remindMinutesBefore?: Prisma.SortOrder
 }
 
@@ -503,6 +548,8 @@ export type EventMaxOrderByAggregateInput = {
   eventTypeId?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  leadTimeDays?: Prisma.SortOrder
   remindMinutesBefore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -518,11 +565,14 @@ export type EventMinOrderByAggregateInput = {
   eventTypeId?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  leadTimeDays?: Prisma.SortOrder
   remindMinutesBefore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type EventSumOrderByAggregateInput = {
+  leadTimeDays?: Prisma.SortOrder
   remindMinutesBefore?: Prisma.SortOrder
 }
 
@@ -615,8 +665,24 @@ export type EventUncheckedUpdateManyWithoutHouseholdNestedInput = {
   deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type EnumRecurrenceFieldUpdateOperationsInput = {
+  set?: $Enums.Recurrence
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type EventCreateNestedManyWithoutEventTypeInput = {
@@ -683,6 +749,8 @@ export type EventCreateWithoutCreatorInput = {
   endAt?: Date | string | null
   allDay?: boolean
   location?: string | null
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   eventType: Prisma.EventTypeCreateNestedOneWithoutEventsInput
@@ -700,6 +768,8 @@ export type EventUncheckedCreateWithoutCreatorInput = {
   location?: string | null
   eventTypeId: string
   householdId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
@@ -745,6 +815,8 @@ export type EventScalarWhereInput = {
   eventTypeId?: Prisma.StringFilter<"Event"> | string
   householdId?: Prisma.StringFilter<"Event"> | string
   creatorId?: Prisma.StringFilter<"Event"> | string
+  recurrence?: Prisma.EnumRecurrenceFilter<"Event"> | $Enums.Recurrence
+  leadTimeDays?: Prisma.IntNullableFilter<"Event"> | number | null
   remindMinutesBefore?: Prisma.IntNullableFilter<"Event"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
 }
@@ -757,6 +829,8 @@ export type EventCreateWithoutHouseholdInput = {
   endAt?: Date | string | null
   allDay?: boolean
   location?: string | null
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   eventType: Prisma.EventTypeCreateNestedOneWithoutEventsInput
@@ -774,6 +848,8 @@ export type EventUncheckedCreateWithoutHouseholdInput = {
   location?: string | null
   eventTypeId: string
   creatorId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
@@ -813,6 +889,8 @@ export type EventCreateWithoutEventTypeInput = {
   endAt?: Date | string | null
   allDay?: boolean
   location?: string | null
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutEventsInput
@@ -830,6 +908,8 @@ export type EventUncheckedCreateWithoutEventTypeInput = {
   location?: string | null
   householdId: string
   creatorId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
@@ -869,6 +949,8 @@ export type EventCreateWithoutAttendeesInput = {
   endAt?: Date | string | null
   allDay?: boolean
   location?: string | null
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
   eventType: Prisma.EventTypeCreateNestedOneWithoutEventsInput
@@ -887,6 +969,8 @@ export type EventUncheckedCreateWithoutAttendeesInput = {
   eventTypeId: string
   householdId: string
   creatorId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
 }
@@ -915,6 +999,8 @@ export type EventUpdateWithoutAttendeesInput = {
   endAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   allDay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventType?: Prisma.EventTypeUpdateOneRequiredWithoutEventsNestedInput
@@ -933,6 +1019,8 @@ export type EventUncheckedUpdateWithoutAttendeesInput = {
   eventTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -947,6 +1035,8 @@ export type EventCreateManyCreatorInput = {
   location?: string | null
   eventTypeId: string
   householdId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
 }
@@ -959,6 +1049,8 @@ export type EventUpdateWithoutCreatorInput = {
   endAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   allDay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventType?: Prisma.EventTypeUpdateOneRequiredWithoutEventsNestedInput
@@ -976,6 +1068,8 @@ export type EventUncheckedUpdateWithoutCreatorInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
@@ -991,6 +1085,8 @@ export type EventUncheckedUpdateManyWithoutCreatorInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1005,6 +1101,8 @@ export type EventCreateManyHouseholdInput = {
   location?: string | null
   eventTypeId: string
   creatorId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
 }
@@ -1017,6 +1115,8 @@ export type EventUpdateWithoutHouseholdInput = {
   endAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   allDay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventType?: Prisma.EventTypeUpdateOneRequiredWithoutEventsNestedInput
@@ -1034,6 +1134,8 @@ export type EventUncheckedUpdateWithoutHouseholdInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
@@ -1049,6 +1151,8 @@ export type EventUncheckedUpdateManyWithoutHouseholdInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eventTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1063,6 +1167,8 @@ export type EventCreateManyEventTypeInput = {
   location?: string | null
   householdId: string
   creatorId: string
+  recurrence?: $Enums.Recurrence
+  leadTimeDays?: number | null
   remindMinutesBefore?: number | null
   createdAt?: Date | string
 }
@@ -1075,6 +1181,8 @@ export type EventUpdateWithoutEventTypeInput = {
   endAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   allDay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutEventsNestedInput
@@ -1092,6 +1200,8 @@ export type EventUncheckedUpdateWithoutEventTypeInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
@@ -1107,6 +1217,8 @@ export type EventUncheckedUpdateManyWithoutEventTypeInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrence?: Prisma.EnumRecurrenceFieldUpdateOperationsInput | $Enums.Recurrence
+  leadTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   remindMinutesBefore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1153,6 +1265,8 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   eventTypeId?: boolean
   householdId?: boolean
   creatorId?: boolean
+  recurrence?: boolean
+  leadTimeDays?: boolean
   remindMinutesBefore?: boolean
   createdAt?: boolean
   eventType?: boolean | Prisma.EventTypeDefaultArgs<ExtArgs>
@@ -1173,6 +1287,8 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   eventTypeId?: boolean
   householdId?: boolean
   creatorId?: boolean
+  recurrence?: boolean
+  leadTimeDays?: boolean
   remindMinutesBefore?: boolean
   createdAt?: boolean
   eventType?: boolean | Prisma.EventTypeDefaultArgs<ExtArgs>
@@ -1191,6 +1307,8 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   eventTypeId?: boolean
   householdId?: boolean
   creatorId?: boolean
+  recurrence?: boolean
+  leadTimeDays?: boolean
   remindMinutesBefore?: boolean
   createdAt?: boolean
   eventType?: boolean | Prisma.EventTypeDefaultArgs<ExtArgs>
@@ -1209,11 +1327,13 @@ export type EventSelectScalar = {
   eventTypeId?: boolean
   householdId?: boolean
   creatorId?: boolean
+  recurrence?: boolean
+  leadTimeDays?: boolean
   remindMinutesBefore?: boolean
   createdAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "startAt" | "endAt" | "allDay" | "location" | "eventTypeId" | "householdId" | "creatorId" | "remindMinutesBefore" | "createdAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "startAt" | "endAt" | "allDay" | "location" | "eventTypeId" | "householdId" | "creatorId" | "recurrence" | "leadTimeDays" | "remindMinutesBefore" | "createdAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   eventType?: boolean | Prisma.EventTypeDefaultArgs<ExtArgs>
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -1251,6 +1371,8 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     eventTypeId: string
     householdId: string
     creatorId: string
+    recurrence: $Enums.Recurrence
+    leadTimeDays: number | null
     remindMinutesBefore: number | null
     createdAt: Date
   }, ExtArgs["result"]["event"]>
@@ -1690,6 +1812,8 @@ export interface EventFieldRefs {
   readonly eventTypeId: Prisma.FieldRef<"Event", 'String'>
   readonly householdId: Prisma.FieldRef<"Event", 'String'>
   readonly creatorId: Prisma.FieldRef<"Event", 'String'>
+  readonly recurrence: Prisma.FieldRef<"Event", 'Recurrence'>
+  readonly leadTimeDays: Prisma.FieldRef<"Event", 'Int'>
   readonly remindMinutesBefore: Prisma.FieldRef<"Event", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>
 }
