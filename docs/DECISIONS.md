@@ -40,3 +40,9 @@ Unlike Calendar/Reminders (which use dialogs), Recipes has a dedicated `/recipes
 
 **2026-07 — Recipe image is optional**
 `imageUrl` is nullable in the schema and must stay optional in the form and Zod validation — a recipe can be saved without a photo. The recipe list/card view needs a sensible placeholder for recipes with no image, not a broken image icon or forced blank space.
+
+**2026-07 — Recipe routing and method field**
+Three distinct routes: `/recipes` (list/browse, cards), `/recipes/[id]` (read-only view — click a card to open), `/recipes/[id]/edit` (edit form — via an Edit button on the card or view page), `/recipes/new` (create). The `Step` model was removed — method/instructions is a single multi-line text field (`Recipe.method`) so a full set of instructions can be pasted in at once, rather than adding one step row at a time. The display should detect numbered lines (e.g. lines starting "1.", "2.") and render them with proper hanging indentation, like a real numbered list, rather than plain wrapped text.
+
+**2026-07 — Ingredient row layout**
+On the edit form, each ingredient is one row: index, amount, measure (unit dropdown), name — not four stacked fields. "Add ingredient" button sits at the bottom of the ingredient list, not the top, so adding another doesn't require scrolling up. On the read-only view page, ingredients are NOT shown as a table — each renders as a single line combining amount + unit + name (e.g. "25g Sugar", "1 lemon", "1 litre(s) Milk"), no index shown.
