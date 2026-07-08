@@ -1,22 +1,22 @@
-import type { EventInput } from '@fullcalendar/core'
 import { CalendarBoard } from '@/components/calendar/calendar-board'
-import { getCurrentUser } from '@/lib/current-user'
+import { getCurrentUser, listHouseholdUsers } from '@/lib/current-user'
 import { listEvents } from '@/lib/events'
 import { listEventTypes } from '@/lib/event-types'
 
-export default async function CalendarPage() {
-  const { householdId } = await getCurrentUser()
-  const [events, eventTypes] = await Promise.all([listEvents(householdId), listEventTypes()])
+export default async function CalendarPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ eventId?: string }>
+}) {
+  const { id: currentUserId, householdId } = await getCurrentUser()
+  const [events, eventTypes, householdUsers, { eventId }] = await Promise.all([
+    listEvents(householdId),
+    listEventTypes(),
+    listHouseholdUsers(householdId),
+    searchParams,
+  ])
 
-  const calendarEvents: EventInput[] = events.map((event) => ({
-    id: event.id,
-    title: event.title,
-    start: event.startAt.toISOString(),
-    end: event.endAt?.toISOString(),
-    allDay: event.allDay,
-    backgroundColor: event.eventType.color,
-    borderColor: event.eventType.color,
-  }))
+  const otherUser = householdUsers.find((u) => u.id !== currentUserId) ?? { id: currentUserId, name: null }
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,7 +26,13 @@ export default async function CalendarPage() {
           No events yet — plans and appointments will appear here once added.
         </p>
       )}
-      <CalendarBoard events={calendarEvents} eventsRaw={events} eventTypes={eventTypes} />
+      <CalendarBoard
+        eventsRaw={events}
+        eventTypes={eventTypes}
+        currentUserId={currentUserId}
+        otherUser={otherUser}
+        initialEventId={eventId ?? null}
+      />
     </div>
   )
 }

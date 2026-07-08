@@ -2,14 +2,14 @@
 
 # Reminders
 - Clicking on a reminder card opens the event in the calendar page. No need to return afterwards.
-- Display Date in full including day of week and time as 12 hour inluding am or pm - no need to say due xx/xx/xxxx
-- Display appointment type with background colour of type
+- Due date displays as "Due 8 Jul 2026 at 13:15" whereas I'd like it to show "Wed 8th July 2026 at 1:15pm"
+- Display associated appointment type colour as background for type text
 - Add filter for Event Type and/or User default to current user
 
 # Calendar
 - Add User Selection me, you, both
 - Add Filter for Event Type and/or User
-- Add background colour for user - blue for me and pink for Nick
+- Indicate user for event. Maybe initials or blue square for me and pink for nick. Need ideas for this one
 
 # Recipes
 - Add a search on name only 

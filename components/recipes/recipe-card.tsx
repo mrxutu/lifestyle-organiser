@@ -17,7 +17,7 @@ export function RecipeCard({
 
   return (
     <Link href={`/recipes/${recipe.id}`} className="block">
-      <Card className="transition-colors hover:bg-muted/50">
+      <Card className="pt-0 transition-colors hover:bg-muted/50">
         {recipe.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={recipe.imageUrl} alt={recipe.title} className="aspect-video w-full object-cover" />

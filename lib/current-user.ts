@@ -21,3 +21,11 @@ export const getCurrentUser = cache(async () => {
 
   return { ...user, householdId: user.householdId }
 })
+
+export async function listHouseholdUsers(householdId: string) {
+  return prisma.user.findMany({
+    where: { householdId },
+    select: { id: true, name: true },
+    orderBy: { createdAt: 'asc' },
+  })
+}

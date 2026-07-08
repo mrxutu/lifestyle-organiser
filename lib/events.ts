@@ -26,7 +26,10 @@ export async function listUpcomingReminders(householdId: string) {
   // exact per-event visibility window is applied in isVisibleOnReminders below.
   const candidates = await prisma.event.findMany({
     where: { householdId, leadTimeDays: { not: null }, startAt: { gte: startOfToday } },
-    include: { eventType: true },
+    include: {
+      eventType: true,
+      attendees: { include: { user: { select: { id: true, name: true } } } },
+    },
     orderBy: { startAt: 'asc' },
   })
 
@@ -47,6 +50,7 @@ export const eventInputSchema = z
     remindMinutesBefore: z.coerce.number().int().min(0).optional().nullable(),
     recurrence: z.enum(Recurrence).default('NONE'),
     leadTimeDays: z.coerce.number().int().min(0).optional().nullable(),
+    attendeeUserIds: z.array(z.string().min(1)).min(1, "Select who this event is for"),
   })
   .refine((data) => !data.endAt || data.endAt >= data.startAt, {
     message: 'End time must be after start time',
@@ -56,23 +60,42 @@ export const eventInputSchema = z
 export type EventInput = z.infer<typeof eventInputSchema>
 
 export async function createEvent(householdId: string, creatorId: string, input: EventInput) {
+  const { attendeeUserIds, ...event } = input
   return prisma.event.create({
-    data: { ...input, householdId, creatorId },
+    data: {
+      ...event,
+      householdId,
+      creatorId,
+      attendees: { create: attendeeUserIds.map((userId) => ({ userId })) },
+    },
     include: {
       eventType: true,
       creator: { select: { id: true, name: true } },
-      attendees: true,
+      attendees: { include: { user: { select: { id: true, name: true } } } },
     },
   })
 }
 
 export async function updateEvent(householdId: string, eventId: string, input: EventInput) {
-  const result = await prisma.event.updateMany({
-    where: { id: eventId, householdId },
-    data: input,
+  const { attendeeUserIds, ...event } = input
+
+  return prisma.$transaction(async (tx) => {
+    const result = await tx.event.updateMany({ where: { id: eventId, householdId }, data: event })
+    if (result.count === 0) return null
+
+    await tx.eventAttendee.deleteMany({ where: { eventId } })
+    await tx.eventAttendee.createMany({
+      data: attendeeUserIds.map((userId) => ({ eventId, userId })),
+    })
+
+    return tx.event.findUnique({
+      where: { id: eventId },
+      include: {
+        eventType: true,
+        attendees: { include: { user: { select: { id: true, name: true } } } },
+      },
+    })
   })
-  if (result.count === 0) return null
-  return prisma.event.findUnique({ where: { id: eventId }, include: { eventType: true } })
 }
 
 export async function deleteEvent(householdId: string, eventId: string) {

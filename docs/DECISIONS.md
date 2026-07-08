@@ -46,3 +46,21 @@ Three distinct routes: `/recipes` (list/browse, cards), `/recipes/[id]` (read-on
 
 **2026-07 — Ingredient row layout**
 On the edit form, each ingredient is one row: index, amount, measure (unit dropdown), name — not four stacked fields. "Add ingredient" button sits at the bottom of the ingredient list, not the top, so adding another doesn't require scrolling up. On the read-only view page, ingredients are NOT shown as a table — each renders as a single line combining amount + unit + name (e.g. "25g Sugar", "1 lemon", "1 litre(s) Milk"), no index shown.
+
+**2026-07 — Event attendees un-deferred (user assignment)**
+Building out `EventAttendee` (previously deferred). Event add/edit form gets a "Who's this for" selector: Me / Nick / Both — creates one or two `EventAttendee` rows accordingly. This is assignment/visibility metadata only — NOT a permission system (per the existing "no permission levels" rule, both users still see and can edit everything regardless of assignment).
+
+**2026-07 — User indicator (Paul/Nick) on cards**
+Small coloured square: blue = Paul, pink = Nick, split/dual square = both. This is secondary to the existing event-type colour, which stays the primary badge/background on both Calendar events and Reminder cards. Same rule applies in both places — user square sits small, in a corner, not competing with the type colour for visual weight.
+
+**2026-07 — Reminders/Calendar filters**
+Both pages get a filter for Event Type and/or User (assigned user). On the Reminders page, the User filter defaults to the current logged-in user. No default filter specified for the Calendar page.
+
+**2026-07 — Reminder card → Calendar navigation**
+Clicking a reminder card navigates to the Calendar page with that event opened (e.g. its edit/view dialog auto-opened, calendar scrolled/jumped to its date). No "back to reminders" requirement — standard browser back covers it.
+
+**2026-07 — Reminder date/time display format**
+Format: "Wed 8th July 2026 at 1:15pm" — abbreviated day name, ordinal day number, full month name, full year, 12-hour time with lowercase am/pm, no space before am/pm. Needs a shared formatting utility (ordinal suffixes aren't built into Intl) — put it somewhere reusable in `lib/`, not duplicated per page.
+
+**2026-07 — Recipe search**
+Search box on `/recipes` filtering by title only (not ingredients or description), case-insensitive substring match.

@@ -47,16 +47,32 @@ function parseDateOnly(value: string) {
   return new Date(year, month - 1, day)
 }
 
+type Who = 'ME' | 'OTHER' | 'BOTH'
+
+function initialWho(initialEvent: EventWithType | null | undefined, currentUserId: string, otherUserId: string): Who {
+  if (!initialEvent) return 'ME'
+  const attendeeIds = new Set(initialEvent.attendees.map((a) => a.userId))
+  const hasMe = attendeeIds.has(currentUserId)
+  const hasOther = attendeeIds.has(otherUserId)
+  if (hasMe && hasOther) return 'BOTH'
+  if (hasOther) return 'OTHER'
+  return 'ME'
+}
+
 export function EventForm({
   eventTypes,
   initialEvent,
   initialDate,
+  currentUserId,
+  otherUser,
   onSuccess,
   onCancel,
 }: {
   eventTypes: EventType[]
   initialEvent?: EventWithType | null
   initialDate?: Date | null
+  currentUserId: string
+  otherUser: { id: string; name: string | null }
   onSuccess: () => void
   onCancel: () => void
 }) {
@@ -65,6 +81,7 @@ export function EventForm({
 
   const [title, setTitle] = useState(initialEvent?.title ?? '')
   const [eventTypeId, setEventTypeId] = useState(initialEvent?.eventTypeId ?? eventTypes[0]?.id ?? '')
+  const [who, setWho] = useState<Who>(initialWho(initialEvent, currentUserId, otherUser.id))
   const [allDay, setAllDay] = useState(initialEvent?.allDay ?? false)
   const [startDate, setStartDate] = useState(toDateValue(baseStart))
   const [startTime, setStartTime] = useState(toTimeValue(baseStart))
@@ -98,6 +115,8 @@ export function EventForm({
       eventTypeId,
       recurrence,
       leadTimeDays: leadTimeDays === '' ? null : Number(leadTimeDays),
+      attendeeUserIds:
+        who === 'BOTH' ? [currentUserId, otherUser.id] : who === 'OTHER' ? [otherUser.id] : [currentUserId],
     }
 
     const res = await fetch(initialEvent ? `/api/events/${initialEvent.id}` : '/api/events', {
@@ -166,6 +185,20 @@ export function EventForm({
             </SelectContent>
           </Select>
         )}
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="event-who">Who&rsquo;s this for</Label>
+        <Select value={who} onValueChange={(value) => setWho(value as Who)}>
+          <SelectTrigger id="event-who" className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ME">Me</SelectItem>
+            <SelectItem value="OTHER">{otherUser.name ?? 'Them'}</SelectItem>
+            <SelectItem value="BOTH">Both</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex items-center justify-between">
