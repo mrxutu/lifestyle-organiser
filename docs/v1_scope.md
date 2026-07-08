@@ -1,5 +1,7 @@
 # Lifestyle Organiser — v1.0 Scope
 
+**Status: v1.0 shipped — live on Vercel/Neon, July 2026.**
+
 ## Purpose
 A shared web app for a household of two (you + Nick) to manage renewal reminders, a colour-coded events calendar, and a recipe collection — accessible from phone, tablet, and laptop.
 

@@ -39,12 +39,12 @@ export function ResponsiveDialog({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="flex max-h-[85vh] flex-col sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             {description && <DialogDescription>{description}</DialogDescription>}
           </DialogHeader>
-          {children}
+          <div className="-mr-4 flex-1 overflow-y-auto pr-4">{children}</div>
           {footer && <DialogFooter>{footer}</DialogFooter>}
         </DialogContent>
       </Dialog>

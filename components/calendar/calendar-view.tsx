@@ -2,6 +2,7 @@
 
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { EventInput, EventClickArg, EventContentArg } from '@fullcalendar/core'
 import type { DateClickArg } from '@fullcalendar/interaction'
@@ -33,13 +34,20 @@ export function CalendarView({
   return (
     <div className="rounded-xl border border-border bg-card p-2 sm:p-4">
       <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         initialDate={initialDate ?? undefined}
         events={events}
         eventDisplay="block"
         height="auto"
-        headerToolbar={{ left: 'prev,next today', center: 'title', right: '' }}
+        slotMinTime="06:00:00"
+        slotMaxTime="23:00:00"
+        nowIndicator
+        headerToolbar={{
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay',
+        }}
         dateClick={onDateClick}
         eventClick={onEventClick}
         eventContent={renderEventContent}
