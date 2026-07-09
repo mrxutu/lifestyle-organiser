@@ -20,6 +20,9 @@ export function UpcomingReminderRow({ reminder }: { reminder: UpcomingReminder }
         <CardContent className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-medium">{reminder.title}</p>
+            {reminder.location && (
+              <p className="text-sm text-muted-foreground">| {reminder.location}</p>
+            )}
             <Badge
               style={{
                 backgroundColor: reminder.eventType.color,
