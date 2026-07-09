@@ -113,3 +113,14 @@
     @apply font-sans;
   }
 }
+
+/* Shrink the FullCalendar header controls ~20% on phone-width screens */
+@media (max-width: 640px) {
+  .fc .fc-toolbar-title {
+    font-size: 1.4em;
+  }
+  .fc .fc-button {
+    font-size: 0.8em;
+    padding: 0.32em 0.52em;
+  }
+}
