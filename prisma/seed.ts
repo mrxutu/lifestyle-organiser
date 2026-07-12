@@ -23,6 +23,8 @@ async function upsertUser(email: string, name: string, householdId: string) {
   return { email, password }
 }
 
+const WATCHLIST_SOURCES = ['Apple TV', 'Netflix', 'IP Stream', 'Prime', 'Terrestrial']
+
 async function main() {
   const household = await prisma.household.upsert({
     where: { id: 'seed-household' },
@@ -34,6 +36,10 @@ async function main() {
     await upsertUser('p@ulcozens.com', 'Paul', household.id),
     await upsertUser('nichola@cozens.xyz', 'Nick', household.id),
   ]
+
+  for (const name of WATCHLIST_SOURCES) {
+    await prisma.watchlistSource.upsert({ where: { name }, update: {}, create: { name } })
+  }
 
   console.log('\nSeeded accounts (save these now, they will not be shown again):\n')
   for (const { email, password } of credentials) {

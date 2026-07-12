@@ -8,6 +8,7 @@ const links = [
   { href: '/reminders', label: 'Reminders' },
   { href: '/calendar', label: 'Calendar' },
   { href: '/recipes', label: 'Recipes' },
+  { href: '/watchlist', label: 'Watchlist' },
 ]
 
 export function NavLinks() {

@@ -76,3 +76,13 @@ export type Recipe = Prisma.RecipeModel
  * 
  */
 export type Ingredient = Prisma.IngredientModel
+/**
+ * Model WatchlistEntry
+ * 
+ */
+export type WatchlistEntry = Prisma.WatchlistEntryModel
+/**
+ * Model WatchlistSource
+ * 
+ */
+export type WatchlistSource = Prisma.WatchlistSourceModel

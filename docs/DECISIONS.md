@@ -64,3 +64,6 @@ Format: "Wed 8th July 2026 at 1:15pm" — abbreviated day name, ordinal day numb
 
 **2026-07 — Recipe search**
 Search box on `/recipes` filtering by title only (not ingredients or description), case-insensitive substring match.
+
+**2026-07 — Watchlist page added (post-v1.0)**
+New feature, table/row-based UI (first departure from the card pattern used elsewhere — appropriate here since it's inherently tabular data). `WatchlistEntry` model: name, source (FK to `WatchlistSource`), season, episode (both nullable — supports movies with no season/episode), status enum (TO_WATCH/WATCHING/WATCHED), `updatedAt` auto-managed via Prisma `@updatedAt` (no manual "last updated" field). `WatchlistSource` is a small user-manageable table (add/edit/remove), same pattern as `EventType` — seeded initially with Apple TV, Netflix, IP Stream, Prime, Terrestrial. Editing a row opens a popup/dialog, same pattern as Calendar events (not inline editing). Columns are sortable; filterable by Status and Source. Shared/no permissions, same as everything else.

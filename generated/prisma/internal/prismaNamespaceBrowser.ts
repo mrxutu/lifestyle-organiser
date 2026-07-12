@@ -57,7 +57,9 @@ export const ModelName = {
   EventType: 'EventType',
   EventAttendee: 'EventAttendee',
   Recipe: 'Recipe',
-  Ingredient: 'Ingredient'
+  Ingredient: 'Ingredient',
+  WatchlistEntry: 'WatchlistEntry',
+  WatchlistSource: 'WatchlistSource'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -162,6 +164,29 @@ export const IngredientScalarFieldEnum = {
 } as const
 
 export type IngredientScalarFieldEnum = (typeof IngredientScalarFieldEnum)[keyof typeof IngredientScalarFieldEnum]
+
+
+export const WatchlistEntryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  sourceId: 'sourceId',
+  season: 'season',
+  episode: 'episode',
+  status: 'status',
+  householdId: 'householdId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WatchlistEntryScalarFieldEnum = (typeof WatchlistEntryScalarFieldEnum)[keyof typeof WatchlistEntryScalarFieldEnum]
+
+
+export const WatchlistSourceScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+} as const
+
+export type WatchlistSourceScalarFieldEnum = (typeof WatchlistSourceScalarFieldEnum)[keyof typeof WatchlistSourceScalarFieldEnum]
 
 
 export const SortOrder = {

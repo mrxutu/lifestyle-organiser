@@ -48,3 +48,13 @@ Reminders are not a separate feature — they're events with a lead time set. On
 
 ## Definition of done for v1.0
 Two users can log in, each independently add/edit calendar events (including reminder-style ones with a lead time), see them colour-coded on the calendar and reflected on the Reminders view, manage recipes, and see a shared, up-to-date view of all of it across any device — with no email sending required to consider v1.0 complete.
+
+## Added after v1.0
+
+### Watchlist (added 2026-07)
+A TV/movie tracking page, table/row-based rather than card-based like the other pages.
+- Fields per entry: Name, Source (managed dropdown list), Season, Episode, Status (To Watch / Watching / Watched), Last Updated (automatic)
+- Editable via popup/dialog per row, same pattern as Calendar events
+- Sortable columns, filterable (by Status and Source)
+- Sources are user-manageable (add/edit/remove), same pattern as Event Types
+- Shared, no permission levels — same as everything else in the app

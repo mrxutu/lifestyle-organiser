@@ -28,11 +28,12 @@ model User {
 }
 
 model Household {
-  id      String   @id @default(cuid())
-  name    String
-  users   User[]
-  events  Event[]
-  recipes Recipe[]
+  id        String           @id @default(cuid())
+  name      String
+  users     User[]
+  events    Event[]
+  recipes   Recipe[]
+  watchlist WatchlistEntry[]
 }
 
 // ---------- EVENTS (colour-coded calendar — reminders are events too) ----------
@@ -128,4 +129,32 @@ enum MeasurementUnit {
   PINT
   OZ
   LB
+}
+
+// ---------- WATCHLIST ----------
+
+model WatchlistEntry {
+  id          String          @id @default(cuid())
+  name        String // show/movie title
+  source      WatchlistSource @relation(fields: [sourceId], references: [id])
+  sourceId    String
+  season      Int? // nullable — movies/one-offs may not have a season
+  episode     Int?
+  status      WatchStatus     @default(TO_WATCH)
+  household   Household       @relation(fields: [householdId], references: [id])
+  householdId String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt // auto-updates whenever any field on the row changes
+}
+
+enum WatchStatus {
+  TO_WATCH
+  WATCHING
+  WATCHED
+}
+
+model WatchlistSource {
+  id      String           @id @default(cuid())
+  name    String           @unique // e.g. "Netflix", "Apple TV", "IP Stream", "Prime", "Terrestrial"
+  entries WatchlistEntry[]
 }

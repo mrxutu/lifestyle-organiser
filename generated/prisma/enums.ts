@@ -31,3 +31,12 @@ export const MeasurementUnit = {
 } as const
 
 export type MeasurementUnit = (typeof MeasurementUnit)[keyof typeof MeasurementUnit]
+
+
+export const WatchStatus = {
+  TO_WATCH: 'TO_WATCH',
+  WATCHING: 'WATCHING',
+  WATCHED: 'WATCHED'
+} as const
+
+export type WatchStatus = (typeof WatchStatus)[keyof typeof WatchStatus]

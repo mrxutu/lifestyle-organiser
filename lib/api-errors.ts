@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 import { EventTypeInUseError } from '@/lib/event-types'
+import { WatchlistSourceInUseError } from '@/lib/watchlist'
 
 export function errorResponse(error: unknown) {
   if (error instanceof ZodError) {
@@ -11,7 +12,7 @@ export function errorResponse(error: unknown) {
     )
   }
 
-  if (error instanceof EventTypeInUseError) {
+  if (error instanceof EventTypeInUseError || error instanceof WatchlistSourceInUseError) {
     return NextResponse.json({ error: error.message }, { status: 409 })
   }
 

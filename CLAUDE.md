@@ -4,9 +4,10 @@ This file gives Claude Code persistent context for this project. Read it at the 
 
 ## Project
 
-A shared lifestyle organiser web app for two users (household of two). v1.0 covers two data areas plus recipes:
+A shared lifestyle organiser web app for two users (household of two). Covers:
 1. Colour-coded events calendar — a single `Event` model. Reminders are NOT a separate model: a "reminder" is just an Event with `leadTimeDays` set. The Reminders page is a filtered, read-only, date-sorted view of upcoming events that have a lead time — it does not have its own add/edit form.
 2. Recipe storage (structured template: ingredients, method, image, tags)
+3. Watchlist — TV/movie tracking, table/row-based (not cards like the rest of the app). See `docs/DECISIONS.md` for the model shape.
 
 Full scope is in `docs/v1_scope.md` — treat it as the source of truth for what is in and out of scope. Do not add features from the "out of scope" list (email notifications, attachments, meal planning, offline sync, budget tracking, contacts) unless explicitly asked. See `docs/DECISIONS.md` for the specifics of how Reminders/Events work together — check it before touching either page.
 

@@ -263,6 +263,23 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntFilter<$PrismaModel>
 }
 
+export type EnumWatchStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.WatchStatus | Prisma.EnumWatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWatchStatusFilter<$PrismaModel> | $Enums.WatchStatus
+}
+
+export type EnumWatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WatchStatus | Prisma.EnumWatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.WatchStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWatchStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWatchStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -512,6 +529,23 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
+}
+
+export type NestedEnumWatchStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.WatchStatus | Prisma.EnumWatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWatchStatusFilter<$PrismaModel> | $Enums.WatchStatus
+}
+
+export type NestedEnumWatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WatchStatus | Prisma.EnumWatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WatchStatus[] | Prisma.ListEnumWatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.WatchStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWatchStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWatchStatusFilter<$PrismaModel>
 }
 
 

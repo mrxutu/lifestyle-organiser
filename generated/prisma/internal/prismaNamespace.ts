@@ -390,7 +390,9 @@ export const ModelName = {
   EventType: 'EventType',
   EventAttendee: 'EventAttendee',
   Recipe: 'Recipe',
-  Ingredient: 'Ingredient'
+  Ingredient: 'Ingredient',
+  WatchlistEntry: 'WatchlistEntry',
+  WatchlistSource: 'WatchlistSource'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "household" | "event" | "eventType" | "eventAttendee" | "recipe" | "ingredient"
+    modelProps: "user" | "household" | "event" | "eventType" | "eventAttendee" | "recipe" | "ingredient" | "watchlistEntry" | "watchlistSource"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +930,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WatchlistEntry: {
+      payload: Prisma.$WatchlistEntryPayload<ExtArgs>
+      fields: Prisma.WatchlistEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WatchlistEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WatchlistEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.WatchlistEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WatchlistEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>
+        }
+        findMany: {
+          args: Prisma.WatchlistEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>[]
+        }
+        create: {
+          args: Prisma.WatchlistEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>
+        }
+        createMany: {
+          args: Prisma.WatchlistEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WatchlistEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.WatchlistEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>
+        }
+        update: {
+          args: Prisma.WatchlistEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.WatchlistEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WatchlistEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WatchlistEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.WatchlistEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.WatchlistEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWatchlistEntry>
+        }
+        groupBy: {
+          args: Prisma.WatchlistEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WatchlistEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WatchlistEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WatchlistEntryCountAggregateOutputType> | number
+        }
+      }
+    }
+    WatchlistSource: {
+      payload: Prisma.$WatchlistSourcePayload<ExtArgs>
+      fields: Prisma.WatchlistSourceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WatchlistSourceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WatchlistSourceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>
+        }
+        findFirst: {
+          args: Prisma.WatchlistSourceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WatchlistSourceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>
+        }
+        findMany: {
+          args: Prisma.WatchlistSourceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>[]
+        }
+        create: {
+          args: Prisma.WatchlistSourceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>
+        }
+        createMany: {
+          args: Prisma.WatchlistSourceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WatchlistSourceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>[]
+        }
+        delete: {
+          args: Prisma.WatchlistSourceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>
+        }
+        update: {
+          args: Prisma.WatchlistSourceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>
+        }
+        deleteMany: {
+          args: Prisma.WatchlistSourceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WatchlistSourceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WatchlistSourceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>[]
+        }
+        upsert: {
+          args: Prisma.WatchlistSourceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WatchlistSourcePayload>
+        }
+        aggregate: {
+          args: Prisma.WatchlistSourceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWatchlistSource>
+        }
+        groupBy: {
+          args: Prisma.WatchlistSourceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WatchlistSourceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WatchlistSourceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WatchlistSourceCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1055,6 +1205,29 @@ export const IngredientScalarFieldEnum = {
 export type IngredientScalarFieldEnum = (typeof IngredientScalarFieldEnum)[keyof typeof IngredientScalarFieldEnum]
 
 
+export const WatchlistEntryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  sourceId: 'sourceId',
+  season: 'season',
+  episode: 'episode',
+  status: 'status',
+  householdId: 'householdId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WatchlistEntryScalarFieldEnum = (typeof WatchlistEntryScalarFieldEnum)[keyof typeof WatchlistEntryScalarFieldEnum]
+
+
+export const WatchlistSourceScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+} as const
+
+export type WatchlistSourceScalarFieldEnum = (typeof WatchlistSourceScalarFieldEnum)[keyof typeof WatchlistSourceScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1175,6 +1348,20 @@ export type EnumMeasurementUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$
 export type ListEnumMeasurementUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeasurementUnit[]'>
     
 
+
+/**
+ * Reference to a field of type 'WatchStatus'
+ */
+export type EnumWatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WatchStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'WatchStatus[]'
+ */
+export type ListEnumWatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WatchStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1292,6 +1479,8 @@ export type GlobalOmitConfig = {
   eventAttendee?: Prisma.EventAttendeeOmit
   recipe?: Prisma.RecipeOmit
   ingredient?: Prisma.IngredientOmit
+  watchlistEntry?: Prisma.WatchlistEntryOmit
+  watchlistSource?: Prisma.WatchlistSourceOmit
 }
 
 /* Types for Logging */
