@@ -1454,6 +1454,7 @@ export const WatchlistEntryScalarFieldEnum = {
   season: 'season',
   episode: 'episode',
   status: 'status',
+  rating: 'rating',
   householdId: 'householdId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select'
 import { BookCard } from '@/components/books/book-card'
 import { ALL_RATINGS, NOT_RATED, filterBooks } from '@/lib/book-filters'
-import { BOOK_RATINGS, bookRatingLabel } from '@/lib/book-rating'
+import { RATINGS, ratingLabel } from '@/lib/rating'
 import type { listBooks } from '@/lib/books'
 
 export function BookGrid({ books }: { books: Awaited<ReturnType<typeof listBooks>> }) {
@@ -40,9 +40,9 @@ export function BookGrid({ books }: { books: Awaited<ReturnType<typeof listBooks
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL_RATINGS}>All ratings</SelectItem>
-            {BOOK_RATINGS.map((rating) => (
+            {RATINGS.map((rating) => (
               <SelectItem key={rating} value={String(rating)}>
-                {bookRatingLabel[rating]}
+                {ratingLabel[rating]}
               </SelectItem>
             ))}
             <SelectItem value={NOT_RATED}>Not rated</SelectItem>

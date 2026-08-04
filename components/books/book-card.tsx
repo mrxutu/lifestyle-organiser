@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { BookOpen } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { StarRating } from '@/components/books/star-rating'
+import { StarRating } from '@/components/star-rating'
 import { bookStatusBadgeVariant, bookStatusLabel } from '@/lib/book-status'
-import type { BookRating } from '@/lib/book-rating'
+import type { Rating } from '@/lib/rating'
 import type { listBooks } from '@/lib/books'
 
 export function BookCard({ book }: { book: Awaited<ReturnType<typeof listBooks>>[number] }) {
@@ -30,7 +30,7 @@ export function BookCard({ book }: { book: Awaited<ReturnType<typeof listBooks>>
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge variant={bookStatusBadgeVariant[book.status]}>{bookStatusLabel[book.status]}</Badge>
               {book.reader.name && <Badge variant="outline">{book.reader.name}</Badge>}
-              {book.rating && <StarRating rating={book.rating as BookRating} />}
+              {book.rating && <StarRating rating={book.rating as Rating} />}
             </div>
             {book.summary && (
               <p className="line-clamp-2 text-sm text-muted-foreground">{book.summary}</p>

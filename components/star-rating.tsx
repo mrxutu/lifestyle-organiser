@@ -1,11 +1,11 @@
 import { Star } from 'lucide-react'
-import { BOOK_RATINGS, type BookRating } from '@/lib/book-rating'
+import { RATINGS, type Rating } from '@/lib/rating'
 import { cn } from '@/lib/utils'
 
-export function StarRating({ rating }: { rating: BookRating }) {
+export function StarRating({ rating }: { rating: Rating }) {
   return (
     <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
-      {BOOK_RATINGS.map((star) => (
+      {RATINGS.map((star) => (
         <Star
           key={star}
           className={cn(

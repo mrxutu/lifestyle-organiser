@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation'
 import { BookOpen, Pencil } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { StarRating } from '@/components/books/star-rating'
+import { StarRating } from '@/components/star-rating'
 import { bookStatusBadgeVariant, bookStatusLabel } from '@/lib/book-status'
-import type { BookRating } from '@/lib/book-rating'
+import type { Rating } from '@/lib/rating'
 import { formatFriendlyDate } from '@/lib/format-datetime'
 import { requireSection } from '@/lib/current-user'
 import { getBook } from '@/lib/books'
@@ -49,7 +49,7 @@ export default async function BookViewPage({ params }: { params: Promise<{ id: s
         <Badge variant={bookStatusBadgeVariant[book.status]}>{bookStatusLabel[book.status]}</Badge>
         <Badge variant="outline">{book.source.name}</Badge>
         {book.reader.name && <Badge variant="outline">{book.reader.name}</Badge>}
-        {book.rating && <StarRating rating={book.rating as BookRating} />}
+        {book.rating && <StarRating rating={book.rating as Rating} />}
       </div>
 
       {book.dateRead && (

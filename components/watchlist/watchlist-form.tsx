@@ -5,6 +5,7 @@ import type { WatchlistSource } from '@/generated/prisma/client'
 import type { WatchStatus } from '@/generated/prisma/enums'
 import type { WatchlistEntryWithSource } from '@/lib/watchlist'
 import { watchStatusLabel } from '@/lib/watchlist-status'
+import { RATINGS, ratingLabel } from '@/lib/rating'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -28,6 +29,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
+const NO_RATING = 'NONE'
+
 export function WatchlistForm({
   sources,
   initialEntry,
@@ -44,6 +47,9 @@ export function WatchlistForm({
   const [season, setSeason] = useState(initialEntry?.season != null ? String(initialEntry.season) : '')
   const [episode, setEpisode] = useState(initialEntry?.episode != null ? String(initialEntry.episode) : '')
   const [status, setStatus] = useState<WatchStatus>(initialEntry?.status ?? 'TO_WATCH')
+  const [rating, setRating] = useState<string>(
+    initialEntry?.rating != null ? String(initialEntry.rating) : NO_RATING
+  )
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -59,6 +65,7 @@ export function WatchlistForm({
       season: season === '' ? null : Number(season),
       episode: episode === '' ? null : Number(episode),
       status,
+      rating: rating === NO_RATING ? null : Number(rating),
     }
 
     const res = await fetch(initialEntry ? `/api/watchlist/${initialEntry.id}` : '/api/watchlist', {
@@ -158,6 +165,23 @@ export function WatchlistForm({
             {Object.entries(watchStatusLabel).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="watchlist-rating">Rating (optional)</Label>
+        <Select value={rating} onValueChange={setRating}>
+          <SelectTrigger id="watchlist-rating" className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={NO_RATING}>No rating</SelectItem>
+            {RATINGS.map((value) => (
+              <SelectItem key={value} value={String(value)}>
+                {ratingLabel[value]}
               </SelectItem>
             ))}
           </SelectContent>

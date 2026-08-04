@@ -5,13 +5,15 @@ import { useRouter } from 'next/navigation'
 import { Tv } from 'lucide-react'
 import type { WatchlistSource } from '@/generated/prisma/client'
 import type { WatchlistEntryWithSource } from '@/lib/watchlist'
-import { ALL_SOURCES, ALL_STATUSES, filterWatchlistEntries } from '@/lib/watchlist-filters'
+import { ALL_RATINGS, ALL_SOURCES, ALL_STATUSES, NOT_RATED, filterWatchlistEntries } from '@/lib/watchlist-filters'
 import { watchStatusBadgeVariant, watchStatusLabel } from '@/lib/watchlist-status'
+import { RATINGS, ratingLabel, type Rating } from '@/lib/rating'
 import { formatFriendlyDate } from '@/lib/format-datetime'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { EmptyState } from '@/components/empty-state'
+import { StarRating } from '@/components/star-rating'
 import {
   Select,
   SelectContent,
@@ -40,10 +42,11 @@ export function WatchlistCards({
   const [state, setState] = useState<BoardState>({ mode: 'closed' })
   const [statusFilter, setStatusFilter] = useState<string>(ALL_STATUSES)
   const [sourceFilter, setSourceFilter] = useState<string>(ALL_SOURCES)
+  const [ratingFilter, setRatingFilter] = useState<string>(ALL_RATINGS)
 
   const filteredEntries = useMemo(
-    () => filterWatchlistEntries(entries, { statusFilter, sourceFilter }),
-    [entries, statusFilter, sourceFilter]
+    () => filterWatchlistEntries(entries, { statusFilter, sourceFilter, ratingFilter }),
+    [entries, statusFilter, sourceFilter, ratingFilter]
   )
 
   function close() {
@@ -86,6 +89,21 @@ export function WatchlistCards({
                   {source.name}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={ratingFilter} onValueChange={setRatingFilter}>
+            <SelectTrigger className="w-[160px]" aria-label="Filter by rating">
+              <SelectValue placeholder="All ratings" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_RATINGS}>All ratings</SelectItem>
+              {RATINGS.map((rating) => (
+                <SelectItem key={rating} value={String(rating)}>
+                  {ratingLabel[rating]}
+                </SelectItem>
+              ))}
+              <SelectItem value={NOT_RATED}>Not rated</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -137,6 +155,7 @@ export function WatchlistCards({
                   <Badge variant={watchStatusBadgeVariant[entry.status]}>
                     {watchStatusLabel[entry.status]}
                   </Badge>
+                  {entry.rating && <StarRating rating={entry.rating as Rating} />}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {formatFriendlyDate(new Date(entry.updatedAt))}

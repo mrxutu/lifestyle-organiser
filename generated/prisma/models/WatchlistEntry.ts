@@ -29,11 +29,13 @@ export type AggregateWatchlistEntry = {
 export type WatchlistEntryAvgAggregateOutputType = {
   season: number | null
   episode: number | null
+  rating: number | null
 }
 
 export type WatchlistEntrySumAggregateOutputType = {
   season: number | null
   episode: number | null
+  rating: number | null
 }
 
 export type WatchlistEntryMinAggregateOutputType = {
@@ -43,6 +45,7 @@ export type WatchlistEntryMinAggregateOutputType = {
   season: number | null
   episode: number | null
   status: $Enums.WatchStatus | null
+  rating: number | null
   householdId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,6 +58,7 @@ export type WatchlistEntryMaxAggregateOutputType = {
   season: number | null
   episode: number | null
   status: $Enums.WatchStatus | null
+  rating: number | null
   householdId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -67,6 +71,7 @@ export type WatchlistEntryCountAggregateOutputType = {
   season: number
   episode: number
   status: number
+  rating: number
   householdId: number
   createdAt: number
   updatedAt: number
@@ -77,11 +82,13 @@ export type WatchlistEntryCountAggregateOutputType = {
 export type WatchlistEntryAvgAggregateInputType = {
   season?: true
   episode?: true
+  rating?: true
 }
 
 export type WatchlistEntrySumAggregateInputType = {
   season?: true
   episode?: true
+  rating?: true
 }
 
 export type WatchlistEntryMinAggregateInputType = {
@@ -91,6 +98,7 @@ export type WatchlistEntryMinAggregateInputType = {
   season?: true
   episode?: true
   status?: true
+  rating?: true
   householdId?: true
   createdAt?: true
   updatedAt?: true
@@ -103,6 +111,7 @@ export type WatchlistEntryMaxAggregateInputType = {
   season?: true
   episode?: true
   status?: true
+  rating?: true
   householdId?: true
   createdAt?: true
   updatedAt?: true
@@ -115,6 +124,7 @@ export type WatchlistEntryCountAggregateInputType = {
   season?: true
   episode?: true
   status?: true
+  rating?: true
   householdId?: true
   createdAt?: true
   updatedAt?: true
@@ -214,6 +224,7 @@ export type WatchlistEntryGroupByOutputType = {
   season: number | null
   episode: number | null
   status: $Enums.WatchStatus
+  rating: number | null
   householdId: string
   createdAt: Date
   updatedAt: Date
@@ -249,6 +260,7 @@ export type WatchlistEntryWhereInput = {
   season?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   episode?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   status?: Prisma.EnumWatchStatusFilter<"WatchlistEntry"> | $Enums.WatchStatus
+  rating?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   householdId?: Prisma.StringFilter<"WatchlistEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
@@ -263,6 +275,7 @@ export type WatchlistEntryOrderByWithRelationInput = {
   season?: Prisma.SortOrderInput | Prisma.SortOrder
   episode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  rating?: Prisma.SortOrderInput | Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -280,6 +293,7 @@ export type WatchlistEntryWhereUniqueInput = Prisma.AtLeast<{
   season?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   episode?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   status?: Prisma.EnumWatchStatusFilter<"WatchlistEntry"> | $Enums.WatchStatus
+  rating?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   householdId?: Prisma.StringFilter<"WatchlistEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
@@ -294,6 +308,7 @@ export type WatchlistEntryOrderByWithAggregationInput = {
   season?: Prisma.SortOrderInput | Prisma.SortOrder
   episode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  rating?: Prisma.SortOrderInput | Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -314,6 +329,7 @@ export type WatchlistEntryScalarWhereWithAggregatesInput = {
   season?: Prisma.IntNullableWithAggregatesFilter<"WatchlistEntry"> | number | null
   episode?: Prisma.IntNullableWithAggregatesFilter<"WatchlistEntry"> | number | null
   status?: Prisma.EnumWatchStatusWithAggregatesFilter<"WatchlistEntry"> | $Enums.WatchStatus
+  rating?: Prisma.IntNullableWithAggregatesFilter<"WatchlistEntry"> | number | null
   householdId?: Prisma.StringWithAggregatesFilter<"WatchlistEntry"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WatchlistEntry"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WatchlistEntry"> | Date | string
@@ -325,6 +341,7 @@ export type WatchlistEntryCreateInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   source: Prisma.WatchlistSourceCreateNestedOneWithoutEntriesInput
@@ -338,6 +355,7 @@ export type WatchlistEntryUncheckedCreateInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   householdId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -349,6 +367,7 @@ export type WatchlistEntryUpdateInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.WatchlistSourceUpdateOneRequiredWithoutEntriesNestedInput
@@ -362,6 +381,7 @@ export type WatchlistEntryUncheckedUpdateInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -374,6 +394,7 @@ export type WatchlistEntryCreateManyInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   householdId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -385,6 +406,7 @@ export type WatchlistEntryUpdateManyMutationInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -396,6 +418,7 @@ export type WatchlistEntryUncheckedUpdateManyInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,6 +441,7 @@ export type WatchlistEntryCountOrderByAggregateInput = {
   season?: Prisma.SortOrder
   episode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -426,6 +450,7 @@ export type WatchlistEntryCountOrderByAggregateInput = {
 export type WatchlistEntryAvgOrderByAggregateInput = {
   season?: Prisma.SortOrder
   episode?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
 }
 
 export type WatchlistEntryMaxOrderByAggregateInput = {
@@ -435,6 +460,7 @@ export type WatchlistEntryMaxOrderByAggregateInput = {
   season?: Prisma.SortOrder
   episode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -447,6 +473,7 @@ export type WatchlistEntryMinOrderByAggregateInput = {
   season?: Prisma.SortOrder
   episode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -455,6 +482,7 @@ export type WatchlistEntryMinOrderByAggregateInput = {
 export type WatchlistEntrySumOrderByAggregateInput = {
   season?: Prisma.SortOrder
   episode?: Prisma.SortOrder
+  rating?: Prisma.SortOrder
 }
 
 export type WatchlistEntryCreateNestedManyWithoutHouseholdInput = {
@@ -551,6 +579,7 @@ export type WatchlistEntryCreateWithoutHouseholdInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   source: Prisma.WatchlistSourceCreateNestedOneWithoutEntriesInput
@@ -563,6 +592,7 @@ export type WatchlistEntryUncheckedCreateWithoutHouseholdInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -603,6 +633,7 @@ export type WatchlistEntryScalarWhereInput = {
   season?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   episode?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   status?: Prisma.EnumWatchStatusFilter<"WatchlistEntry"> | $Enums.WatchStatus
+  rating?: Prisma.IntNullableFilter<"WatchlistEntry"> | number | null
   householdId?: Prisma.StringFilter<"WatchlistEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
@@ -614,6 +645,7 @@ export type WatchlistEntryCreateWithoutSourceInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutWatchlistInput
@@ -625,6 +657,7 @@ export type WatchlistEntryUncheckedCreateWithoutSourceInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   householdId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -663,6 +696,7 @@ export type WatchlistEntryCreateManyHouseholdInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -673,6 +707,7 @@ export type WatchlistEntryUpdateWithoutHouseholdInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.WatchlistSourceUpdateOneRequiredWithoutEntriesNestedInput
@@ -685,6 +720,7 @@ export type WatchlistEntryUncheckedUpdateWithoutHouseholdInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -696,6 +732,7 @@ export type WatchlistEntryUncheckedUpdateManyWithoutHouseholdInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -706,6 +743,7 @@ export type WatchlistEntryCreateManySourceInput = {
   season?: number | null
   episode?: number | null
   status?: $Enums.WatchStatus
+  rating?: number | null
   householdId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -717,6 +755,7 @@ export type WatchlistEntryUpdateWithoutSourceInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutWatchlistNestedInput
@@ -728,6 +767,7 @@ export type WatchlistEntryUncheckedUpdateWithoutSourceInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -739,6 +779,7 @@ export type WatchlistEntryUncheckedUpdateManyWithoutSourceInput = {
   season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -753,6 +794,7 @@ export type WatchlistEntrySelect<ExtArgs extends runtime.Types.Extensions.Intern
   season?: boolean
   episode?: boolean
   status?: boolean
+  rating?: boolean
   householdId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -767,6 +809,7 @@ export type WatchlistEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Type
   season?: boolean
   episode?: boolean
   status?: boolean
+  rating?: boolean
   householdId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -781,6 +824,7 @@ export type WatchlistEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   season?: boolean
   episode?: boolean
   status?: boolean
+  rating?: boolean
   householdId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -795,12 +839,13 @@ export type WatchlistEntrySelectScalar = {
   season?: boolean
   episode?: boolean
   status?: boolean
+  rating?: boolean
   householdId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WatchlistEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "sourceId" | "season" | "episode" | "status" | "householdId" | "createdAt" | "updatedAt", ExtArgs["result"]["watchlistEntry"]>
+export type WatchlistEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "sourceId" | "season" | "episode" | "status" | "rating" | "householdId" | "createdAt" | "updatedAt", ExtArgs["result"]["watchlistEntry"]>
 export type WatchlistEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   source?: boolean | Prisma.WatchlistSourceDefaultArgs<ExtArgs>
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
@@ -827,6 +872,7 @@ export type $WatchlistEntryPayload<ExtArgs extends runtime.Types.Extensions.Inte
     season: number | null
     episode: number | null
     status: $Enums.WatchStatus
+    rating: number | null
     householdId: string
     createdAt: Date
     updatedAt: Date
@@ -1261,6 +1307,7 @@ export interface WatchlistEntryFieldRefs {
   readonly season: Prisma.FieldRef<"WatchlistEntry", 'Int'>
   readonly episode: Prisma.FieldRef<"WatchlistEntry", 'Int'>
   readonly status: Prisma.FieldRef<"WatchlistEntry", 'WatchStatus'>
+  readonly rating: Prisma.FieldRef<"WatchlistEntry", 'Int'>
   readonly householdId: Prisma.FieldRef<"WatchlistEntry", 'String'>
   readonly createdAt: Prisma.FieldRef<"WatchlistEntry", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WatchlistEntry", 'DateTime'>

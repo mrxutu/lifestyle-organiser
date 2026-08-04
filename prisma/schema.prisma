@@ -167,6 +167,7 @@ model WatchlistEntry {
   season      Int? // nullable — movies/one-offs may not have a season
   episode     Int?
   status      WatchStatus     @default(TO_WATCH)
+  rating      Int? // 1-5 stars, null = not rated
   household   Household       @relation(fields: [householdId], references: [id])
   householdId String
   createdAt   DateTime        @default(now())

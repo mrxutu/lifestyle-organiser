@@ -2,6 +2,8 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { WatchStatus } from '@/generated/prisma/enums'
 
+const emptyToNull = (val: unknown) => (val === '' || val == null ? null : val)
+
 export async function listWatchlistEntries(householdId: string) {
   return prisma.watchlistEntry.findMany({
     where: { householdId },
@@ -18,6 +20,7 @@ export const watchlistEntryInputSchema = z.object({
   season: z.coerce.number().int().min(1).optional().nullable(),
   episode: z.coerce.number().int().min(1).optional().nullable(),
   status: z.enum(WatchStatus).default('TO_WATCH'),
+  rating: z.preprocess(emptyToNull, z.coerce.number().int().min(1).max(5).nullable()),
 })
 
 export type WatchlistEntryInput = z.infer<typeof watchlistEntryInputSchema>

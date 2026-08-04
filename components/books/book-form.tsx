@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react'
 import type { BookSource } from '@/generated/prisma/client'
 import type { BookStatus } from '@/generated/prisma/enums'
 import { bookStatusLabel } from '@/lib/book-status'
-import { BOOK_RATINGS, bookRatingLabel } from '@/lib/book-rating'
+import { RATINGS, ratingLabel } from '@/lib/rating'
 import type { BookWithDetail } from '@/lib/books'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -234,9 +234,9 @@ export function BookForm({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={NO_RATING}>No rating</SelectItem>
-              {BOOK_RATINGS.map((value) => (
+              {RATINGS.map((value) => (
                 <SelectItem key={value} value={String(value)}>
-                  {bookRatingLabel[value]}
+                  {ratingLabel[value]}
                 </SelectItem>
               ))}
             </SelectContent>
