@@ -41,7 +41,7 @@ export function UpcomingReminderRow({
             )}
             {dueSoon && <Badge variant="warning">Due soon</Badge>}
           </div>
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex flex-col items-start gap-1 sm:items-end">
             <UserIndicator attendees={reminder.attendees} currentUserId={currentUserId} />
             <p className="text-sm text-muted-foreground">{due}</p>
           </div>
