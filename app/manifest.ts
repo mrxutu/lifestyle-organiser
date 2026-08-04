@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Lifestyle Organiser",
-    short_name: "Organiser",
+    short_name: "Lifestyle Organiser",
     description: "Shared reminders, calendar, and recipes for two.",
     start_url: "/",
     scope: "/",
