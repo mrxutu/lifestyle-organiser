@@ -13,8 +13,6 @@ export default async function RemindersPage() {
     listHouseholdUsers(householdId),
   ])
 
-  const otherUser = householdUsers.find((u) => u.id !== currentUserId) ?? { id: currentUserId, name: null }
-
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">Reminders</h1>
@@ -29,7 +27,7 @@ export default async function RemindersPage() {
           reminders={reminders}
           eventTypes={eventTypes}
           currentUserId={currentUserId}
-          otherUser={otherUser}
+          householdUsers={householdUsers}
         />
       )}
     </div>

@@ -1,5 +1,4 @@
 export const ALL_EVENT_TYPES = 'ALL'
-export type UserFilterValue = 'ALL' | 'ME' | 'OTHER'
 
 type FilterableEvent = {
   eventTypeId: string
@@ -11,20 +10,14 @@ export function filterEventsByTypeAndUser<T extends FilterableEvent>(
   {
     eventTypeId,
     userFilter,
-    currentUserId,
-    otherUserId,
   }: {
     eventTypeId: string
-    userFilter: UserFilterValue
-    currentUserId: string
-    otherUserId: string
+    userFilter: string[]
   }
 ): T[] {
-  const targetUserId = userFilter === 'ME' ? currentUserId : userFilter === 'OTHER' ? otherUserId : null
-
   return events.filter((event) => {
     if (eventTypeId !== ALL_EVENT_TYPES && event.eventTypeId !== eventTypeId) return false
-    if (targetUserId && !event.attendees.some((a) => a.userId === targetUserId)) return false
+    if (userFilter.length > 0 && !event.attendees.some((a) => userFilter.includes(a.userId))) return false
     return true
   })
 }

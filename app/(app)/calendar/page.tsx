@@ -16,8 +16,6 @@ export default async function CalendarPage({
     searchParams,
   ])
 
-  const otherUser = householdUsers.find((u) => u.id !== currentUserId) ?? { id: currentUserId, name: null }
-
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">Calendar</h1>
@@ -30,7 +28,7 @@ export default async function CalendarPage({
         eventsRaw={events}
         eventTypes={eventTypes}
         currentUserId={currentUserId}
-        otherUser={otherUser}
+        householdUsers={householdUsers}
         initialEventId={eventId ?? null}
       />
     </div>

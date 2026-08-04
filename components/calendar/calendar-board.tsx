@@ -7,7 +7,7 @@ import type { DateClickArg } from '@fullcalendar/interaction'
 import type { EventType } from '@/generated/prisma/client'
 import type { EventWithType } from '@/lib/events'
 import { toCalendarEventInput } from '@/lib/calendar-events'
-import { ALL_EVENT_TYPES, filterEventsByTypeAndUser, type UserFilterValue } from '@/lib/event-filters'
+import { ALL_EVENT_TYPES, filterEventsByTypeAndUser } from '@/lib/event-filters'
 import { Button } from '@/components/ui/button'
 import { EventFilters } from '@/components/event-filters'
 import { CalendarView } from '@/components/calendar/calendar-view'
@@ -25,13 +25,13 @@ export function CalendarBoard({
   eventsRaw,
   eventTypes,
   currentUserId,
-  otherUser,
+  householdUsers,
   initialEventId,
 }: {
   eventsRaw: EventWithType[]
   eventTypes: EventType[]
   currentUserId: string
-  otherUser: { id: string; name: string | null }
+  householdUsers: { id: string; name: string | null }[]
   initialEventId?: string | null
 }) {
   const router = useRouter()
@@ -42,7 +42,7 @@ export function CalendarBoard({
     initialEvent ? { mode: 'edit', event: initialEvent } : { mode: 'closed' }
   )
   const [eventTypeFilter, setEventTypeFilter] = useState<string>(ALL_EVENT_TYPES)
-  const [userFilter, setUserFilter] = useState<UserFilterValue>('ALL')
+  const [userFilter, setUserFilter] = useState<string[]>([])
 
   const [initialViewDate] = useState<Date | null>(() => (initialEvent ? new Date(initialEvent.startAt) : null))
 
@@ -59,10 +59,8 @@ export function CalendarBoard({
       filterEventsByTypeAndUser(eventsRaw, {
         eventTypeId: eventTypeFilter,
         userFilter,
-        currentUserId,
-        otherUserId: otherUser.id,
       }),
-    [eventsRaw, eventTypeFilter, userFilter, currentUserId, otherUser.id]
+    [eventsRaw, eventTypeFilter, userFilter]
   )
 
   const events = useMemo(() => filteredEvents.map(toCalendarEventInput), [filteredEvents])
@@ -96,7 +94,8 @@ export function CalendarBoard({
           onEventTypeFilterChange={setEventTypeFilter}
           userFilter={userFilter}
           onUserFilterChange={setUserFilter}
-          otherUserName={otherUser.name}
+          currentUserId={currentUserId}
+          householdUsers={householdUsers}
         />
 
         <div className="flex gap-2">
@@ -125,6 +124,7 @@ export function CalendarBoard({
 
       <CalendarView
         events={events}
+        currentUserId={currentUserId}
         initialDate={initialViewDate}
         onDateClick={handleDateClick}
         onEventClick={handleEventClick}
@@ -140,7 +140,7 @@ export function CalendarBoard({
           initialEvent={state.mode === 'edit' ? state.event : null}
           initialDate={state.mode === 'create' ? state.initialDate : null}
           currentUserId={currentUserId}
-          otherUser={otherUser}
+          householdUsers={householdUsers}
           onSuccess={handleSuccess}
           onCancel={close}
         />

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { EventType } from '@/generated/prisma/client'
 import type { UpcomingReminder } from '@/lib/events'
-import { ALL_EVENT_TYPES, filterEventsByTypeAndUser, type UserFilterValue } from '@/lib/event-filters'
+import { ALL_EVENT_TYPES, filterEventsByTypeAndUser } from '@/lib/event-filters'
 import { EventFilters } from '@/components/event-filters'
 import { UpcomingReminderRow } from '@/components/reminders/upcoming-reminder-row'
 
@@ -11,25 +11,23 @@ export function RemindersBoard({
   reminders,
   eventTypes,
   currentUserId,
-  otherUser,
+  householdUsers,
 }: {
   reminders: UpcomingReminder[]
   eventTypes: EventType[]
   currentUserId: string
-  otherUser: { id: string; name: string | null }
+  householdUsers: { id: string; name: string | null }[]
 }) {
   const [eventTypeFilter, setEventTypeFilter] = useState<string>(ALL_EVENT_TYPES)
-  const [userFilter, setUserFilter] = useState<UserFilterValue>('ME')
+  const [userFilter, setUserFilter] = useState<string[]>([currentUserId])
 
   const filteredReminders = useMemo(
     () =>
       filterEventsByTypeAndUser(reminders, {
         eventTypeId: eventTypeFilter,
         userFilter,
-        currentUserId,
-        otherUserId: otherUser.id,
       }),
-    [reminders, eventTypeFilter, userFilter, currentUserId, otherUser.id]
+    [reminders, eventTypeFilter, userFilter]
   )
 
   return (
@@ -40,7 +38,8 @@ export function RemindersBoard({
         onEventTypeFilterChange={setEventTypeFilter}
         userFilter={userFilter}
         onUserFilterChange={setUserFilter}
-        otherUserName={otherUser.name}
+        currentUserId={currentUserId}
+        householdUsers={householdUsers}
       />
 
       {filteredReminders.length === 0 ? (
@@ -48,7 +47,7 @@ export function RemindersBoard({
       ) : (
         <div className="grid grid-cols-1 gap-3">
           {filteredReminders.map((reminder) => (
-            <UpcomingReminderRow key={reminder.id} reminder={reminder} />
+            <UpcomingReminderRow key={reminder.id} reminder={reminder} currentUserId={currentUserId} />
           ))}
         </div>
       )}

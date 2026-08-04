@@ -59,8 +59,23 @@ export const eventInputSchema = z
 
 export type EventInput = z.infer<typeof eventInputSchema>
 
+export class InvalidAttendeesError extends Error {
+  constructor() {
+    super('One or more selected people are not part of this household')
+    this.name = 'InvalidAttendeesError'
+  }
+}
+
+async function assertAttendeesInHousehold(householdId: string, attendeeUserIds: string[]) {
+  const memberCount = await prisma.user.count({
+    where: { householdId, id: { in: attendeeUserIds } },
+  })
+  if (memberCount !== attendeeUserIds.length) throw new InvalidAttendeesError()
+}
+
 export async function createEvent(householdId: string, creatorId: string, input: EventInput) {
   const { attendeeUserIds, ...event } = input
+  await assertAttendeesInHousehold(householdId, attendeeUserIds)
   return prisma.event.create({
     data: {
       ...event,
@@ -78,6 +93,7 @@ export async function createEvent(householdId: string, creatorId: string, input:
 
 export async function updateEvent(householdId: string, eventId: string, input: EventInput) {
   const { attendeeUserIds, ...event } = input
+  await assertAttendeesInHousehold(householdId, attendeeUserIds)
 
   return prisma.$transaction(async (tx) => {
     const result = await tx.event.updateMany({ where: { id: eventId, householdId }, data: event })

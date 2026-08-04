@@ -8,29 +8,31 @@ import type { EventInput, EventClickArg, EventContentArg } from '@fullcalendar/c
 import type { DateClickArg } from '@fullcalendar/interaction'
 import { UserIndicator } from '@/components/calendar/user-indicator'
 
-function renderEventContent(arg: EventContentArg) {
-  const attendees = (arg.event.extendedProps.attendees ?? []) as { user: { name: string | null } }[]
-
-  return (
-    <div className="flex min-w-0 items-center gap-1 px-0.5">
-      <UserIndicator attendees={attendees} />
-      {arg.timeText && <span className="shrink-0 text-[0.7em] opacity-80">{arg.timeText}</span>}
-      <span className="min-w-0 flex-1 truncate">{arg.event.title}</span>
-    </div>
-  )
-}
-
 export function CalendarView({
   events,
+  currentUserId,
   initialDate,
   onDateClick,
   onEventClick,
 }: {
   events: EventInput[]
+  currentUserId: string
   initialDate?: Date | null
   onDateClick: (arg: DateClickArg) => void
   onEventClick: (arg: EventClickArg) => void
 }) {
+  function renderEventContent(arg: EventContentArg) {
+    const attendees = (arg.event.extendedProps.attendees ?? []) as { userId: string }[]
+
+    return (
+      <div className="flex min-w-0 items-center gap-1 px-0.5">
+        <UserIndicator attendees={attendees} currentUserId={currentUserId} />
+        {arg.timeText && <span className="shrink-0 text-[0.7em] opacity-80">{arg.timeText}</span>}
+        <span className="min-w-0 flex-1 truncate">{arg.event.title}</span>
+      </div>
+    )
+  }
+
   return (
     <div className="rounded-xl border border-border bg-card p-2 sm:p-4">
       <FullCalendar

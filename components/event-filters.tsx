@@ -1,6 +1,8 @@
 'use client'
 
+import { ChevronDown } from 'lucide-react'
 import type { EventType } from '@/generated/prisma/client'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -8,7 +10,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ALL_EVENT_TYPES, type UserFilterValue } from '@/lib/event-filters'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ALL_EVENT_TYPES } from '@/lib/event-filters'
+
+function userFilterLabel(userFilter: string[], currentUserId: string, householdUsers: { id: string; name: string | null }[]) {
+  if (userFilter.length === 0) return 'Everyone'
+  if (userFilter.length === 1) {
+    const [id] = userFilter
+    if (id === currentUserId) return 'Me'
+    return householdUsers.find((u) => u.id === id)?.name ?? 'Someone'
+  }
+  return `${userFilter.length} people`
+}
 
 export function EventFilters({
   eventTypes,
@@ -16,15 +35,23 @@ export function EventFilters({
   onEventTypeFilterChange,
   userFilter,
   onUserFilterChange,
-  otherUserName,
+  currentUserId,
+  householdUsers,
 }: {
   eventTypes: EventType[]
   eventTypeFilter: string
   onEventTypeFilterChange: (value: string) => void
-  userFilter: UserFilterValue
-  onUserFilterChange: (value: UserFilterValue) => void
-  otherUserName: string | null
+  userFilter: string[]
+  onUserFilterChange: (value: string[]) => void
+  currentUserId: string
+  householdUsers: { id: string; name: string | null }[]
 }) {
+  function toggleUser(userId: string) {
+    onUserFilterChange(
+      userFilter.includes(userId) ? userFilter.filter((id) => id !== userId) : [...userFilter, userId]
+    )
+  }
+
   return (
     <div className="flex flex-wrap items-center gap-2">
       <Select value={eventTypeFilter} onValueChange={onEventTypeFilterChange}>
@@ -42,16 +69,39 @@ export function EventFilters({
         </SelectContent>
       </Select>
 
-      <Select value={userFilter} onValueChange={(value) => onUserFilterChange(value as UserFilterValue)}>
-        <SelectTrigger className="w-[160px]" aria-label="Filter by assigned user">
-          <SelectValue placeholder="Everyone" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">Everyone</SelectItem>
-          <SelectItem value="ME">Me</SelectItem>
-          <SelectItem value="OTHER">{otherUserName ?? 'Them'}</SelectItem>
-        </SelectContent>
-      </Select>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-[160px] justify-between font-normal"
+            aria-label="Filter by assigned user"
+          >
+            {userFilterLabel(userFilter, currentUserId, householdUsers)}
+            <ChevronDown className="opacity-50" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuCheckboxItem
+            checked={userFilter.length === 0}
+            onCheckedChange={() => onUserFilterChange([])}
+            onSelect={(e) => e.preventDefault()}
+          >
+            Everyone
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuSeparator />
+          {householdUsers.map((user) => (
+            <DropdownMenuCheckboxItem
+              key={user.id}
+              checked={userFilter.includes(user.id)}
+              onCheckedChange={() => toggleUser(user.id)}
+              onSelect={(e) => e.preventDefault()}
+            >
+              {user.id === currentUserId ? 'Me' : (user.name ?? 'Unnamed')}
+            </DropdownMenuCheckboxItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }

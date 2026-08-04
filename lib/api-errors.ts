@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 import { EventTypeInUseError } from '@/lib/event-types'
+import { InvalidAttendeesError } from '@/lib/events'
 import { WatchlistSourceInUseError } from '@/lib/watchlist'
 import { CannotDeleteSelfError, LastAdminError, UserHasContentError } from '@/lib/admin-users'
 import { HouseholdInUseError } from '@/lib/admin-households'
@@ -19,7 +20,11 @@ export function errorResponse(error: unknown) {
     return NextResponse.json({ error: error.message }, { status: 403 })
   }
 
-  if (error instanceof CannotDeleteSelfError || error instanceof LastAdminError) {
+  if (
+    error instanceof CannotDeleteSelfError ||
+    error instanceof LastAdminError ||
+    error instanceof InvalidAttendeesError
+  ) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }
 

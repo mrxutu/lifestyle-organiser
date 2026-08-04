@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   Select,
@@ -47,16 +48,9 @@ function parseDateOnly(value: string) {
   return new Date(year, month - 1, day)
 }
 
-type Who = 'ME' | 'OTHER' | 'BOTH'
-
-function initialWho(initialEvent: EventWithType | null | undefined, currentUserId: string, otherUserId: string): Who {
-  if (!initialEvent) return 'ME'
-  const attendeeIds = new Set(initialEvent.attendees.map((a) => a.userId))
-  const hasMe = attendeeIds.has(currentUserId)
-  const hasOther = attendeeIds.has(otherUserId)
-  if (hasMe && hasOther) return 'BOTH'
-  if (hasOther) return 'OTHER'
-  return 'ME'
+function initialAttendeeIds(initialEvent: EventWithType | null | undefined, currentUserId: string) {
+  if (!initialEvent) return [currentUserId]
+  return initialEvent.attendees.map((a) => a.userId)
 }
 
 export function EventForm({
@@ -64,7 +58,7 @@ export function EventForm({
   initialEvent,
   initialDate,
   currentUserId,
-  otherUser,
+  householdUsers,
   onSuccess,
   onCancel,
 }: {
@@ -72,7 +66,7 @@ export function EventForm({
   initialEvent?: EventWithType | null
   initialDate?: Date | null
   currentUserId: string
-  otherUser: { id: string; name: string | null }
+  householdUsers: { id: string; name: string | null }[]
   onSuccess: () => void
   onCancel: () => void
 }) {
@@ -81,7 +75,7 @@ export function EventForm({
 
   const [title, setTitle] = useState(initialEvent?.title ?? '')
   const [eventTypeId, setEventTypeId] = useState(initialEvent?.eventTypeId ?? eventTypes[0]?.id ?? '')
-  const [who, setWho] = useState<Who>(initialWho(initialEvent, currentUserId, otherUser.id))
+  const [attendeeIds, setAttendeeIds] = useState<string[]>(initialAttendeeIds(initialEvent, currentUserId))
   const [allDay, setAllDay] = useState(initialEvent?.allDay ?? false)
   const [startDate, setStartDate] = useState(toDateValue(baseStart))
   const [startTime, setStartTime] = useState(toTimeValue(baseStart))
@@ -96,6 +90,10 @@ export function EventForm({
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  function toggleAttendee(userId: string) {
+    setAttendeeIds((ids) => (ids.includes(userId) ? ids.filter((id) => id !== userId) : [...ids, userId]))
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -115,8 +113,7 @@ export function EventForm({
       eventTypeId,
       recurrence,
       leadTimeDays: leadTimeDays === '' ? null : Number(leadTimeDays),
-      attendeeUserIds:
-        who === 'BOTH' ? [currentUserId, otherUser.id] : who === 'OTHER' ? [otherUser.id] : [currentUserId],
+      attendeeUserIds: attendeeIds,
     }
 
     const res = await fetch(initialEvent ? `/api/events/${initialEvent.id}` : '/api/events', {
@@ -188,17 +185,34 @@ export function EventForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="event-who">Who&rsquo;s this for</Label>
-        <Select value={who} onValueChange={(value) => setWho(value as Who)}>
-          <SelectTrigger id="event-who" className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ME">Me</SelectItem>
-            <SelectItem value="OTHER">{otherUser.name ?? 'Them'}</SelectItem>
-            <SelectItem value="BOTH">Both</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center justify-between">
+          <Label>Who&rsquo;s this for</Label>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setAttendeeIds(householdUsers.map((u) => u.id))}
+          >
+            Select all
+          </Button>
+        </div>
+        <div className="flex flex-col gap-2 rounded-lg border border-border p-3">
+          {householdUsers.map((user) => (
+            <div key={user.id} className="flex items-center gap-2">
+              <Checkbox
+                id={`event-who-${user.id}`}
+                checked={attendeeIds.includes(user.id)}
+                onCheckedChange={() => toggleAttendee(user.id)}
+              />
+              <Label htmlFor={`event-who-${user.id}`} className="font-normal">
+                {user.id === currentUserId ? 'Me' : (user.name ?? 'Unnamed')}
+              </Label>
+            </div>
+          ))}
+        </div>
+        {attendeeIds.length === 0 && (
+          <p className="text-sm text-destructive">Select at least one person.</p>
+        )}
       </div>
 
       <div className="flex items-center justify-between">
@@ -328,7 +342,7 @@ export function EventForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={submitting || eventTypes.length === 0}>
+        <Button type="submit" disabled={submitting || eventTypes.length === 0 || attendeeIds.length === 0}>
           {submitting ? 'Saving…' : initialEvent ? 'Save changes' : 'Add event'}
         </Button>
       </div>

@@ -1,32 +1,27 @@
-import { cn } from '@/lib/utils'
-import { userColorKey } from '@/lib/user-colors'
-
-const colorClass = { blue: 'bg-user-blue', pink: 'bg-user-pink' } as const
+import { Badge } from '@/components/ui/badge'
 
 export function UserIndicator({
   attendees,
+  currentUserId,
   className,
 }: {
-  attendees: { user: { name: string | null } }[]
+  attendees: { userId: string }[]
+  currentUserId: string
   className?: string
 }) {
   if (attendees.length === 0) return null
 
-  if (attendees.length >= 2) {
-    return (
-      <span className={cn('relative inline-block size-2.5 shrink-0 overflow-hidden rounded-[2px]', className)}>
-        <span
-          className="absolute inset-0 bg-user-blue"
-          style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}
-        />
-        <span
-          className="absolute inset-0 bg-user-pink"
-          style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }}
-        />
-      </span>
-    )
-  }
+  const isMe = attendees.some((a) => a.userId === currentUserId)
+  const othersCount = attendees.filter((a) => a.userId !== currentUserId).length
 
-  const color = userColorKey(attendees[0].user.name)
-  return <span className={cn('size-2.5 shrink-0 rounded-[2px]', colorClass[color], className)} />
+  let label: string
+  if (isMe && othersCount > 0) label = `Me + Other${othersCount === 1 ? '' : 's'}`
+  else if (isMe) label = 'Me'
+  else label = othersCount === 1 ? 'Other' : 'Others'
+
+  return (
+    <Badge variant="secondary" className={className}>
+      {label}
+    </Badge>
+  )
 }

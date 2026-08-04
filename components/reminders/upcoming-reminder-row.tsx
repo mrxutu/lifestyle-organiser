@@ -8,15 +8,20 @@ import { formatFriendlyDateTime } from '@/lib/format-datetime'
 import { getContrastTextColor } from '@/lib/contrast-color'
 import type { UpcomingReminder } from '@/lib/events'
 
-export function UpcomingReminderRow({ reminder }: { reminder: UpcomingReminder }) {
+export function UpcomingReminderRow({
+  reminder,
+  currentUserId,
+}: {
+  reminder: UpcomingReminder
+  currentUserId: string
+}) {
   const dueSoon = isDueSoon(reminder)
   const startAt = new Date(reminder.startAt)
   const due = formatFriendlyDateTime(startAt, { allDay: reminder.allDay })
 
   return (
     <Link href={`/calendar?eventId=${reminder.id}`} className="block">
-      <Card className={cn('relative', dueSoon && 'border-l-4 border-l-warning')}>
-        <UserIndicator attendees={reminder.attendees} className="absolute top-2 right-2" />
+      <Card className={cn(dueSoon && 'border-l-4 border-l-warning')}>
         <CardContent className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-medium">{reminder.title}</p>
@@ -36,7 +41,10 @@ export function UpcomingReminderRow({ reminder }: { reminder: UpcomingReminder }
             )}
             {dueSoon && <Badge variant="warning">Due soon</Badge>}
           </div>
-          <p className="text-sm text-muted-foreground">{due}</p>
+          <div className="flex flex-col items-end gap-1">
+            <UserIndicator attendees={reminder.attendees} currentUserId={currentUserId} />
+            <p className="text-sm text-muted-foreground">{due}</p>
+          </div>
         </CardContent>
       </Card>
     </Link>
