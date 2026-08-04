@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     // Organiser" is too long for a single line under an iOS home-screen icon —
     // it wraps to two lines ("Lifestyle" / "Organiser"), which at small sizes
     // reads like one concatenated word with no space at all.
-    short_name: "Organiser",
-    description: "Shared reminders, calendar, and recipes for two.",
+    short_name: "Lifestyle App",
+    description: "Shared reminders, calendar, and recipes for families.",
     start_url: "/",
     scope: "/",
     display: "standalone",
