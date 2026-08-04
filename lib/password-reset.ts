@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto'
 import { z } from 'zod'
+import { Resend } from 'resend'
 import { prisma } from '@/lib/prisma'
 
 const TOKEN_TTL_MS = 60 * 60 * 1000 // 1 hour
@@ -36,4 +37,24 @@ export async function findValidPasswordResetToken(token: string) {
 
 export async function deletePasswordResetToken(id: string) {
   await prisma.passwordResetToken.delete({ where: { id } })
+}
+
+export async function sendPasswordResetEmail(user: { id: string; email: string }, origin: string) {
+  try {
+    const resetToken = await createPasswordResetToken(user.id)
+    const resetUrl = new URL('/reset-password', origin)
+    resetUrl.searchParams.set('token', resetToken.token)
+
+    const resend = new Resend(process.env.RESEND_API)
+    await resend.emails.send({
+      from: `Lifestyle Organiser <${process.env.SENDER_EMAIL}>`,
+      to: user.email,
+      subject: 'Reset your password',
+      text: `We received a request to reset your password. This link expires in 1 hour:\n\n${resetUrl.toString()}\n\nIf you didn't request this, you can ignore this email.`,
+    })
+  } catch (sendError) {
+    // Swallowed deliberately: callers (e.g. forgot-password) must not let a delivery
+    // failure change their response, since that could be used to enumerate emails.
+    console.error('Failed to send password reset email', sendError)
+  }
 }

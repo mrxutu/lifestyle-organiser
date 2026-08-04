@@ -10,7 +10,7 @@ export const getCurrentUser = cache(async () => {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, email: true, name: true, householdId: true },
+    select: { id: true, email: true, name: true, householdId: true, role: true },
   })
   if (!user) {
     throw new Error(`Session user ${session.user.id} has no matching User row`)
@@ -21,6 +21,19 @@ export const getCurrentUser = cache(async () => {
 
   return { ...user, householdId: user.householdId }
 })
+
+export class ForbiddenError extends Error {
+  constructor() {
+    super('Admin access required')
+    this.name = 'ForbiddenError'
+  }
+}
+
+export async function requireAdmin() {
+  const user = await getCurrentUser()
+  if (user.role !== 'ADMIN') throw new ForbiddenError()
+  return user
+}
 
 export async function listHouseholdUsers(householdId: string) {
   return prisma.user.findMany({

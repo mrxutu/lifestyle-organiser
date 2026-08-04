@@ -95,3 +95,22 @@ Scope: reset flow only, per the step-1c brief — admin page and profile page (s
 The step-1c follow-up flagged above is resolved: a verified sending domain now exists (`support@decisionreadiness.com`), added to `.env` as `SENDER_EMAIL`. `app/api/auth/forgot-password/route.ts` now builds `from` as `` `Lifestyle Organiser <${process.env.SENDER_EMAIL}>` `` instead of the hardcoded Resend onboarding address.
 
 Verified live: a throwaway test send to an `example.com` address still 422s, but that's Resend universally rejecting reserved documentation domains as a `to` address — unrelated to the sender-domain fix, and not a valid test of it. Sent a real test to `p@ulcozens.com` instead (the seeded local dev user) — no error logged, and Paul confirmed the email actually arrived. Domain fix confirmed working end-to-end, not just accepted by the API.
+
+**2026-08 — Admin page built: Users + Households CRUD (Phase 1, step 1d)**
+Role-gated `/admin` with two tabs (single page, shadcn `Tabs` — no separate sub-routes). Gated in two layers: `app/(app)/admin/layout.tsx` does a server-side `getCurrentUser()` check and `redirect('/reminders')` for non-admins before anything renders (not just hidden nav), and every admin API route independently calls a new `requireAdmin()` helper (`lib/current-user.ts`) that 403s non-admins — defense in depth, verified both layers live with a throwaway non-admin session (page: 307 redirect; API: real 403 JSON). `getCurrentUser()` now also selects `role`.
+
+**Users tab**: list (name/email/household/role), create, edit (name/household/role), delete. Creating a user leaves `passwordHash: null` and calls the same `sendPasswordResetEmail()` used by the step-1c forgot-password flow — extracted out of `app/api/auth/forgot-password/route.ts` into `lib/password-reset.ts` specifically so this step could reuse it instead of duplicating the token/email logic. Verified: creating a user leaves no password set and does create a `PasswordResetToken` row via the shared function.
+
+**Households tab**: list (name/member count), create, rename, delete.
+
+**Safeguards, all server-side (not just UI), all verified live against the real dev DB via a throwaway admin session**:
+- Can't delete your own account, ever (`CannotDeleteSelfError`, 400) — confirmed.
+- Can't delete a user who has created Events or Recipes (`UserHasContentError`, 409, counts both) — confirmed by attempting to delete Paul's real account (6 events/recipes) and getting blocked; his account was untouched.
+- Can't demote yourself off `ADMIN` if you're currently the *only* admin (`LastAdminError`, 400) — confirmed by temporarily demoting Paul to `MEMBER` on the local dev DB (making a throwaway test account the sole admin), attempting self-demotion via the real API and getting blocked, then immediately restoring Paul's role and re-verifying it stuck. Also confirmed the *permitted* case: self-demotion succeeds once there's more than one admin.
+- Can't delete a household that still has users, Events, Recipes, or WatchlistEntries (`HouseholdInUseError`, 409) — confirmed against the real seed household.
+
+All new error classes wired into the shared `errorResponse()` in `lib/api-errors.ts`, matching the existing `EventTypeInUseError`/`WatchlistSourceInUseError` pattern rather than inventing a new error-handling shape.
+
+**UI**: first real usage of the shadcn `Table` primitive in the app (it existed unused before this). Both tabs follow the existing `WatchlistCards`/`WatchlistForm`/`ResponsiveDialog` BoardState (closed/create/edit) convention already used elsewhere, applied consistently to both tabs rather than mixing patterns. Nav: `NavLinks` takes an optional `isAdmin` prop, threaded from `AppLayout` (which now knows the session's `role`) through `TopNav` — "Admin" link only renders for admins, confirmed present/absent in both sessions.
+
+Not touched in this step, per the brief: the profile page (1e, next).

@@ -11,12 +11,13 @@ const links = [
   { href: '/watchlist', label: 'Watchlist' },
 ]
 
-export function NavLinks() {
+export function NavLinks({ isAdmin }: { isAdmin?: boolean }) {
   const pathname = usePathname()
+  const allLinks = isAdmin ? [...links, { href: '/admin', label: 'Admin' }] : links
 
   return (
     <nav className="flex items-center gap-4 sm:gap-6">
-      {links.map((link) => {
+      {allLinks.map((link) => {
         const isActive = pathname.startsWith(link.href)
         return (
           <Link
