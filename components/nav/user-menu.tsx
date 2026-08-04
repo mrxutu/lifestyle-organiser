@@ -1,6 +1,7 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
+import Link from 'next/link'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -42,6 +43,9 @@ export function UserMenu({
           {name && <p className="text-xs text-muted-foreground">{email}</p>}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/profile">Profile</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/login' })}>
           Sign out
         </DropdownMenuItem>
