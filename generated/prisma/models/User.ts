@@ -29,6 +29,7 @@ export type UserMinAggregateOutputType = {
   email: string | null
   name: string | null
   passwordHash: string | null
+  role: $Enums.Role | null
   householdId: string | null
   createdAt: Date | null
 }
@@ -38,6 +39,7 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   name: string | null
   passwordHash: string | null
+  role: $Enums.Role | null
   householdId: string | null
   createdAt: Date | null
 }
@@ -47,6 +49,7 @@ export type UserCountAggregateOutputType = {
   email: number
   name: number
   passwordHash: number
+  role: number
   householdId: number
   createdAt: number
   _all: number
@@ -58,6 +61,7 @@ export type UserMinAggregateInputType = {
   email?: true
   name?: true
   passwordHash?: true
+  role?: true
   householdId?: true
   createdAt?: true
 }
@@ -67,6 +71,7 @@ export type UserMaxAggregateInputType = {
   email?: true
   name?: true
   passwordHash?: true
+  role?: true
   householdId?: true
   createdAt?: true
 }
@@ -76,6 +81,7 @@ export type UserCountAggregateInputType = {
   email?: true
   name?: true
   passwordHash?: true
+  role?: true
   householdId?: true
   createdAt?: true
   _all?: true
@@ -158,6 +164,7 @@ export type UserGroupByOutputType = {
   email: string
   name: string | null
   passwordHash: string | null
+  role: $Enums.Role
   householdId: string | null
   createdAt: Date
   _count: UserCountAggregateOutputType | null
@@ -188,12 +195,14 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   householdId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdNullableScalarRelationFilter, Prisma.HouseholdWhereInput> | null
   eventsCreated?: Prisma.EventListRelationFilter
   eventInvites?: Prisma.EventAttendeeListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -201,12 +210,14 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
   householdId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   household?: Prisma.HouseholdOrderByWithRelationInput
   eventsCreated?: Prisma.EventOrderByRelationAggregateInput
   eventInvites?: Prisma.EventAttendeeOrderByRelationAggregateInput
   recipes?: Prisma.RecipeOrderByRelationAggregateInput
+  passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -217,12 +228,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   householdId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   household?: Prisma.XOR<Prisma.HouseholdNullableScalarRelationFilter, Prisma.HouseholdWhereInput> | null
   eventsCreated?: Prisma.EventListRelationFilter
   eventInvites?: Prisma.EventAttendeeListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -230,6 +243,7 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
   householdId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -245,6 +259,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   householdId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -254,11 +269,13 @@ export type UserCreateInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   createdAt?: Date | string
   household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -266,11 +283,13 @@ export type UserUncheckedCreateInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   householdId?: string | null
   createdAt?: Date | string
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -278,11 +297,13 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -290,11 +311,13 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   householdId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -302,6 +325,7 @@ export type UserCreateManyInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   householdId?: string | null
   createdAt?: Date | string
 }
@@ -311,6 +335,7 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -319,6 +344,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   householdId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -328,6 +354,7 @@ export type UserCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -337,6 +364,7 @@ export type UserMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -346,8 +374,14 @@ export type UserMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   householdId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type UserListRelationFilter = {
@@ -360,11 +394,6 @@ export type UserOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -373,8 +402,26 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type EnumRoleFieldUpdateOperationsInput = {
+  set?: $Enums.Role
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPasswordResetTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  upsert?: Prisma.UserUpsertWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPasswordResetTokensInput, Prisma.UserUpdateWithoutPasswordResetTokensInput>, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
 }
 
 export type UserCreateNestedManyWithoutHouseholdInput = {
@@ -461,15 +508,85 @@ export type UserUpdateOneRequiredWithoutRecipesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRecipesInput, Prisma.UserUpdateWithoutRecipesInput>, Prisma.UserUncheckedUpdateWithoutRecipesInput>
 }
 
+export type UserCreateWithoutPasswordResetTokensInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
+  eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
+  recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+}
+
+export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  householdId?: string | null
+  createdAt?: Date | string
+  eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
+  recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+}
+
+export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpsertWithoutPasswordResetTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPasswordResetTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
+  eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
+  recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  householdId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
+  recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
 export type UserCreateWithoutHouseholdInput = {
   id?: string
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   createdAt?: Date | string
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHouseholdInput = {
@@ -477,10 +594,12 @@ export type UserUncheckedCreateWithoutHouseholdInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   createdAt?: Date | string
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHouseholdInput = {
@@ -517,6 +636,7 @@ export type UserScalarWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   householdId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -526,10 +646,12 @@ export type UserCreateWithoutEventsCreatedInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   createdAt?: Date | string
   household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventsCreatedInput = {
@@ -537,10 +659,12 @@ export type UserUncheckedCreateWithoutEventsCreatedInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   householdId?: string | null
   createdAt?: Date | string
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventsCreatedInput = {
@@ -564,10 +688,12 @@ export type UserUpdateWithoutEventsCreatedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventsCreatedInput = {
@@ -575,10 +701,12 @@ export type UserUncheckedUpdateWithoutEventsCreatedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   householdId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEventInvitesInput = {
@@ -586,10 +714,12 @@ export type UserCreateWithoutEventInvitesInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   createdAt?: Date | string
   household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventInvitesInput = {
@@ -597,10 +727,12 @@ export type UserUncheckedCreateWithoutEventInvitesInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   householdId?: string | null
   createdAt?: Date | string
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventInvitesInput = {
@@ -624,10 +756,12 @@ export type UserUpdateWithoutEventInvitesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventInvitesInput = {
@@ -635,10 +769,12 @@ export type UserUncheckedUpdateWithoutEventInvitesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   householdId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRecipesInput = {
@@ -646,10 +782,12 @@ export type UserCreateWithoutRecipesInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   createdAt?: Date | string
   household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRecipesInput = {
@@ -657,10 +795,12 @@ export type UserUncheckedCreateWithoutRecipesInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   householdId?: string | null
   createdAt?: Date | string
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRecipesInput = {
@@ -684,10 +824,12 @@ export type UserUpdateWithoutRecipesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecipesInput = {
@@ -695,10 +837,12 @@ export type UserUncheckedUpdateWithoutRecipesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   householdId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyHouseholdInput = {
@@ -706,6 +850,7 @@ export type UserCreateManyHouseholdInput = {
   email: string
   name?: string | null
   passwordHash?: string | null
+  role?: $Enums.Role
   createdAt?: Date | string
 }
 
@@ -714,10 +859,12 @@ export type UserUpdateWithoutHouseholdInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHouseholdInput = {
@@ -725,10 +872,12 @@ export type UserUncheckedUpdateWithoutHouseholdInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutHouseholdInput = {
@@ -736,6 +885,7 @@ export type UserUncheckedUpdateManyWithoutHouseholdInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -748,12 +898,14 @@ export type UserCountOutputType = {
   eventsCreated: number
   eventInvites: number
   recipes: number
+  passwordResetTokens: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   eventsCreated?: boolean | UserCountOutputTypeCountEventsCreatedArgs
   eventInvites?: boolean | UserCountOutputTypeCountEventInvitesArgs
   recipes?: boolean | UserCountOutputTypeCountRecipesArgs
+  passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
 }
 
 /**
@@ -787,18 +939,27 @@ export type UserCountOutputTypeCountRecipesArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.RecipeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PasswordResetTokenWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
   name?: boolean
   passwordHash?: boolean
+  role?: boolean
   householdId?: boolean
   createdAt?: boolean
   household?: boolean | Prisma.User$householdArgs<ExtArgs>
   eventsCreated?: boolean | Prisma.User$eventsCreatedArgs<ExtArgs>
   eventInvites?: boolean | Prisma.User$eventInvitesArgs<ExtArgs>
   recipes?: boolean | Prisma.User$recipesArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -807,6 +968,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   name?: boolean
   passwordHash?: boolean
+  role?: boolean
   householdId?: boolean
   createdAt?: boolean
   household?: boolean | Prisma.User$householdArgs<ExtArgs>
@@ -817,6 +979,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   name?: boolean
   passwordHash?: boolean
+  role?: boolean
   householdId?: boolean
   createdAt?: boolean
   household?: boolean | Prisma.User$householdArgs<ExtArgs>
@@ -827,16 +990,18 @@ export type UserSelectScalar = {
   email?: boolean
   name?: boolean
   passwordHash?: boolean
+  role?: boolean
   householdId?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "passwordHash" | "householdId" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "passwordHash" | "role" | "householdId" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   household?: boolean | Prisma.User$householdArgs<ExtArgs>
   eventsCreated?: boolean | Prisma.User$eventsCreatedArgs<ExtArgs>
   eventInvites?: boolean | Prisma.User$eventInvitesArgs<ExtArgs>
   recipes?: boolean | Prisma.User$recipesArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -853,12 +1018,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     eventsCreated: Prisma.$EventPayload<ExtArgs>[]
     eventInvites: Prisma.$EventAttendeePayload<ExtArgs>[]
     recipes: Prisma.$RecipePayload<ExtArgs>[]
+    passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
     name: string | null
     passwordHash: string | null
+    role: $Enums.Role
     householdId: string | null
     createdAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1259,6 +1426,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   eventsCreated<T extends Prisma.User$eventsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eventInvites<T extends Prisma.User$eventInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventAttendeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recipes<T extends Prisma.User$recipesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$recipesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecipePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1292,6 +1460,7 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly householdId: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1783,6 +1952,30 @@ export type User$recipesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.RecipeScalarFieldEnum | Prisma.RecipeScalarFieldEnum[]
+}
+
+/**
+ * User.passwordResetTokens
+ */
+export type User$passwordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PasswordResetToken
+   */
+  select?: Prisma.PasswordResetTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PasswordResetToken
+   */
+  omit?: Prisma.PasswordResetTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PasswordResetTokenInclude<ExtArgs> | null
+  where?: Prisma.PasswordResetTokenWhereInput
+  orderBy?: Prisma.PasswordResetTokenOrderByWithRelationInput | Prisma.PasswordResetTokenOrderByWithRelationInput[]
+  cursor?: Prisma.PasswordResetTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PasswordResetTokenScalarFieldEnum | Prisma.PasswordResetTokenScalarFieldEnum[]
 }
 
 /**

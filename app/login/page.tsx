@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
@@ -66,6 +67,11 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <p className="text-right text-sm">
+                <Link href="/forgot-password" className="text-muted-foreground underline">
+                  Forgot password?
+                </Link>
+              </p>
             </div>
 
             {error && (

@@ -18,13 +18,29 @@ model User {
   email        String     @unique
   name         String?
   passwordHash String?
+  role         Role       @default(MEMBER)
   household    Household? @relation(fields: [householdId], references: [id])
   householdId  String?
   createdAt    DateTime   @default(now())
 
-  eventsCreated Event[]         @relation("EventCreator")
-  eventInvites  EventAttendee[]
-  recipes       Recipe[]
+  eventsCreated       Event[]              @relation("EventCreator")
+  eventInvites        EventAttendee[]
+  recipes             Recipe[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 model Household {
