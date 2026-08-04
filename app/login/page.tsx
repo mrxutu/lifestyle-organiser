@@ -31,7 +31,11 @@ export default function LoginPage() {
     setSubmitting(false)
 
     if (result?.error) {
-      setError('Incorrect email or password.')
+      setError(
+        result.code === 'account_disabled'
+          ? 'This account has been disabled.'
+          : 'Incorrect email or password.'
+      )
       return
     }
 

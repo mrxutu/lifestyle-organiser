@@ -6,6 +6,7 @@ import type { Role } from '@/generated/prisma/enums'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   Select,
@@ -43,6 +44,7 @@ export function UserForm({
   const [email, setEmail] = useState(initialUser?.email ?? '')
   const [householdId, setHouseholdId] = useState(initialUser?.householdId ?? households[0]?.id ?? '')
   const [role, setRole] = useState<Role>(initialUser?.role ?? 'MEMBER')
+  const [isActive, setIsActive] = useState(initialUser?.isActive ?? true)
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -54,7 +56,9 @@ export function UserForm({
     setSubmitting(true)
     setError(null)
 
-    const body = initialUser ? { name, householdId, role } : { name, email, householdId, role }
+    const body = initialUser
+      ? { name, householdId, role, isActive }
+      : { name, email, householdId, role }
 
     const res = await fetch(initialUser ? `/api/admin/users/${initialUser.id}` : '/api/admin/users', {
       method: initialUser ? 'PATCH' : 'POST',
@@ -148,6 +152,20 @@ export function UserForm({
           </p>
         )}
       </div>
+
+      {initialUser && (
+        <div className="flex items-center justify-between">
+          <div>
+            <Label htmlFor="user-active">Account active</Label>
+            {!isActive && (
+              <p className="text-sm text-muted-foreground">
+                This user can&rsquo;t log in while disabled.
+              </p>
+            )}
+          </div>
+          <Switch id="user-active" checked={isActive} onCheckedChange={setIsActive} disabled={isSelf} />
+        </div>
+      )}
 
       {error && (
         <Alert variant="destructive">

@@ -52,6 +52,7 @@ export function AdminUsersPanel({
               <TableHead>Email</TableHead>
               <TableHead>Household</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,6 +67,9 @@ export function AdminUsersPanel({
                 <TableCell className="text-muted-foreground">{user.household?.name ?? '—'}</TableCell>
                 <TableCell>
                   <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'}>{user.role}</Badge>
+                </TableCell>
+                <TableCell>
+                  {!user.isActive && <Badge variant="destructive">Disabled</Badge>}
                 </TableCell>
               </TableRow>
             ))}

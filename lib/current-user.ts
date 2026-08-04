@@ -1,4 +1,5 @@
 import { cache } from 'react'
+import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
@@ -10,10 +11,15 @@ export const getCurrentUser = cache(async () => {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, email: true, name: true, householdId: true, role: true },
+    select: { id: true, email: true, name: true, householdId: true, role: true, isActive: true },
   })
   if (!user) {
     throw new Error(`Session user ${session.user.id} has no matching User row`)
+  }
+  // Re-checked on every request (not just at login) so disabling a user via the
+  // admin page takes effect immediately, even on an already-live session/JWT.
+  if (!user.isActive) {
+    redirect('/login')
   }
   if (!user.householdId) {
     throw new Error(`User ${user.email} has no household assigned`)

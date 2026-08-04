@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import { CredentialsSignin } from '@auth/core/errors'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { prisma } from './prisma'
@@ -8,6 +9,10 @@ const credentialsSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 })
+
+export class AccountDisabledSignin extends CredentialsSignin {
+  code = 'account_disabled'
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
@@ -28,6 +33,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const passwordValid = await bcrypt.compare(password, user.passwordHash)
         if (!passwordValid) return null
+
+        if (!user.isActive) throw new AccountDisabledSignin()
 
         return { id: user.id, email: user.email, name: user.name }
       },

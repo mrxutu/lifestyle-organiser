@@ -19,6 +19,7 @@ model User {
   name         String?
   passwordHash String?
   role         Role       @default(MEMBER)
+  isActive     Boolean    @default(true)
   household    Household? @relation(fields: [householdId], references: [id])
   householdId  String?
   createdAt    DateTime   @default(now())

@@ -16,6 +16,7 @@ export const updateUserInputSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(100),
   householdId: z.string().min(1, 'Household is required'),
   role: z.enum(Role),
+  isActive: z.boolean(),
 })
 
 export type UpdateUserInput = z.infer<typeof updateUserInputSchema>
@@ -31,6 +32,13 @@ export class CannotDeleteSelfError extends Error {
   constructor() {
     super("You can't delete your own account")
     this.name = 'CannotDeleteSelfError'
+  }
+}
+
+export class CannotDisableSelfError extends Error {
+  constructor() {
+    super("You can't disable your own account")
+    this.name = 'CannotDisableSelfError'
   }
 }
 
@@ -67,14 +75,17 @@ export async function createUser(input: CreateUserInput, origin: string) {
 }
 
 export async function updateUser(userId: string, input: UpdateUserInput, currentUserId: string) {
-  if (userId === currentUserId && input.role !== 'ADMIN') {
-    const adminCount = await prisma.user.count({ where: { role: 'ADMIN' } })
-    if (adminCount <= 1) throw new LastAdminError()
+  if (userId === currentUserId) {
+    if (input.role !== 'ADMIN') {
+      const adminCount = await prisma.user.count({ where: { role: 'ADMIN' } })
+      if (adminCount <= 1) throw new LastAdminError()
+    }
+    if (!input.isActive) throw new CannotDisableSelfError()
   }
 
   return prisma.user.update({
     where: { id: userId },
-    data: { name: input.name, householdId: input.householdId, role: input.role },
+    data: { name: input.name, householdId: input.householdId, role: input.role, isActive: input.isActive },
   })
 }
 
