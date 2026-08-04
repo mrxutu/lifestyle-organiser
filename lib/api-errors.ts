@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { EventTypeInUseError } from '@/lib/event-types'
 import { InvalidAttendeesError } from '@/lib/events'
 import { WatchlistSourceInUseError } from '@/lib/watchlist'
+import { BookSourceInUseError } from '@/lib/books'
 import { CannotDeleteSelfError, CannotDisableSelfError, LastAdminError, UserHasContentError } from '@/lib/admin-users'
 import { HouseholdInUseError } from '@/lib/admin-households'
 import { ForbiddenError } from '@/lib/current-user'
@@ -32,6 +33,7 @@ export function errorResponse(error: unknown) {
   if (
     error instanceof EventTypeInUseError ||
     error instanceof WatchlistSourceInUseError ||
+    error instanceof BookSourceInUseError ||
     error instanceof UserHasContentError ||
     error instanceof HouseholdInUseError
   ) {

@@ -210,6 +210,7 @@ export type UserWhereInput = {
   eventsCreated?: Prisma.EventListRelationFilter
   eventInvites?: Prisma.EventAttendeeListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
+  books?: Prisma.BookListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }
 
@@ -226,6 +227,7 @@ export type UserOrderByWithRelationInput = {
   eventsCreated?: Prisma.EventOrderByRelationAggregateInput
   eventInvites?: Prisma.EventAttendeeOrderByRelationAggregateInput
   recipes?: Prisma.RecipeOrderByRelationAggregateInput
+  books?: Prisma.BookOrderByRelationAggregateInput
   passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
 }
 
@@ -245,6 +247,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   eventsCreated?: Prisma.EventListRelationFilter
   eventInvites?: Prisma.EventAttendeeListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
+  books?: Prisma.BookListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }, "id" | "email">
 
@@ -288,6 +291,7 @@ export type UserCreateInput = {
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
@@ -303,6 +307,7 @@ export type UserUncheckedCreateInput = {
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -318,6 +323,7 @@ export type UserUpdateInput = {
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -333,6 +339,7 @@ export type UserUncheckedUpdateInput = {
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -534,6 +541,20 @@ export type UserUpdateOneRequiredWithoutRecipesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRecipesInput, Prisma.UserUpdateWithoutRecipesInput>, Prisma.UserUncheckedUpdateWithoutRecipesInput>
 }
 
+export type UserCreateNestedOneWithoutBooksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBooksInput, Prisma.UserUncheckedCreateWithoutBooksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBooksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBooksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBooksInput, Prisma.UserUncheckedCreateWithoutBooksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBooksInput
+  upsert?: Prisma.UserUpsertWithoutBooksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBooksInput, Prisma.UserUpdateWithoutBooksInput>, Prisma.UserUncheckedUpdateWithoutBooksInput>
+}
+
 export type UserCreateWithoutPasswordResetTokensInput = {
   id?: string
   email: string
@@ -546,6 +567,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookCreateNestedManyWithoutReaderInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -560,6 +582,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutReaderInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -590,6 +613,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUpdateManyWithoutReaderNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -604,6 +628,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutReaderNestedInput
 }
 
 export type UserCreateWithoutHouseholdInput = {
@@ -617,6 +642,7 @@ export type UserCreateWithoutHouseholdInput = {
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
@@ -631,6 +657,7 @@ export type UserUncheckedCreateWithoutHouseholdInput = {
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -685,6 +712,7 @@ export type UserCreateWithoutEventsCreatedInput = {
   household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
@@ -699,6 +727,7 @@ export type UserUncheckedCreateWithoutEventsCreatedInput = {
   createdAt?: Date | string
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -729,6 +758,7 @@ export type UserUpdateWithoutEventsCreatedInput = {
   household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -743,6 +773,7 @@ export type UserUncheckedUpdateWithoutEventsCreatedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -757,6 +788,7 @@ export type UserCreateWithoutEventInvitesInput = {
   household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
@@ -771,6 +803,7 @@ export type UserUncheckedCreateWithoutEventInvitesInput = {
   createdAt?: Date | string
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -801,6 +834,7 @@ export type UserUpdateWithoutEventInvitesInput = {
   household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -815,6 +849,7 @@ export type UserUncheckedUpdateWithoutEventInvitesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -829,6 +864,7 @@ export type UserCreateWithoutRecipesInput = {
   household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
+  books?: Prisma.BookCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
@@ -843,6 +879,7 @@ export type UserUncheckedCreateWithoutRecipesInput = {
   createdAt?: Date | string
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutReaderInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -873,6 +910,7 @@ export type UserUpdateWithoutRecipesInput = {
   household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
+  books?: Prisma.BookUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -887,6 +925,83 @@ export type UserUncheckedUpdateWithoutRecipesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutReaderNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBooksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  createdAt?: Date | string
+  household?: Prisma.HouseholdCreateNestedOneWithoutUsersInput
+  eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  eventInvites?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
+  recipes?: Prisma.RecipeCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBooksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  householdId?: string | null
+  createdAt?: Date | string
+  eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  eventInvites?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
+  recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutAuthorInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBooksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBooksInput, Prisma.UserUncheckedCreateWithoutBooksInput>
+}
+
+export type UserUpsertWithoutBooksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBooksInput, Prisma.UserUncheckedUpdateWithoutBooksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBooksInput, Prisma.UserUncheckedCreateWithoutBooksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBooksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBooksInput, Prisma.UserUncheckedUpdateWithoutBooksInput>
+}
+
+export type UserUpdateWithoutBooksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  household?: Prisma.HouseholdUpdateOneWithoutUsersNestedInput
+  eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
+  recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBooksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  householdId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
+  recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -911,6 +1026,7 @@ export type UserUpdateWithoutHouseholdInput = {
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -925,6 +1041,7 @@ export type UserUncheckedUpdateWithoutHouseholdInput = {
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventInvites?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutReaderNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -947,6 +1064,7 @@ export type UserCountOutputType = {
   eventsCreated: number
   eventInvites: number
   recipes: number
+  books: number
   passwordResetTokens: number
 }
 
@@ -954,6 +1072,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   eventsCreated?: boolean | UserCountOutputTypeCountEventsCreatedArgs
   eventInvites?: boolean | UserCountOutputTypeCountEventInvitesArgs
   recipes?: boolean | UserCountOutputTypeCountRecipesArgs
+  books?: boolean | UserCountOutputTypeCountBooksArgs
   passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
 }
 
@@ -991,6 +1110,13 @@ export type UserCountOutputTypeCountRecipesArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountBooksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PasswordResetTokenWhereInput
 }
@@ -1009,6 +1135,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   eventsCreated?: boolean | Prisma.User$eventsCreatedArgs<ExtArgs>
   eventInvites?: boolean | Prisma.User$eventInvitesArgs<ExtArgs>
   recipes?: boolean | Prisma.User$recipesArgs<ExtArgs>
+  books?: boolean | Prisma.User$booksArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -1054,6 +1181,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   eventsCreated?: boolean | Prisma.User$eventsCreatedArgs<ExtArgs>
   eventInvites?: boolean | Prisma.User$eventInvitesArgs<ExtArgs>
   recipes?: boolean | Prisma.User$recipesArgs<ExtArgs>
+  books?: boolean | Prisma.User$booksArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1071,6 +1199,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     eventsCreated: Prisma.$EventPayload<ExtArgs>[]
     eventInvites: Prisma.$EventAttendeePayload<ExtArgs>[]
     recipes: Prisma.$RecipePayload<ExtArgs>[]
+    books: Prisma.$BookPayload<ExtArgs>[]
     passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1480,6 +1609,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   eventsCreated<T extends Prisma.User$eventsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eventInvites<T extends Prisma.User$eventInvitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventAttendeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recipes<T extends Prisma.User$recipesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$recipesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecipePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  books<T extends Prisma.User$booksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$booksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2007,6 +2137,30 @@ export type User$recipesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.RecipeScalarFieldEnum | Prisma.RecipeScalarFieldEnum[]
+}
+
+/**
+ * User.books
+ */
+export type User$booksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Book
+   */
+  select?: Prisma.BookSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Book
+   */
+  omit?: Prisma.BookOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookInclude<ExtArgs> | null
+  where?: Prisma.BookWhereInput
+  orderBy?: Prisma.BookOrderByWithRelationInput | Prisma.BookOrderByWithRelationInput[]
+  cursor?: Prisma.BookWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookScalarFieldEnum | Prisma.BookScalarFieldEnum[]
 }
 
 /**

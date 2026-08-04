@@ -58,3 +58,11 @@ A TV/movie tracking page, table/row-based rather than card-based like the other 
 - Sortable columns, filterable (by Status and Source)
 - Sources are user-manageable (add/edit/remove), same pattern as Event Types
 - Shared, no permission levels — same as everything else in the app
+
+### Books (added 2026-08)
+A book-tracking page, card-based (same pattern as Recipes).
+- Fields per book: Title, Author, Summary, Date Read, Status (To Read / Reading / Read), Source (managed dropdown list), Notes, Reader (dropdown of household members)
+- Card list view (title, author, status, reader) + a separate read-only detail view, same routing pattern as Recipes (`/books`, `/books/[id]`, `/books/[id]/edit`, `/books/new`)
+- Title-only search on the list view, same as Recipes
+- Sources are user-manageable (add/edit/remove), same pattern as Event Types/Watchlist Sources
+- Shared, no permission levels — same as everything else in the app

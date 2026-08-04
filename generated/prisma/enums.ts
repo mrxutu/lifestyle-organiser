@@ -48,3 +48,12 @@ export const WatchStatus = {
 } as const
 
 export type WatchStatus = (typeof WatchStatus)[keyof typeof WatchStatus]
+
+
+export const BookStatus = {
+  TO_READ: 'TO_READ',
+  READING: 'READING',
+  READ: 'READ'
+} as const
+
+export type BookStatus = (typeof BookStatus)[keyof typeof BookStatus]

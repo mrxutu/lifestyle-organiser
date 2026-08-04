@@ -60,7 +60,9 @@ export const ModelName = {
   Recipe: 'Recipe',
   Ingredient: 'Ingredient',
   WatchlistEntry: 'WatchlistEntry',
-  WatchlistSource: 'WatchlistSource'
+  WatchlistSource: 'WatchlistSource',
+  Book: 'Book',
+  BookSource: 'BookSource'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -201,6 +203,33 @@ export const WatchlistSourceScalarFieldEnum = {
 } as const
 
 export type WatchlistSourceScalarFieldEnum = (typeof WatchlistSourceScalarFieldEnum)[keyof typeof WatchlistSourceScalarFieldEnum]
+
+
+export const BookScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  author: 'author',
+  summary: 'summary',
+  imageUrl: 'imageUrl',
+  dateRead: 'dateRead',
+  rating: 'rating',
+  status: 'status',
+  sourceId: 'sourceId',
+  notes: 'notes',
+  readerId: 'readerId',
+  householdId: 'householdId',
+  createdAt: 'createdAt'
+} as const
+
+export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum]
+
+
+export const BookSourceScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+} as const
+
+export type BookSourceScalarFieldEnum = (typeof BookSourceScalarFieldEnum)[keyof typeof BookSourceScalarFieldEnum]
 
 
 export const SortOrder = {

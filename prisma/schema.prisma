@@ -27,6 +27,7 @@ model User {
   eventsCreated       Event[]              @relation("EventCreator")
   eventInvites        EventAttendee[]
   recipes             Recipe[]
+  books               Book[]
   passwordResetTokens PasswordResetToken[]
 }
 
@@ -51,6 +52,7 @@ model Household {
   events    Event[]
   recipes   Recipe[]
   watchlist WatchlistEntry[]
+  books     Book[]
 }
 
 // ---------- EVENTS (colour-coded calendar — reminders are events too) ----------
@@ -174,4 +176,37 @@ model WatchlistSource {
   id      String           @id @default(cuid())
   name    String           @unique // e.g. "Netflix", "Apple TV", "IP Stream", "Prime", "Terrestrial"
   entries WatchlistEntry[]
+}
+
+// ---------- BOOKS ----------
+
+model Book {
+  id          String     @id @default(cuid())
+  title       String
+  author      String
+  summary     String?
+  imageUrl    String?
+  dateRead    DateTime?
+  rating      Int? // 1-5 stars, null = not rated
+  status      BookStatus @default(TO_READ)
+  source      BookSource @relation(fields: [sourceId], references: [id])
+  sourceId    String
+  notes       String?
+  reader      User       @relation(fields: [readerId], references: [id])
+  readerId    String
+  household   Household  @relation(fields: [householdId], references: [id])
+  householdId String
+  createdAt   DateTime   @default(now())
+}
+
+enum BookStatus {
+  TO_READ
+  READING
+  READ
+}
+
+model BookSource {
+  id    String @id @default(cuid())
+  name  String @unique // e.g. "Kindle", "Physical Book", "Audiobook", "Library"
+  books Book[]
 }

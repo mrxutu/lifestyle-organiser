@@ -24,6 +24,7 @@ async function upsertUser(email: string, name: string, householdId: string) {
 }
 
 const WATCHLIST_SOURCES = ['Apple TV', 'Netflix', 'IP Stream', 'Prime', 'Terrestrial']
+const BOOK_SOURCES = ['Kindle', 'Physical Book', 'Audiobook', 'Library']
 
 async function main() {
   const household = await prisma.household.upsert({
@@ -39,6 +40,10 @@ async function main() {
 
   for (const name of WATCHLIST_SOURCES) {
     await prisma.watchlistSource.upsert({ where: { name }, update: {}, create: { name } })
+  }
+
+  for (const name of BOOK_SOURCES) {
+    await prisma.bookSource.upsert({ where: { name }, update: {}, create: { name } })
   }
 
   console.log('\nSeeded accounts (save these now, they will not be shown again):\n')

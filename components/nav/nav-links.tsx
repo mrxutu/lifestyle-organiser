@@ -9,6 +9,7 @@ const links = [
   { href: '/calendar', label: 'Calendar' },
   { href: '/recipes', label: 'Recipes' },
   { href: '/watchlist', label: 'Watchlist' },
+  { href: '/books', label: 'Books' },
 ]
 
 export function NavLinks({ isAdmin }: { isAdmin?: boolean }) {

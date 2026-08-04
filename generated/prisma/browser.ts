@@ -67,3 +67,13 @@ export type WatchlistEntry = Prisma.WatchlistEntryModel
  * 
  */
 export type WatchlistSource = Prisma.WatchlistSourceModel
+/**
+ * Model Book
+ * 
+ */
+export type Book = Prisma.BookModel
+/**
+ * Model BookSource
+ * 
+ */
+export type BookSource = Prisma.BookSourceModel
