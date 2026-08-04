@@ -22,7 +22,7 @@ export function NavLinks({ isAdmin, sections }: { isAdmin?: boolean; sections: S
     : visibleLinks
 
   return (
-    <nav className="flex items-center gap-3 lg:gap-6">
+    <nav className="flex items-center gap-1 lg:gap-6">
       {allLinks.map((link) => {
         const isActive = pathname.startsWith(link.href)
         const Icon = link.icon
@@ -33,7 +33,9 @@ export function NavLinks({ isAdmin, sections }: { isAdmin?: boolean; sections: S
             aria-current={isActive ? 'page' : undefined}
             aria-label={link.label}
             className={cn(
-              'flex items-center gap-1.5 text-sm transition-colors',
+              // Extra padding below `lg:` grows the tap target well past the bare 16px icon
+              // for touch — cancelled at `lg:` where labels appear and space is already tight.
+              'flex items-center gap-1.5 rounded-lg p-2 text-sm transition-colors hover:bg-muted lg:p-0 lg:hover:bg-transparent',
               isActive ? 'font-medium text-foreground' : 'text-muted-foreground hover:text-foreground'
             )}
           >
