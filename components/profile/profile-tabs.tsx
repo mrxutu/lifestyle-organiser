@@ -10,8 +10,10 @@ import type { UpcomingReminder } from '@/lib/events'
 import type { listRecipes } from '@/lib/recipes'
 import type { WatchlistEntryWithSource } from '@/lib/watchlist'
 import type { listBooks } from '@/lib/books'
+import type { SectionFlags } from '@/lib/household-sections'
 
 export function ProfileTabs({
+  sections,
   reminders,
   eventTypes,
   currentUserId,
@@ -21,6 +23,7 @@ export function ProfileTabs({
   watchlistSources,
   myBooks,
 }: {
+  sections: SectionFlags
   reminders: UpcomingReminder[]
   eventTypes: EventType[]
   currentUserId: string
@@ -30,50 +33,64 @@ export function ProfileTabs({
   watchlistSources: WatchlistSource[]
   myBooks: Awaited<ReturnType<typeof listBooks>>
 }) {
+  const tabs = [
+    {
+      key: 'reminders',
+      enabled: sections.calendar,
+      label: 'Reminders/Calendar',
+      content: (
+        <ProfileRemindersSection
+          reminders={reminders}
+          eventTypes={eventTypes}
+          currentUserId={currentUserId}
+          householdUsers={householdUsers}
+        />
+      ),
+    },
+    {
+      key: 'recipes',
+      enabled: sections.recipes,
+      label: 'Recipes',
+      content: <ProfileRecipesSection recipes={myRecipes} />,
+    },
+    {
+      key: 'watchlist',
+      enabled: sections.watchlist,
+      label: 'Watchlist',
+      content: <ProfileWatchlistSection entries={watchlistEntries} sources={watchlistSources} />,
+    },
+    {
+      key: 'books',
+      enabled: sections.books,
+      label: 'Books',
+      content: <ProfileBooksSection books={myBooks} />,
+    },
+  ].filter((tab) => tab.enabled)
+
   return (
     <Tabs defaultValue="all">
       <div className="overflow-x-auto">
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="reminders">Reminders/Calendar</TabsTrigger>
-          <TabsTrigger value="recipes">Recipes</TabsTrigger>
-          <TabsTrigger value="watchlist">Watchlist</TabsTrigger>
-          <TabsTrigger value="books">Books</TabsTrigger>
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.key} value={tab.key}>
+              {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
       </div>
 
       <TabsContent value="all" className="flex flex-col gap-8 pt-2">
-        <ProfileRemindersSection
-          reminders={reminders}
-          eventTypes={eventTypes}
-          currentUserId={currentUserId}
-          householdUsers={householdUsers}
-        />
-        <ProfileRecipesSection recipes={myRecipes} />
-        <ProfileWatchlistSection entries={watchlistEntries} sources={watchlistSources} />
-        <ProfileBooksSection books={myBooks} />
+        {tabs.map((tab) => (
+          <div key={tab.key}>{tab.content}</div>
+        ))}
       </TabsContent>
 
-      <TabsContent value="reminders" className="pt-2">
-        <ProfileRemindersSection
-          reminders={reminders}
-          eventTypes={eventTypes}
-          currentUserId={currentUserId}
-          householdUsers={householdUsers}
-        />
-      </TabsContent>
-
-      <TabsContent value="recipes" className="pt-2">
-        <ProfileRecipesSection recipes={myRecipes} />
-      </TabsContent>
-
-      <TabsContent value="watchlist" className="pt-2">
-        <ProfileWatchlistSection entries={watchlistEntries} sources={watchlistSources} />
-      </TabsContent>
-
-      <TabsContent value="books" className="pt-2">
-        <ProfileBooksSection books={myBooks} />
-      </TabsContent>
+      {tabs.map((tab) => (
+        <TabsContent key={tab.key} value={tab.key} className="pt-2">
+          {tab.content}
+        </TabsContent>
+      ))}
     </Tabs>
   )
 }

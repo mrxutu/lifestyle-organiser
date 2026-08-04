@@ -53,6 +53,13 @@ model Household {
   recipes   Recipe[]
   watchlist WatchlistEntry[]
   books     Book[]
+
+  // Admin-controlled section visibility — no per-user preference. Reminders is a
+  // filtered view of Events, not a separate model, so it rides along with showCalendar.
+  showCalendar  Boolean @default(true)
+  showRecipes   Boolean @default(true)
+  showWatchlist Boolean @default(true)
+  showBooks     Boolean @default(true)
 }
 
 // ---------- EVENTS (colour-coded calendar — reminders are events too) ----------

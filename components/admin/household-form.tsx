@@ -2,9 +2,11 @@
 
 import { useState, type FormEvent } from 'react'
 import type { HouseholdWithCount } from '@/lib/admin-households'
+import { SECTION_KEYS, SECTION_META, type SectionFlags } from '@/lib/household-sections'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   AlertDialog,
@@ -18,6 +20,15 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
+function sectionsFrom(household?: HouseholdWithCount | null): SectionFlags {
+  return {
+    calendar: household?.showCalendar ?? true,
+    recipes: household?.showRecipes ?? true,
+    watchlist: household?.showWatchlist ?? true,
+    books: household?.showBooks ?? true,
+  }
+}
+
 export function HouseholdForm({
   initialHousehold,
   onSuccess,
@@ -28,12 +39,23 @@ export function HouseholdForm({
   onCancel: () => void
 }) {
   const [name, setName] = useState(initialHousehold?.name ?? '')
+  const [sections, setSections] = useState<SectionFlags>(sectionsFrom(initialHousehold))
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const noSectionsEnabled = SECTION_KEYS.every((key) => !sections[key])
+
+  function toggleSection(key: keyof SectionFlags) {
+    setSections((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    if (noSectionsEnabled) {
+      setError('At least one section must stay enabled')
+      return
+    }
     setSubmitting(true)
     setError(null)
 
@@ -42,7 +64,13 @@ export function HouseholdForm({
       {
         method: initialHousehold ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({
+          name,
+          showCalendar: sections.calendar,
+          showRecipes: sections.recipes,
+          showWatchlist: sections.watchlist,
+          showBooks: sections.books,
+        }),
       }
     )
 
@@ -82,6 +110,28 @@ export function HouseholdForm({
         <Input id="household-name" required value={name} onChange={(e) => setName(e.target.value)} />
       </div>
 
+      <div className="space-y-1.5">
+        <Label>Section types</Label>
+        <div className="flex flex-col gap-2">
+          {SECTION_KEYS.map((key) => (
+            <div key={key} className="flex items-center gap-2">
+              <Checkbox
+                id={`household-section-${key}`}
+                checked={sections[key]}
+                onCheckedChange={() => toggleSection(key)}
+              />
+              <Label htmlFor={`household-section-${key}`} className="font-normal">
+                {SECTION_META[key].label}
+                {key === 'calendar' && ' (includes Reminders)'}
+              </Label>
+            </div>
+          ))}
+        </div>
+        {noSectionsEnabled && (
+          <p className="text-sm text-destructive">At least one section must stay enabled.</p>
+        )}
+      </div>
+
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
@@ -116,7 +166,7 @@ export function HouseholdForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={submitting}>
+        <Button type="submit" disabled={submitting || noSectionsEnabled}>
           {submitting ? 'Saving…' : initialHousehold ? 'Save changes' : 'Create household'}
         </Button>
       </div>

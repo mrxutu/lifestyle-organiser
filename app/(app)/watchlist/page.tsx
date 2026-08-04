@@ -1,9 +1,9 @@
 import { WatchlistCards } from '@/components/watchlist/watchlist-cards'
-import { getCurrentUser } from '@/lib/current-user'
+import { requireSection } from '@/lib/current-user'
 import { listWatchlistEntries, listWatchlistSources } from '@/lib/watchlist'
 
 export default async function WatchlistPage() {
-  const { householdId } = await getCurrentUser()
+  const { householdId } = await requireSection('watchlist')
   const [entries, sources] = await Promise.all([
     listWatchlistEntries(householdId),
     listWatchlistSources(),

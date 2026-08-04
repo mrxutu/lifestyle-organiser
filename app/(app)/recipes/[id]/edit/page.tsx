@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation'
 import { RecipeForm } from '@/components/recipes/recipe-form'
-import { getCurrentUser } from '@/lib/current-user'
+import { requireSection } from '@/lib/current-user'
 import { getRecipe } from '@/lib/recipes'
 
 export default async function EditRecipePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { householdId } = await getCurrentUser()
+  const { householdId } = await requireSection('recipes')
   const recipe = await getRecipe(householdId, id)
 
   if (!recipe) notFound()

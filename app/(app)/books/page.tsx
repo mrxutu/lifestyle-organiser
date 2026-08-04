@@ -4,11 +4,11 @@ import { EmptyState } from '@/components/empty-state'
 import { BookGrid } from '@/components/books/book-grid'
 import { BookSourceManagerDialog } from '@/components/books/book-source-manager-dialog'
 import { Button } from '@/components/ui/button'
-import { getCurrentUser } from '@/lib/current-user'
+import { requireSection } from '@/lib/current-user'
 import { listBooks, listBookSources } from '@/lib/books'
 
 export default async function BooksPage() {
-  const { householdId } = await getCurrentUser()
+  const { householdId } = await requireSection('books')
   const [books, sources] = await Promise.all([listBooks(householdId), listBookSources()])
 
   return (

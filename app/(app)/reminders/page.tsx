@@ -1,12 +1,12 @@
 import { BellOff } from 'lucide-react'
 import { EmptyState } from '@/components/empty-state'
 import { RemindersBoard } from '@/components/reminders/reminders-board'
-import { getCurrentUser, listHouseholdUsers } from '@/lib/current-user'
+import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listUpcomingReminders } from '@/lib/events'
 import { listEventTypes } from '@/lib/event-types'
 
 export default async function RemindersPage() {
-  const { id: currentUserId, householdId } = await getCurrentUser()
+  const { id: currentUserId, householdId } = await requireSection('calendar')
   const [reminders, eventTypes, householdUsers] = await Promise.all([
     listUpcomingReminders(householdId),
     listEventTypes(),

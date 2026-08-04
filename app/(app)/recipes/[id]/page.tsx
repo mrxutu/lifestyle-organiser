@@ -4,13 +4,13 @@ import { ChefHat, Pencil } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { MethodView } from '@/components/recipes/method-view'
-import { getCurrentUser } from '@/lib/current-user'
+import { requireSection } from '@/lib/current-user'
 import { getRecipe } from '@/lib/recipes'
 import { formatIngredientLine } from '@/lib/measurement-units'
 
 export default async function RecipeViewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { householdId } = await getCurrentUser()
+  const { householdId } = await requireSection('recipes')
   const recipe = await getRecipe(householdId, id)
 
   if (!recipe) notFound()

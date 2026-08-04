@@ -1,5 +1,5 @@
 import { CalendarBoard } from '@/components/calendar/calendar-board'
-import { getCurrentUser, listHouseholdUsers } from '@/lib/current-user'
+import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listEvents } from '@/lib/events'
 import { listEventTypes } from '@/lib/event-types'
 
@@ -8,7 +8,7 @@ export default async function CalendarPage({
 }: {
   searchParams: Promise<{ eventId?: string }>
 }) {
-  const { id: currentUserId, householdId } = await getCurrentUser()
+  const { id: currentUserId, householdId } = await requireSection('calendar')
   const [events, eventTypes, householdUsers, { eventId }] = await Promise.all([
     listEvents(householdId),
     listEventTypes(),

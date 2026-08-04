@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { EmptyState } from '@/components/empty-state'
 import { RecipeGrid } from '@/components/recipes/recipe-grid'
 import { Button } from '@/components/ui/button'
-import { getCurrentUser } from '@/lib/current-user'
+import { requireSection } from '@/lib/current-user'
 import { listRecipes } from '@/lib/recipes'
 
 export default async function RecipesPage() {
-  const { householdId } = await getCurrentUser()
+  const { householdId } = await requireSection('recipes')
   const recipes = await listRecipes(householdId)
 
   return (

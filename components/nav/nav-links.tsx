@@ -3,18 +3,20 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import type { SectionFlags } from '@/lib/household-sections'
 
-const links = [
-  { href: '/reminders', label: 'Reminders' },
-  { href: '/calendar', label: 'Calendar' },
-  { href: '/recipes', label: 'Recipes' },
-  { href: '/watchlist', label: 'Watchlist' },
-  { href: '/books', label: 'Books' },
+const links: { href: string; label: string; section: keyof SectionFlags }[] = [
+  { href: '/reminders', label: 'Reminders', section: 'calendar' },
+  { href: '/calendar', label: 'Calendar', section: 'calendar' },
+  { href: '/recipes', label: 'Recipes', section: 'recipes' },
+  { href: '/watchlist', label: 'Watchlist', section: 'watchlist' },
+  { href: '/books', label: 'Books', section: 'books' },
 ]
 
-export function NavLinks({ isAdmin }: { isAdmin?: boolean }) {
+export function NavLinks({ isAdmin, sections }: { isAdmin?: boolean; sections: SectionFlags }) {
   const pathname = usePathname()
-  const allLinks = isAdmin ? [...links, { href: '/admin', label: 'Admin' }] : links
+  const visibleLinks = links.filter((link) => sections[link.section])
+  const allLinks = isAdmin ? [...visibleLinks, { href: '/admin', label: 'Admin' }] : visibleLinks
 
   return (
     <nav className="flex items-center gap-4 sm:gap-6">

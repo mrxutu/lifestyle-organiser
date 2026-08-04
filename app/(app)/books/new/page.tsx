@@ -1,9 +1,9 @@
 import { BookForm } from '@/components/books/book-form'
-import { getCurrentUser, listHouseholdUsers } from '@/lib/current-user'
+import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listBookSources } from '@/lib/books'
 
 export default async function NewBookPage() {
-  const { id: currentUserId, householdId } = await getCurrentUser()
+  const { id: currentUserId, householdId } = await requireSection('books')
   const [sources, householdUsers] = await Promise.all([
     listBookSources(),
     listHouseholdUsers(householdId),

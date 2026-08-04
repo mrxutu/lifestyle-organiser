@@ -1,9 +1,18 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 
-export const householdInputSchema = z.object({
-  name: z.string().trim().min(1, 'Name is required').max(100),
-})
+export const householdInputSchema = z
+  .object({
+    name: z.string().trim().min(1, 'Name is required').max(100),
+    showCalendar: z.boolean().default(true),
+    showRecipes: z.boolean().default(true),
+    showWatchlist: z.boolean().default(true),
+    showBooks: z.boolean().default(true),
+  })
+  .refine((data) => data.showCalendar || data.showRecipes || data.showWatchlist || data.showBooks, {
+    message: 'At least one section must stay enabled',
+    path: ['showCalendar'],
+  })
 
 export type HouseholdInput = z.infer<typeof householdInputSchema>
 

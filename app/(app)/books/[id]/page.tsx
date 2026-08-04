@@ -7,12 +7,12 @@ import { StarRating } from '@/components/books/star-rating'
 import { bookStatusBadgeVariant, bookStatusLabel } from '@/lib/book-status'
 import type { BookRating } from '@/lib/book-rating'
 import { formatFriendlyDate } from '@/lib/format-datetime'
-import { getCurrentUser } from '@/lib/current-user'
+import { requireSection } from '@/lib/current-user'
 import { getBook } from '@/lib/books'
 
 export default async function BookViewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { householdId } = await getCurrentUser()
+  const { householdId } = await requireSection('books')
   const book = await getBook(householdId, id)
 
   if (!book) notFound()

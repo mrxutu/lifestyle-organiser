@@ -108,7 +108,11 @@ export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalar
 
 export const HouseholdScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  showCalendar: 'showCalendar',
+  showRecipes: 'showRecipes',
+  showWatchlist: 'showWatchlist',
+  showBooks: 'showBooks'
 } as const
 
 export type HouseholdScalarFieldEnum = (typeof HouseholdScalarFieldEnum)[keyof typeof HouseholdScalarFieldEnum]

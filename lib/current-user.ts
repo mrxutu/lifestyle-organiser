@@ -2,6 +2,7 @@ import { cache } from 'react'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import type { SectionFlags, SectionKey } from '@/lib/household-sections'
 
 export const getCurrentUser = cache(async () => {
   const session = await auth()
@@ -11,7 +12,17 @@ export const getCurrentUser = cache(async () => {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, email: true, name: true, householdId: true, role: true, isActive: true },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      householdId: true,
+      role: true,
+      isActive: true,
+      household: {
+        select: { showCalendar: true, showRecipes: true, showWatchlist: true, showBooks: true },
+      },
+    },
   })
   if (!user) {
     throw new Error(`Session user ${session.user.id} has no matching User row`)
@@ -21,11 +32,18 @@ export const getCurrentUser = cache(async () => {
   if (!user.isActive) {
     redirect('/login')
   }
-  if (!user.householdId) {
+  if (!user.householdId || !user.household) {
     throw new Error(`User ${user.email} has no household assigned`)
   }
 
-  return { ...user, householdId: user.householdId }
+  const sections: SectionFlags = {
+    calendar: user.household.showCalendar,
+    recipes: user.household.showRecipes,
+    watchlist: user.household.showWatchlist,
+    books: user.household.showBooks,
+  }
+
+  return { ...user, householdId: user.householdId, sections }
 })
 
 export class ForbiddenError extends Error {
@@ -38,6 +56,14 @@ export class ForbiddenError extends Error {
 export async function requireAdmin() {
   const user = await getCurrentUser()
   if (user.role !== 'ADMIN') throw new ForbiddenError()
+  return user
+}
+
+// Server-side gate for a section's routes — redirects rather than just relying on
+// the nav being hidden, so direct URL access to a disabled section is also blocked.
+export async function requireSection(section: SectionKey) {
+  const user = await getCurrentUser()
+  if (!user.sections[section]) redirect('/profile')
   return user
 }
 
