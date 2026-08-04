@@ -2,6 +2,10 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Tailwind v4 default `dark:` follows the OS media query only — this override
+   switches it to follow the `.dark` class next-themes toggles on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -92,6 +96,41 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Subtle tiled dot pattern behind the app shell — swapped per theme below. */
+  --pattern-dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='1' fill='%231a1a1a' fill-opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.dark {
+  --background: #171717;
+  --foreground: #ededed;
+
+  --card: #1f1f1f;
+  --card-foreground: #ededed;
+  --popover: #1f1f1f;
+  --popover-foreground: #ededed;
+
+  --primary: #6b93b8;
+  --primary-foreground: #171717;
+
+  --secondary: #262626;
+  --secondary-foreground: #ededed;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --accent: #262626;
+  --accent-foreground: #ededed;
+
+  --destructive: #e0847d;
+  --destructive-foreground: #171717;
+
+  --warning: #d4ab74;
+  --warning-foreground: #171717;
+
+  --border: #2e2e2e;
+  --input: #2e2e2e;
+  --ring: #6b93b8;
+
+  --pattern-dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23ededed' fill-opacity='0.06'/%3E%3C/svg%3E");
 }
 
 @layer base {
@@ -104,6 +143,13 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Subtle, code-generated tiled background — very low opacity by design,
+   not meant to be noticeable at a glance. See --pattern-dot above. */
+.app-pattern-bg {
+  background-image: var(--pattern-dot);
+  background-repeat: repeat;
 }
 
 /* Shrink the FullCalendar header controls ~20% on phone-width screens */

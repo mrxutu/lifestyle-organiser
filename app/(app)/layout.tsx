@@ -5,7 +5,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const user = await getCurrentUser()
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="app-pattern-bg flex min-h-screen flex-col">
       <TopNav
         user={{ name: user.name, email: user.email, isAdmin: user.role === 'ADMIN', sections: user.sections }}
       />

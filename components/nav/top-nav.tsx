@@ -1,5 +1,6 @@
 import { NavLinks } from '@/components/nav/nav-links'
 import { UserMenu } from '@/components/nav/user-menu'
+import { ThemeToggle } from '@/components/nav/theme-toggle'
 import type { SectionFlags } from '@/lib/household-sections'
 
 export function TopNav({
@@ -14,7 +15,10 @@ export function TopNav({
           <span className="hidden text-sm font-semibold sm:inline">Lifestyle Organiser</span>
           <NavLinks isAdmin={user.isAdmin} sections={user.sections} />
         </div>
-        <UserMenu name={user.name} email={user.email} />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <UserMenu name={user.name} email={user.email} />
+        </div>
       </div>
     </header>
   )
