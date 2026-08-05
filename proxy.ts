@@ -8,8 +8,9 @@ export default auth((req) => {
     req.nextUrl.pathname.startsWith('/forgot-password') ||
     req.nextUrl.pathname.startsWith('/reset-password')
   const isAuthApi = req.nextUrl.pathname.startsWith('/api/auth')
+  const isHealthCheck = req.nextUrl.pathname.startsWith('/api/health')
 
-  if (isAuthApi || isPublicPage) return NextResponse.next()
+  if (isAuthApi || isHealthCheck || isPublicPage) return NextResponse.next()
 
   if (!isLoggedIn) {
     const loginUrl = new URL('/login', req.nextUrl.origin)
