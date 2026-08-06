@@ -28,6 +28,7 @@ export function RecipeCard({
         )}
         <CardContent className="flex flex-col gap-2">
           <p className="font-medium">{recipe.title}</p>
+          <p className="text-xs text-muted-foreground">Chef: {recipe.chef.name ?? 'Unnamed'}</p>
           {recipe.description && (
             <p className="line-clamp-2 text-sm text-muted-foreground">{recipe.description}</p>
           )}

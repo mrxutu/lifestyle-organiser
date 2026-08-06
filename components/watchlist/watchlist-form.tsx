@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
@@ -36,11 +37,15 @@ export function WatchlistForm({
   initialEntry,
   onSuccess,
   onCancel,
+  householdUsers,
+  currentUserId,
 }: {
   sources: WatchlistSource[]
   initialEntry?: WatchlistEntryWithSource | null
   onSuccess: () => void
   onCancel: () => void
+  householdUsers: { id: string; name: string | null }[]
+  currentUserId: string
 }) {
   const [name, setName] = useState(initialEntry?.name ?? '')
   const [sourceId, setSourceId] = useState(initialEntry?.sourceId ?? sources[0]?.id ?? '')
@@ -49,6 +54,9 @@ export function WatchlistForm({
   const [status, setStatus] = useState<WatchStatus>(initialEntry?.status ?? 'TO_WATCH')
   const [rating, setRating] = useState<string>(
     initialEntry?.rating != null ? String(initialEntry.rating) : NO_RATING
+  )
+  const [viewerUserIds, setViewerUserIds] = useState<string[]>(
+    initialEntry ? initialEntry.viewers.map((viewer) => viewer.userId) : [currentUserId]
   )
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -66,6 +74,7 @@ export function WatchlistForm({
       episode: episode === '' ? null : Number(episode),
       status,
       rating: rating === NO_RATING ? null : Number(rating),
+      viewerUserIds,
     }
 
     const res = await fetch(initialEntry ? `/api/watchlist/${initialEntry.id}` : '/api/watchlist', {
@@ -188,6 +197,41 @@ export function WatchlistForm({
         </Select>
       </div>
 
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between">
+          <Label>Viewers</Label>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setViewerUserIds(householdUsers.map((user) => user.id))}
+          >
+            Select all
+          </Button>
+        </div>
+        <div className="flex flex-col gap-2 rounded-lg border border-border p-3">
+          {householdUsers.map((user) => (
+            <div key={user.id} className="flex items-center gap-2">
+              <Checkbox
+                id={`watchlist-viewer-${user.id}`}
+                checked={viewerUserIds.includes(user.id)}
+                onCheckedChange={() =>
+                  setViewerUserIds((ids) =>
+                    ids.includes(user.id) ? ids.filter((id) => id !== user.id) : [...ids, user.id]
+                  )
+                }
+              />
+              <Label htmlFor={`watchlist-viewer-${user.id}`} className="font-normal">
+                {user.id === currentUserId ? 'Me' : (user.name ?? 'Unnamed household member')}
+              </Label>
+            </div>
+          ))}
+        </div>
+        {viewerUserIds.length === 0 && (
+          <p className="text-sm text-destructive">Select at least one viewer.</p>
+        )}
+      </div>
+
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
@@ -221,7 +265,7 @@ export function WatchlistForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={submitting || sources.length === 0}>
+        <Button type="submit" disabled={submitting || sources.length === 0 || viewerUserIds.length === 0}>
           {submitting ? 'Saving…' : initialEntry ? 'Save changes' : 'Add to watchlist'}
         </Button>
       </div>

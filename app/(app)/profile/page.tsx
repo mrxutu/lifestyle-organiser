@@ -13,14 +13,20 @@ export default async function ProfilePage() {
     await Promise.all([
       sections.calendar ? listUpcomingReminders(householdId) : Promise.resolve([]),
       sections.calendar ? listEventTypes() : Promise.resolve([]),
-      sections.calendar ? listHouseholdUsers(householdId) : Promise.resolve([]),
+      listHouseholdUsers(householdId),
       sections.recipes ? listRecipes(householdId) : Promise.resolve([]),
       sections.watchlist ? listWatchlistEntries(householdId) : Promise.resolve([]),
       sections.watchlist ? listWatchlistSources() : Promise.resolve([]),
       sections.books ? listBooks(householdId) : Promise.resolve([]),
     ])
 
-  const myRecipes = recipes.filter((recipe) => recipe.authorId === currentUserId)
+  const myReminders = reminders.filter((reminder) =>
+    reminder.attendees.some((attendee) => attendee.userId === currentUserId)
+  )
+  const myRecipes = recipes.filter((recipe) => recipe.chefId === currentUserId)
+  const myWatchlistEntries = watchlistEntries.filter((entry) =>
+    entry.viewers.some((viewer) => viewer.userId === currentUserId)
+  )
   const myBooks = books.filter((book) => book.readerId === currentUserId)
 
   return (
@@ -28,12 +34,12 @@ export default async function ProfilePage() {
       <h1 className="text-2xl font-semibold">Profile</h1>
       <ProfileTabs
         sections={sections}
-        reminders={reminders}
+        reminders={myReminders}
         eventTypes={eventTypes}
         currentUserId={currentUserId}
         householdUsers={householdUsers}
         myRecipes={myRecipes}
-        watchlistEntries={watchlistEntries}
+        watchlistEntries={myWatchlistEntries}
         watchlistSources={watchlistSources}
         myBooks={myBooks}
       />

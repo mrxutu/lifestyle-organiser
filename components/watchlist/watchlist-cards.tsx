@@ -24,6 +24,7 @@ import {
 import { ResponsiveDialog } from '@/components/responsive-dialog'
 import { WatchlistForm } from '@/components/watchlist/watchlist-form'
 import { WatchlistSourceManager } from '@/components/watchlist/watchlist-source-manager'
+import { ALL_MEMBERS, memberFilterLabel } from '@/lib/member-filters'
 
 type BoardState =
   | { mode: 'closed' }
@@ -34,19 +35,26 @@ type BoardState =
 export function WatchlistCards({
   entries,
   sources,
+  householdUsers,
+  currentUserId,
+  showViewerFilter = true,
 }: {
   entries: WatchlistEntryWithSource[]
   sources: WatchlistSource[]
+  householdUsers: { id: string; name: string | null }[]
+  currentUserId: string
+  showViewerFilter?: boolean
 }) {
   const router = useRouter()
   const [state, setState] = useState<BoardState>({ mode: 'closed' })
   const [statusFilter, setStatusFilter] = useState<string>(ALL_STATUSES)
   const [sourceFilter, setSourceFilter] = useState<string>(ALL_SOURCES)
   const [ratingFilter, setRatingFilter] = useState<string>(ALL_RATINGS)
+  const [viewerFilter, setViewerFilter] = useState<string>(ALL_MEMBERS)
 
   const filteredEntries = useMemo(
-    () => filterWatchlistEntries(entries, { statusFilter, sourceFilter, ratingFilter }),
-    [entries, statusFilter, sourceFilter, ratingFilter]
+    () => filterWatchlistEntries(entries, { statusFilter, sourceFilter, ratingFilter, viewerFilter }),
+    [entries, statusFilter, sourceFilter, ratingFilter, viewerFilter]
   )
 
   function close() {
@@ -106,6 +114,22 @@ export function WatchlistCards({
               <SelectItem value={NOT_RATED}>Not rated</SelectItem>
             </SelectContent>
           </Select>
+
+          {showViewerFilter && (
+            <Select value={viewerFilter} onValueChange={setViewerFilter}>
+              <SelectTrigger className="w-[160px]" aria-label="Filter by viewer">
+                <SelectValue placeholder="All viewers" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ALL_MEMBERS}>All viewers</SelectItem>
+                {householdUsers.map((user) => (
+                  <SelectItem key={user.id} value={user.id}>
+                    {memberFilterLabel(user, currentUserId)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
         <div className="flex gap-2">
@@ -156,6 +180,9 @@ export function WatchlistCards({
                     {watchStatusLabel[entry.status]}
                   </Badge>
                   {entry.rating && <StarRating rating={entry.rating as Rating} />}
+                  <span className="text-xs text-muted-foreground">
+                    Viewers: {entry.viewers.map((viewer) => viewer.user.name ?? 'Unnamed').join(', ')}
+                  </span>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {formatFriendlyDate(new Date(entry.updatedAt))}
@@ -176,6 +203,8 @@ export function WatchlistCards({
           initialEntry={state.mode === 'edit' ? state.entry : null}
           onSuccess={handleSuccess}
           onCancel={close}
+          householdUsers={householdUsers}
+          currentUserId={currentUserId}
         />
       </ResponsiveDialog>
 

@@ -58,10 +58,19 @@ function ingredientRowsFrom(recipe?: RecipeWithDetail | null): IngredientRow[] {
   }))
 }
 
-export function RecipeForm({ initialRecipe }: { initialRecipe?: RecipeWithDetail | null }) {
+export function RecipeForm({
+  initialRecipe,
+  householdUsers,
+  currentUserId,
+}: {
+  initialRecipe?: RecipeWithDetail | null
+  householdUsers: { id: string; name: string | null }[]
+  currentUserId: string
+}) {
   const router = useRouter()
 
   const [title, setTitle] = useState(initialRecipe?.title ?? '')
+  const [chefId, setChefId] = useState(initialRecipe?.chefId ?? currentUserId)
   const [description, setDescription] = useState(initialRecipe?.description ?? '')
   const [servings, setServings] = useState(initialRecipe?.servings != null ? String(initialRecipe.servings) : '')
   const [prepMinutes, setPrepMinutes] = useState(
@@ -136,6 +145,7 @@ export function RecipeForm({ initialRecipe }: { initialRecipe?: RecipeWithDetail
 
     const body = {
       title,
+      chefId,
       description: description || null,
       imageUrl: imageUrl || null,
       servings: servings || null,
@@ -195,6 +205,22 @@ export function RecipeForm({ initialRecipe }: { initialRecipe?: RecipeWithDetail
       <div className="space-y-1.5">
         <Label htmlFor="recipe-title">Title</Label>
         <Input id="recipe-title" required value={title} onChange={(e) => setTitle(e.target.value)} />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="recipe-chef">Chef</Label>
+        <Select value={chefId} onValueChange={setChefId}>
+          <SelectTrigger id="recipe-chef" className="w-full">
+            <SelectValue placeholder="Select a chef" />
+          </SelectTrigger>
+          <SelectContent>
+            {householdUsers.map((user) => (
+              <SelectItem key={user.id} value={user.id}>
+                {user.id === currentUserId ? 'Me' : (user.name ?? 'Unnamed household member')}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-1.5">
@@ -424,7 +450,7 @@ export function RecipeForm({ initialRecipe }: { initialRecipe?: RecipeWithDetail
         <Button type="button" variant="outline" onClick={() => router.push('/recipes')}>
           Cancel
         </Button>
-        <Button type="submit" disabled={submitting || uploading}>
+        <Button type="submit" disabled={submitting || uploading || !chefId}>
           {submitting ? 'Saving…' : initialRecipe ? 'Save changes' : 'Add recipe'}
         </Button>
       </div>

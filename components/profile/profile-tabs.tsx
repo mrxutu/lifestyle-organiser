@@ -57,7 +57,14 @@ export function ProfileTabs({
       key: 'watchlist',
       enabled: sections.watchlist,
       label: 'Watchlist',
-      content: <ProfileWatchlistSection entries={watchlistEntries} sources={watchlistSources} />,
+      content: (
+        <ProfileWatchlistSection
+          entries={watchlistEntries}
+          sources={watchlistSources}
+          householdUsers={householdUsers}
+          currentUserId={currentUserId}
+        />
+      ),
     },
     {
       key: 'books',

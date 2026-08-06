@@ -41,14 +41,15 @@ export async function updateHousehold(householdId: string, input: HouseholdInput
 }
 
 export async function deleteHousehold(householdId: string) {
-  const [userCount, eventCount, recipeCount, watchlistCount] = await Promise.all([
+  const [userCount, eventCount, recipeCount, watchlistCount, bookCount] = await Promise.all([
     prisma.user.count({ where: { householdId } }),
     prisma.event.count({ where: { householdId } }),
     prisma.recipe.count({ where: { householdId } }),
     prisma.watchlistEntry.count({ where: { householdId } }),
+    prisma.book.count({ where: { householdId } }),
   ])
 
-  if (userCount + eventCount + recipeCount + watchlistCount > 0) {
+  if (userCount + eventCount + recipeCount + watchlistCount + bookCount > 0) {
     throw new HouseholdInUseError()
   }
 

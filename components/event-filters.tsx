@@ -20,7 +20,7 @@ import {
 import { ALL_EVENT_TYPES } from '@/lib/event-filters'
 
 function userFilterLabel(userFilter: string[], currentUserId: string, householdUsers: { id: string; name: string | null }[]) {
-  if (userFilter.length === 0) return 'Everyone'
+  if (userFilter.length === 0) return 'All attendees'
   if (userFilter.length === 1) {
     const [id] = userFilter
     if (id === currentUserId) return 'Me'
@@ -87,7 +87,7 @@ export function EventFilters({
             onCheckedChange={() => onUserFilterChange([])}
             onSelect={(e) => e.preventDefault()}
           >
-            Everyone
+            All attendees
           </DropdownMenuCheckboxItem>
           <DropdownMenuSeparator />
           {householdUsers.map((user) => (

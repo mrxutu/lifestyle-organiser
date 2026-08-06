@@ -21,7 +21,7 @@ export function ProfileRecipesSection({
         <EmptyState
           icon={ChefHat}
           title="No recipes yet"
-          description="Recipes you've added will appear here."
+          description="Recipes assigned to you as the chef will appear here."
         />
       ) : (
         <RecipeGrid recipes={recipes} />

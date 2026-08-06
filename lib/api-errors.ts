@@ -3,11 +3,12 @@ import { ZodError } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 import { EventTypeInUseError } from '@/lib/event-types'
 import { InvalidAttendeesError } from '@/lib/events'
-import { WatchlistSourceInUseError } from '@/lib/watchlist'
+import { InvalidViewersError, WatchlistSourceInUseError } from '@/lib/watchlist'
 import { BookSourceInUseError } from '@/lib/books'
 import { CannotDeleteSelfError, CannotDisableSelfError, LastAdminError, UserHasContentError } from '@/lib/admin-users'
 import { HouseholdInUseError } from '@/lib/admin-households'
 import { ForbiddenError } from '@/lib/current-user'
+import { InvalidChefError } from '@/lib/recipes'
 
 export function errorResponse(error: unknown) {
   if (error instanceof ZodError) {
@@ -25,7 +26,9 @@ export function errorResponse(error: unknown) {
     error instanceof CannotDeleteSelfError ||
     error instanceof CannotDisableSelfError ||
     error instanceof LastAdminError ||
-    error instanceof InvalidAttendeesError
+    error instanceof InvalidAttendeesError ||
+    error instanceof InvalidChefError ||
+    error instanceof InvalidViewersError
   ) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }

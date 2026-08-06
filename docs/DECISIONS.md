@@ -236,6 +236,13 @@ Recipes, Reminders, and Watchlist already had their own segment `loading.tsx` (`
 
 No manual spinner/`useState`-based loading UI existed anywhere to remove — this was purely additive. Doesn't address underlying latency; that's still Phase 4's diagnostic pass, not this change.
 
+**2026-08 — Assignment roles drive filtering and Profile inclusion**
+User-facing ownership is based only on the domain assignment role: Event attendees, Recipe chef, Watchlist viewers, and Book reader. Recipe `authorId` remains required provenance recording who created the row, but it does not affect normal lists, member filters, or Profile inclusion.
+
+Recipes now have one required `chefId`. The migration adds it temporarily nullable, backfills every existing recipe from `authorId`, and then makes it `NOT NULL`. Watchlist entries have a many-to-many `WatchlistViewer` assignment; existing entries are assigned to every currently active member of their household as a compatibility backfill because the old product showed the full shared Watchlist to everyone and recorded no creator or assignee.
+
+The dedicated Recipes and Watchlist pages still load all records in the current household by default. Their member filters default to All and offer Me plus each household member. Profile is stricter: it only receives records assigned to the current user in the relevant role. New recipes default Chef to the current user; new Watchlist entries default Viewers to the current user, and both forms allow reassignment within the household. Server-side validation rejects assignments to users outside the record's household.
+
 **2026-08 — Separate email template for new-user password setup; reset-password form polish**
 `lib/password-reset.ts`'s single `sendPasswordResetEmail` was being reused for two different situations — an existing user resetting a forgotten password, and an admin creating a brand-new user (`passwordHash: null`, no password ever set) — with copy that said "We received a request to reset your password," which doesn't make sense for someone who never had one. Split into two exported functions sharing a common `sendPasswordSetupEmail` helper (token creation + Resend call): `sendPasswordResetEmail` keeps the original "Reset your password" copy for `/api/auth/forgot-password`; new `sendNewUserSetPasswordEmail` ("Welcome to Lifestyle Organiser — set your password") is now what `lib/admin-users.ts`'s `createUser` calls. Both still land on the same `/reset-password?token=...` page and API route — only the email copy differs.
 

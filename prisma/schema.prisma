@@ -24,11 +24,13 @@ model User {
   householdId  String?
   createdAt    DateTime   @default(now())
 
-  eventsCreated       Event[]              @relation("EventCreator")
-  eventInvites        EventAttendee[]
-  recipes             Recipe[]
-  books               Book[]
-  passwordResetTokens PasswordResetToken[]
+  eventsCreated        Event[]              @relation("EventCreator")
+  eventInvites         EventAttendee[]
+  recipesAuthored      Recipe[]             @relation("RecipeAuthor")
+  recipesAsChef        Recipe[]             @relation("RecipeChef")
+  watchlistAssignments WatchlistViewer[]
+  books                Book[]
+  passwordResetTokens  PasswordResetToken[]
 }
 
 enum Role {
@@ -131,8 +133,10 @@ model Recipe {
   method      String? // single multi-line text field, pasted in — not a repeatable Step model
   household   Household    @relation(fields: [householdId], references: [id])
   householdId String
-  author      User         @relation(fields: [authorId], references: [id])
+  author      User         @relation("RecipeAuthor", fields: [authorId], references: [id])
   authorId    String
+  chef        User         @relation("RecipeChef", fields: [chefId], references: [id])
+  chefId      String
   createdAt   DateTime     @default(now())
 }
 
@@ -160,18 +164,29 @@ enum MeasurementUnit {
 // ---------- WATCHLIST ----------
 
 model WatchlistEntry {
-  id          String          @id @default(cuid())
+  id          String            @id @default(cuid())
   name        String // show/movie title
-  source      WatchlistSource @relation(fields: [sourceId], references: [id])
+  source      WatchlistSource   @relation(fields: [sourceId], references: [id])
   sourceId    String
   season      Int? // nullable — movies/one-offs may not have a season
   episode     Int?
-  status      WatchStatus     @default(TO_WATCH)
+  status      WatchStatus       @default(TO_WATCH)
   rating      Int? // 1-5 stars, null = not rated
-  household   Household       @relation(fields: [householdId], references: [id])
+  household   Household         @relation(fields: [householdId], references: [id])
   householdId String
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt // auto-updates whenever any field on the row changes
+  viewers     WatchlistViewer[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt // auto-updates whenever any field on the row changes
+}
+
+model WatchlistViewer {
+  id               String         @id @default(cuid())
+  watchlistEntry   WatchlistEntry @relation(fields: [watchlistEntryId], references: [id], onDelete: Cascade)
+  watchlistEntryId String
+  user             User           @relation(fields: [userId], references: [id])
+  userId           String
+
+  @@unique([watchlistEntryId, userId])
 }
 
 enum WatchStatus {

@@ -24,6 +24,7 @@ export const recipeInputSchema = z.object({
   method: z.string().trim().max(10000).optional().nullable(),
   tags: z.array(z.string().trim().min(1).max(40)).default([]),
   ingredients: z.array(ingredientInputSchema).default([]),
+  chefId: z.string().min(1, 'Chef is required'),
 })
 
 export type RecipeInput = z.infer<typeof recipeInputSchema>
@@ -33,6 +34,7 @@ export async function listRecipes(householdId: string) {
     where: { householdId },
     include: {
       author: { select: { id: true, name: true } },
+      chef: { select: { id: true, name: true } },
       _count: { select: { ingredients: true } },
     },
     orderBy: { createdAt: 'desc' },
@@ -44,13 +46,30 @@ export async function getRecipe(householdId: string, recipeId: string) {
     where: { id: recipeId, householdId },
     include: {
       ingredients: { orderBy: { order: 'asc' } },
+      chef: { select: { id: true, name: true } },
     },
   })
 }
 
 export type RecipeWithDetail = NonNullable<Awaited<ReturnType<typeof getRecipe>>>
 
+export class InvalidChefError extends Error {
+  constructor() {
+    super('The selected chef must be an active member of this household')
+    this.name = 'InvalidChefError'
+  }
+}
+
+async function assertChefInHousehold(householdId: string, chefId: string) {
+  const chef = await prisma.user.findFirst({
+    where: { id: chefId, householdId, isActive: true },
+    select: { id: true },
+  })
+  if (!chef) throw new InvalidChefError()
+}
+
 export async function createRecipe(householdId: string, authorId: string, input: RecipeInput) {
+  await assertChefInHousehold(householdId, input.chefId)
   const { ingredients, ...recipe } = input
   return prisma.recipe.create({
     data: {
@@ -66,6 +85,7 @@ export async function createRecipe(householdId: string, authorId: string, input:
 }
 
 export async function updateRecipe(householdId: string, recipeId: string, input: RecipeInput) {
+  await assertChefInHousehold(householdId, input.chefId)
   const { ingredients, ...recipe } = input
 
   return prisma.$transaction(async (tx) => {
@@ -81,6 +101,7 @@ export async function updateRecipe(householdId: string, recipeId: string, input:
       where: { id: recipeId },
       include: {
         ingredients: { orderBy: { order: 'asc' } },
+        chef: { select: { id: true, name: true } },
       },
     })
   })

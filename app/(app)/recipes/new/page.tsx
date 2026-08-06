@@ -1,13 +1,14 @@
 import { RecipeForm } from '@/components/recipes/recipe-form'
-import { requireSection } from '@/lib/current-user'
+import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 
 export default async function NewRecipePage() {
-  await requireSection('recipes')
+  const { id: currentUserId, householdId } = await requireSection('recipes')
+  const householdUsers = await listHouseholdUsers(householdId)
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">Add recipe</h1>
-      <RecipeForm />
+      <RecipeForm householdUsers={householdUsers} currentUserId={currentUserId} />
     </div>
   )
 }
