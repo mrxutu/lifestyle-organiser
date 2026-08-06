@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { email } })
     if (user) {
-      await sendPasswordResetEmail(user, request.nextUrl.origin)
+      await sendPasswordResetEmail(user)
     }
 
     return NextResponse.json({ message: GENERIC_MESSAGE })

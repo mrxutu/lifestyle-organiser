@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { Role } from '@/generated/prisma/enums'
-import { sendPasswordResetEmail } from '@/lib/password-reset'
+import { sendNewUserSetPasswordEmail } from '@/lib/password-reset'
 
 export const createUserInputSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(100),
@@ -58,7 +58,7 @@ export async function listUsers() {
 
 export type UserWithHousehold = Awaited<ReturnType<typeof listUsers>>[number]
 
-export async function createUser(input: CreateUserInput, origin: string) {
+export async function createUser(input: CreateUserInput) {
   const user = await prisma.user.create({
     data: {
       name: input.name,
@@ -69,7 +69,7 @@ export async function createUser(input: CreateUserInput, origin: string) {
     },
   })
 
-  await sendPasswordResetEmail(user, origin)
+  await sendNewUserSetPasswordEmail(user)
 
   return user
 }

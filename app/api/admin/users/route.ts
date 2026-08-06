@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     await requireAdmin()
     const input = createUserInputSchema.parse(await request.json())
-    const user = await createUser(input, request.nextUrl.origin)
+    const user = await createUser(input)
     return NextResponse.json(user, { status: 201 })
   } catch (error) {
     return errorResponse(error)

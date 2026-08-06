@@ -34,6 +34,7 @@ function InvalidLink() {
 export function ResetPasswordForm({ token }: { token: string | null }) {
   const router = useRouter()
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -42,8 +43,19 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    setSubmitting(true)
     setError(null)
+
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.')
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords don't match.")
+      return
+    }
+
+    setSubmitting(true)
 
     const response = await fetch('/api/auth/reset-password', {
       method: 'POST',
@@ -97,6 +109,19 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
                 minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">Must be at least 8 characters.</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword">Confirm password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                required
+                minLength={8}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
 

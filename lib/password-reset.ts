@@ -39,22 +39,39 @@ export async function deletePasswordResetToken(id: string) {
   await prisma.passwordResetToken.delete({ where: { id } })
 }
 
-export async function sendPasswordResetEmail(user: { id: string; email: string }, origin: string) {
+async function sendPasswordSetupEmail(
+  user: { id: string; email: string },
+  { subject, text }: { subject: string; text: string },
+) {
   try {
     const resetToken = await createPasswordResetToken(user.id)
-    const resetUrl = new URL('/reset-password', origin)
+    const resetUrl = new URL('/reset-password', process.env.HOSTNAME)
     resetUrl.searchParams.set('token', resetToken.token)
 
     const resend = new Resend(process.env.RESEND_API)
     await resend.emails.send({
       from: `Lifestyle Organiser <${process.env.SENDER_EMAIL}>`,
       to: user.email,
-      subject: 'Reset your password',
-      text: `We received a request to reset your password. This link expires in 1 hour:\n\n${resetUrl.toString()}\n\nIf you didn't request this, you can ignore this email.`,
+      subject,
+      text: text.replace('{{resetUrl}}', resetUrl.toString()),
     })
   } catch (sendError) {
     // Swallowed deliberately: callers (e.g. forgot-password) must not let a delivery
     // failure change their response, since that could be used to enumerate emails.
-    console.error('Failed to send password reset email', sendError)
+    console.error('Failed to send password setup email', sendError)
   }
+}
+
+export async function sendPasswordResetEmail(user: { id: string; email: string }) {
+  await sendPasswordSetupEmail(user, {
+    subject: 'Reset your password',
+    text: `We received a request to reset your password. This link expires in 1 hour:\n\n{{resetUrl}}\n\nIf you didn't request this, you can ignore this email.`,
+  })
+}
+
+export async function sendNewUserSetPasswordEmail(user: { id: string; email: string }) {
+  await sendPasswordSetupEmail(user, {
+    subject: 'Welcome to Lifestyle Organiser — set your password',
+    text: `An account has been created for you on Lifestyle Organiser. Set your password to get started — this link expires in 1 hour:\n\n{{resetUrl}}\n\nIf you weren't expecting this, you can ignore this email.`,
+  })
 }
