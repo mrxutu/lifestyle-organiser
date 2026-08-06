@@ -78,6 +78,24 @@ George must therefore assume that every commit is potentially production-sensiti
 
 ---
 
+## Repository Documentation Entry Point
+
+The repository root must contain an `AGENTS.md` file.
+
+`AGENTS.md` is the entry point for George and any other AI coding agent. It identifies the operational and project documentation that must be read before significant work begins.
+
+Operational documentation is stored in:
+
+`docs/operational/`
+
+Project-specific documentation is stored in:
+
+`docs/project/`
+
+The agent must follow `AGENTS.md` and review the relevant documentation before planning or implementing significant changes.
+
+---
+
 # George May
 
 George may:
