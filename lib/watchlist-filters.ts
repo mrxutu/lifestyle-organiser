@@ -1,4 +1,5 @@
 import type { WatchStatus } from '@/generated/prisma/enums'
+import { ALL_MEMBERS } from '@/lib/member-filters'
 
 export const ALL_STATUSES = 'ALL'
 export const ALL_SOURCES = 'ALL'
@@ -9,6 +10,7 @@ type FilterableEntry = {
   sourceId: string
   status: WatchStatus
   rating: number | null
+  viewers: { userId: string }[]
 }
 
 export function filterWatchlistEntries<T extends FilterableEntry>(
@@ -17,13 +19,17 @@ export function filterWatchlistEntries<T extends FilterableEntry>(
     statusFilter,
     sourceFilter,
     ratingFilter,
-  }: { statusFilter: string; sourceFilter: string; ratingFilter: string }
+    viewerFilter,
+  }: { statusFilter: string; sourceFilter: string; ratingFilter: string; viewerFilter?: string }
 ): T[] {
   return entries.filter((entry) => {
     if (statusFilter !== ALL_STATUSES && entry.status !== statusFilter) return false
     if (sourceFilter !== ALL_SOURCES && entry.sourceId !== sourceFilter) return false
     if (ratingFilter === NOT_RATED && entry.rating != null) return false
     if (ratingFilter !== ALL_RATINGS && ratingFilter !== NOT_RATED && entry.rating !== Number(ratingFilter)) {
+      return false
+    }
+    if (viewerFilter && viewerFilter !== ALL_MEMBERS && !entry.viewers.some((viewer) => viewer.userId === viewerFilter)) {
       return false
     }
     return true

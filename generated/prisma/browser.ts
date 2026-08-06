@@ -63,6 +63,11 @@ export type Ingredient = Prisma.IngredientModel
  */
 export type WatchlistEntry = Prisma.WatchlistEntryModel
 /**
+ * Model WatchlistViewer
+ * 
+ */
+export type WatchlistViewer = Prisma.WatchlistViewerModel
+/**
  * Model WatchlistSource
  * 
  */

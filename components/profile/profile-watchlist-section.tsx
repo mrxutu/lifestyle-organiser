@@ -6,9 +6,13 @@ import type { WatchlistEntryWithSource } from '@/lib/watchlist'
 export function ProfileWatchlistSection({
   entries,
   sources,
+  householdUsers,
+  currentUserId,
 }: {
   entries: WatchlistEntryWithSource[]
   sources: WatchlistSource[]
+  householdUsers: { id: string; name: string | null }[]
+  currentUserId: string
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -18,7 +22,13 @@ export function ProfileWatchlistSection({
           View all →
         </Link>
       </div>
-      <WatchlistCards entries={entries} sources={sources} />
+      <WatchlistCards
+        entries={entries}
+        sources={sources}
+        householdUsers={householdUsers}
+        currentUserId={currentUserId}
+        showViewerFilter={false}
+      />
     </div>
   )
 }

@@ -7,7 +7,10 @@ const emptyToNull = (val: unknown) => (val === '' || val == null ? null : val)
 export async function listWatchlistEntries(householdId: string) {
   return prisma.watchlistEntry.findMany({
     where: { householdId },
-    include: { source: true },
+    include: {
+      source: true,
+      viewers: { include: { user: { select: { id: true, name: true } } } },
+    },
     orderBy: { updatedAt: 'desc' },
   })
 }
@@ -21,14 +24,41 @@ export const watchlistEntryInputSchema = z.object({
   episode: z.coerce.number().int().min(1).optional().nullable(),
   status: z.enum(WatchStatus).default('TO_WATCH'),
   rating: z.preprocess(emptyToNull, z.coerce.number().int().min(1).max(5).nullable()),
+  viewerUserIds: z.array(z.string().min(1)).min(1, 'Select at least one viewer'),
 })
 
 export type WatchlistEntryInput = z.infer<typeof watchlistEntryInputSchema>
 
+export class InvalidViewersError extends Error {
+  constructor() {
+    super('Every selected viewer must be an active member of this household')
+    this.name = 'InvalidViewersError'
+  }
+}
+
+async function assertViewersInHousehold(householdId: string, viewerUserIds: string[]) {
+  const uniqueViewerIds = new Set(viewerUserIds)
+  const memberCount = await prisma.user.count({
+    where: { householdId, isActive: true, id: { in: [...uniqueViewerIds] } },
+  })
+  if (memberCount !== uniqueViewerIds.size || uniqueViewerIds.size !== viewerUserIds.length) {
+    throw new InvalidViewersError()
+  }
+}
+
 export async function createWatchlistEntry(householdId: string, input: WatchlistEntryInput) {
+  const { viewerUserIds, ...entry } = input
+  await assertViewersInHousehold(householdId, viewerUserIds)
   return prisma.watchlistEntry.create({
-    data: { ...input, householdId },
-    include: { source: true },
+    data: {
+      ...entry,
+      householdId,
+      viewers: { create: viewerUserIds.map((userId) => ({ userId })) },
+    },
+    include: {
+      source: true,
+      viewers: { include: { user: { select: { id: true, name: true } } } },
+    },
   })
 }
 
@@ -37,15 +67,28 @@ export async function updateWatchlistEntry(
   entryId: string,
   input: WatchlistEntryInput
 ) {
-  const result = await prisma.watchlistEntry.updateMany({
-    where: { id: entryId, householdId },
-    data: input,
-  })
-  if (result.count === 0) return null
+  const { viewerUserIds, ...entry } = input
+  await assertViewersInHousehold(householdId, viewerUserIds)
 
-  return prisma.watchlistEntry.findUnique({
-    where: { id: entryId },
-    include: { source: true },
+  return prisma.$transaction(async (tx) => {
+    const result = await tx.watchlistEntry.updateMany({
+      where: { id: entryId, householdId },
+      data: entry,
+    })
+    if (result.count === 0) return null
+
+    await tx.watchlistViewer.deleteMany({ where: { watchlistEntryId: entryId } })
+    await tx.watchlistViewer.createMany({
+      data: viewerUserIds.map((userId) => ({ watchlistEntryId: entryId, userId })),
+    })
+
+    return tx.watchlistEntry.findUnique({
+      where: { id: entryId },
+      include: {
+        source: true,
+        viewers: { include: { user: { select: { id: true, name: true } } } },
+      },
+    })
   })
 }
 

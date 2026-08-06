@@ -47,6 +47,8 @@ export default async function RecipeViewPage({ params }: { params: Promise<{ id:
 
       {recipe.description && <p className="text-muted-foreground">{recipe.description}</p>}
 
+      <p className="text-sm text-muted-foreground">Chef: {recipe.chef.name ?? 'Unnamed'}</p>
+
       {meta.length > 0 && <p className="text-sm text-muted-foreground">{meta.join(' · ')}</p>}
 
       {recipe.tags.length > 0 && (

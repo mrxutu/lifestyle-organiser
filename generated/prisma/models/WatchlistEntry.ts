@@ -266,6 +266,7 @@ export type WatchlistEntryWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
   source?: Prisma.XOR<Prisma.WatchlistSourceScalarRelationFilter, Prisma.WatchlistSourceWhereInput>
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
+  viewers?: Prisma.WatchlistViewerListRelationFilter
 }
 
 export type WatchlistEntryOrderByWithRelationInput = {
@@ -281,6 +282,7 @@ export type WatchlistEntryOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   source?: Prisma.WatchlistSourceOrderByWithRelationInput
   household?: Prisma.HouseholdOrderByWithRelationInput
+  viewers?: Prisma.WatchlistViewerOrderByRelationAggregateInput
 }
 
 export type WatchlistEntryWhereUniqueInput = Prisma.AtLeast<{
@@ -299,6 +301,7 @@ export type WatchlistEntryWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
   source?: Prisma.XOR<Prisma.WatchlistSourceScalarRelationFilter, Prisma.WatchlistSourceWhereInput>
   household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
+  viewers?: Prisma.WatchlistViewerListRelationFilter
 }, "id">
 
 export type WatchlistEntryOrderByWithAggregationInput = {
@@ -346,6 +349,7 @@ export type WatchlistEntryCreateInput = {
   updatedAt?: Date | string
   source: Prisma.WatchlistSourceCreateNestedOneWithoutEntriesInput
   household: Prisma.HouseholdCreateNestedOneWithoutWatchlistInput
+  viewers?: Prisma.WatchlistViewerCreateNestedManyWithoutWatchlistEntryInput
 }
 
 export type WatchlistEntryUncheckedCreateInput = {
@@ -359,6 +363,7 @@ export type WatchlistEntryUncheckedCreateInput = {
   householdId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  viewers?: Prisma.WatchlistViewerUncheckedCreateNestedManyWithoutWatchlistEntryInput
 }
 
 export type WatchlistEntryUpdateInput = {
@@ -372,6 +377,7 @@ export type WatchlistEntryUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.WatchlistSourceUpdateOneRequiredWithoutEntriesNestedInput
   household?: Prisma.HouseholdUpdateOneRequiredWithoutWatchlistNestedInput
+  viewers?: Prisma.WatchlistViewerUpdateManyWithoutWatchlistEntryNestedInput
 }
 
 export type WatchlistEntryUncheckedUpdateInput = {
@@ -385,6 +391,7 @@ export type WatchlistEntryUncheckedUpdateInput = {
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewers?: Prisma.WatchlistViewerUncheckedUpdateManyWithoutWatchlistEntryNestedInput
 }
 
 export type WatchlistEntryCreateManyInput = {
@@ -485,6 +492,11 @@ export type WatchlistEntrySumOrderByAggregateInput = {
   rating?: Prisma.SortOrder
 }
 
+export type WatchlistEntryScalarRelationFilter = {
+  is?: Prisma.WatchlistEntryWhereInput
+  isNot?: Prisma.WatchlistEntryWhereInput
+}
+
 export type WatchlistEntryCreateNestedManyWithoutHouseholdInput = {
   create?: Prisma.XOR<Prisma.WatchlistEntryCreateWithoutHouseholdInput, Prisma.WatchlistEntryUncheckedCreateWithoutHouseholdInput> | Prisma.WatchlistEntryCreateWithoutHouseholdInput[] | Prisma.WatchlistEntryUncheckedCreateWithoutHouseholdInput[]
   connectOrCreate?: Prisma.WatchlistEntryCreateOrConnectWithoutHouseholdInput | Prisma.WatchlistEntryCreateOrConnectWithoutHouseholdInput[]
@@ -529,6 +541,20 @@ export type WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput = {
 
 export type EnumWatchStatusFieldUpdateOperationsInput = {
   set?: $Enums.WatchStatus
+}
+
+export type WatchlistEntryCreateNestedOneWithoutViewersInput = {
+  create?: Prisma.XOR<Prisma.WatchlistEntryCreateWithoutViewersInput, Prisma.WatchlistEntryUncheckedCreateWithoutViewersInput>
+  connectOrCreate?: Prisma.WatchlistEntryCreateOrConnectWithoutViewersInput
+  connect?: Prisma.WatchlistEntryWhereUniqueInput
+}
+
+export type WatchlistEntryUpdateOneRequiredWithoutViewersNestedInput = {
+  create?: Prisma.XOR<Prisma.WatchlistEntryCreateWithoutViewersInput, Prisma.WatchlistEntryUncheckedCreateWithoutViewersInput>
+  connectOrCreate?: Prisma.WatchlistEntryCreateOrConnectWithoutViewersInput
+  upsert?: Prisma.WatchlistEntryUpsertWithoutViewersInput
+  connect?: Prisma.WatchlistEntryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WatchlistEntryUpdateToOneWithWhereWithoutViewersInput, Prisma.WatchlistEntryUpdateWithoutViewersInput>, Prisma.WatchlistEntryUncheckedUpdateWithoutViewersInput>
 }
 
 export type WatchlistEntryCreateNestedManyWithoutSourceInput = {
@@ -583,6 +609,7 @@ export type WatchlistEntryCreateWithoutHouseholdInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   source: Prisma.WatchlistSourceCreateNestedOneWithoutEntriesInput
+  viewers?: Prisma.WatchlistViewerCreateNestedManyWithoutWatchlistEntryInput
 }
 
 export type WatchlistEntryUncheckedCreateWithoutHouseholdInput = {
@@ -595,6 +622,7 @@ export type WatchlistEntryUncheckedCreateWithoutHouseholdInput = {
   rating?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  viewers?: Prisma.WatchlistViewerUncheckedCreateNestedManyWithoutWatchlistEntryInput
 }
 
 export type WatchlistEntryCreateOrConnectWithoutHouseholdInput = {
@@ -639,6 +667,74 @@ export type WatchlistEntryScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"WatchlistEntry"> | Date | string
 }
 
+export type WatchlistEntryCreateWithoutViewersInput = {
+  id?: string
+  name: string
+  season?: number | null
+  episode?: number | null
+  status?: $Enums.WatchStatus
+  rating?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  source: Prisma.WatchlistSourceCreateNestedOneWithoutEntriesInput
+  household: Prisma.HouseholdCreateNestedOneWithoutWatchlistInput
+}
+
+export type WatchlistEntryUncheckedCreateWithoutViewersInput = {
+  id?: string
+  name: string
+  sourceId: string
+  season?: number | null
+  episode?: number | null
+  status?: $Enums.WatchStatus
+  rating?: number | null
+  householdId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type WatchlistEntryCreateOrConnectWithoutViewersInput = {
+  where: Prisma.WatchlistEntryWhereUniqueInput
+  create: Prisma.XOR<Prisma.WatchlistEntryCreateWithoutViewersInput, Prisma.WatchlistEntryUncheckedCreateWithoutViewersInput>
+}
+
+export type WatchlistEntryUpsertWithoutViewersInput = {
+  update: Prisma.XOR<Prisma.WatchlistEntryUpdateWithoutViewersInput, Prisma.WatchlistEntryUncheckedUpdateWithoutViewersInput>
+  create: Prisma.XOR<Prisma.WatchlistEntryCreateWithoutViewersInput, Prisma.WatchlistEntryUncheckedCreateWithoutViewersInput>
+  where?: Prisma.WatchlistEntryWhereInput
+}
+
+export type WatchlistEntryUpdateToOneWithWhereWithoutViewersInput = {
+  where?: Prisma.WatchlistEntryWhereInput
+  data: Prisma.XOR<Prisma.WatchlistEntryUpdateWithoutViewersInput, Prisma.WatchlistEntryUncheckedUpdateWithoutViewersInput>
+}
+
+export type WatchlistEntryUpdateWithoutViewersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.WatchlistSourceUpdateOneRequiredWithoutEntriesNestedInput
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutWatchlistNestedInput
+}
+
+export type WatchlistEntryUncheckedUpdateWithoutViewersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  season?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  episode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumWatchStatusFieldUpdateOperationsInput | $Enums.WatchStatus
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type WatchlistEntryCreateWithoutSourceInput = {
   id?: string
   name: string
@@ -649,6 +745,7 @@ export type WatchlistEntryCreateWithoutSourceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   household: Prisma.HouseholdCreateNestedOneWithoutWatchlistInput
+  viewers?: Prisma.WatchlistViewerCreateNestedManyWithoutWatchlistEntryInput
 }
 
 export type WatchlistEntryUncheckedCreateWithoutSourceInput = {
@@ -661,6 +758,7 @@ export type WatchlistEntryUncheckedCreateWithoutSourceInput = {
   householdId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  viewers?: Prisma.WatchlistViewerUncheckedCreateNestedManyWithoutWatchlistEntryInput
 }
 
 export type WatchlistEntryCreateOrConnectWithoutSourceInput = {
@@ -711,6 +809,7 @@ export type WatchlistEntryUpdateWithoutHouseholdInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.WatchlistSourceUpdateOneRequiredWithoutEntriesNestedInput
+  viewers?: Prisma.WatchlistViewerUpdateManyWithoutWatchlistEntryNestedInput
 }
 
 export type WatchlistEntryUncheckedUpdateWithoutHouseholdInput = {
@@ -723,6 +822,7 @@ export type WatchlistEntryUncheckedUpdateWithoutHouseholdInput = {
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewers?: Prisma.WatchlistViewerUncheckedUpdateManyWithoutWatchlistEntryNestedInput
 }
 
 export type WatchlistEntryUncheckedUpdateManyWithoutHouseholdInput = {
@@ -759,6 +859,7 @@ export type WatchlistEntryUpdateWithoutSourceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   household?: Prisma.HouseholdUpdateOneRequiredWithoutWatchlistNestedInput
+  viewers?: Prisma.WatchlistViewerUpdateManyWithoutWatchlistEntryNestedInput
 }
 
 export type WatchlistEntryUncheckedUpdateWithoutSourceInput = {
@@ -771,6 +872,7 @@ export type WatchlistEntryUncheckedUpdateWithoutSourceInput = {
   householdId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  viewers?: Prisma.WatchlistViewerUncheckedUpdateManyWithoutWatchlistEntryNestedInput
 }
 
 export type WatchlistEntryUncheckedUpdateManyWithoutSourceInput = {
@@ -786,6 +888,35 @@ export type WatchlistEntryUncheckedUpdateManyWithoutSourceInput = {
 }
 
 
+/**
+ * Count Type WatchlistEntryCountOutputType
+ */
+
+export type WatchlistEntryCountOutputType = {
+  viewers: number
+}
+
+export type WatchlistEntryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  viewers?: boolean | WatchlistEntryCountOutputTypeCountViewersArgs
+}
+
+/**
+ * WatchlistEntryCountOutputType without action
+ */
+export type WatchlistEntryCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WatchlistEntryCountOutputType
+   */
+  select?: Prisma.WatchlistEntryCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * WatchlistEntryCountOutputType without action
+ */
+export type WatchlistEntryCountOutputTypeCountViewersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WatchlistViewerWhereInput
+}
+
 
 export type WatchlistEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -800,6 +931,8 @@ export type WatchlistEntrySelect<ExtArgs extends runtime.Types.Extensions.Intern
   updatedAt?: boolean
   source?: boolean | Prisma.WatchlistSourceDefaultArgs<ExtArgs>
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+  viewers?: boolean | Prisma.WatchlistEntry$viewersArgs<ExtArgs>
+  _count?: boolean | Prisma.WatchlistEntryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["watchlistEntry"]>
 
 export type WatchlistEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -849,6 +982,8 @@ export type WatchlistEntryOmit<ExtArgs extends runtime.Types.Extensions.Internal
 export type WatchlistEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   source?: boolean | Prisma.WatchlistSourceDefaultArgs<ExtArgs>
   household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+  viewers?: boolean | Prisma.WatchlistEntry$viewersArgs<ExtArgs>
+  _count?: boolean | Prisma.WatchlistEntryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WatchlistEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   source?: boolean | Prisma.WatchlistSourceDefaultArgs<ExtArgs>
@@ -864,6 +999,7 @@ export type $WatchlistEntryPayload<ExtArgs extends runtime.Types.Extensions.Inte
   objects: {
     source: Prisma.$WatchlistSourcePayload<ExtArgs>
     household: Prisma.$HouseholdPayload<ExtArgs>
+    viewers: Prisma.$WatchlistViewerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1272,6 +1408,7 @@ export interface Prisma__WatchlistEntryClient<T, Null = never, ExtArgs extends r
   readonly [Symbol.toStringTag]: "PrismaPromise"
   source<T extends Prisma.WatchlistSourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WatchlistSourceDefaultArgs<ExtArgs>>): Prisma.Prisma__WatchlistSourceClient<runtime.Types.Result.GetResult<Prisma.$WatchlistSourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   household<T extends Prisma.HouseholdDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdDefaultArgs<ExtArgs>>): Prisma.Prisma__HouseholdClient<runtime.Types.Result.GetResult<Prisma.$HouseholdPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  viewers<T extends Prisma.WatchlistEntry$viewersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WatchlistEntry$viewersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WatchlistViewerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1709,6 +1846,30 @@ export type WatchlistEntryDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many WatchlistEntries to delete.
    */
   limit?: number
+}
+
+/**
+ * WatchlistEntry.viewers
+ */
+export type WatchlistEntry$viewersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WatchlistViewer
+   */
+  select?: Prisma.WatchlistViewerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WatchlistViewer
+   */
+  omit?: Prisma.WatchlistViewerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WatchlistViewerInclude<ExtArgs> | null
+  where?: Prisma.WatchlistViewerWhereInput
+  orderBy?: Prisma.WatchlistViewerOrderByWithRelationInput | Prisma.WatchlistViewerOrderByWithRelationInput[]
+  cursor?: Prisma.WatchlistViewerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WatchlistViewerScalarFieldEnum | Prisma.WatchlistViewerScalarFieldEnum[]
 }
 
 /**

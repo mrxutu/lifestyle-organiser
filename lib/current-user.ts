@@ -69,7 +69,7 @@ export async function requireSection(section: SectionKey) {
 
 export async function listHouseholdUsers(householdId: string) {
   return prisma.user.findMany({
-    where: { householdId },
+    where: { householdId, isActive: true },
     select: { id: true, name: true },
     orderBy: { createdAt: 'asc' },
   })

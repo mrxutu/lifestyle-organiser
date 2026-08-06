@@ -3,12 +3,15 @@ import Link from 'next/link'
 import { EmptyState } from '@/components/empty-state'
 import { RecipeGrid } from '@/components/recipes/recipe-grid'
 import { Button } from '@/components/ui/button'
-import { requireSection } from '@/lib/current-user'
+import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listRecipes } from '@/lib/recipes'
 
 export default async function RecipesPage() {
-  const { householdId } = await requireSection('recipes')
-  const recipes = await listRecipes(householdId)
+  const { id: currentUserId, householdId } = await requireSection('recipes')
+  const [recipes, householdUsers] = await Promise.all([
+    listRecipes(householdId),
+    listHouseholdUsers(householdId),
+  ])
 
   return (
     <div className="flex flex-col gap-6">
@@ -25,7 +28,7 @@ export default async function RecipesPage() {
           description="Saved recipes with ingredients and steps will appear here."
         />
       ) : (
-        <RecipeGrid recipes={recipes} />
+        <RecipeGrid recipes={recipes} householdUsers={householdUsers} currentUserId={currentUserId} />
       )}
     </div>
   )

@@ -23,7 +23,7 @@ export type UpdateUserInput = z.infer<typeof updateUserInputSchema>
 
 export class UserHasContentError extends Error {
   constructor(public count: number) {
-    super(`This user has created ${count} event${count === 1 ? '' : 's'}/recipe${count === 1 ? '' : 's'} — reassign or delete their content first`)
+    super(`This user is linked to ${count} record${count === 1 ? '' : 's'} — reassign or delete them first`)
     this.name = 'UserHasContentError'
   }
 }
@@ -92,12 +92,17 @@ export async function updateUser(userId: string, input: UpdateUserInput, current
 export async function deleteUser(userId: string, currentUserId: string) {
   if (userId === currentUserId) throw new CannotDeleteSelfError()
 
-  const [eventCount, recipeCount] = await Promise.all([
+  const [eventCount, authoredRecipeCount, chefRecipeCount, attendeeCount, viewerCount, bookCount] = await Promise.all([
     prisma.event.count({ where: { creatorId: userId } }),
     prisma.recipe.count({ where: { authorId: userId } }),
+    prisma.recipe.count({ where: { chefId: userId } }),
+    prisma.eventAttendee.count({ where: { userId } }),
+    prisma.watchlistViewer.count({ where: { userId } }),
+    prisma.book.count({ where: { readerId: userId } }),
   ])
 
-  const contentCount = eventCount + recipeCount
+  const contentCount =
+    eventCount + authoredRecipeCount + chefRecipeCount + attendeeCount + viewerCount + bookCount
   if (contentCount > 0) throw new UserHasContentError(contentCount)
 
   await prisma.user.delete({ where: { id: userId } })
