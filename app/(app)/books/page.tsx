@@ -4,12 +4,16 @@ import { EmptyState } from '@/components/empty-state'
 import { BookGrid } from '@/components/books/book-grid'
 import { BookSourceManagerDialog } from '@/components/books/book-source-manager-dialog'
 import { Button } from '@/components/ui/button'
-import { requireSection } from '@/lib/current-user'
+import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listBooks, listBookSources } from '@/lib/books'
 
 export default async function BooksPage() {
-  const { householdId } = await requireSection('books')
-  const [books, sources] = await Promise.all([listBooks(householdId), listBookSources()])
+  const { id: currentUserId, householdId } = await requireSection('books')
+  const [books, sources, householdUsers] = await Promise.all([
+    listBooks(householdId),
+    listBookSources(),
+    listHouseholdUsers(householdId),
+  ])
 
   return (
     <div className="flex flex-col gap-6">
@@ -29,7 +33,11 @@ export default async function BooksPage() {
           description="Books you're reading or have read will appear here."
         />
       ) : (
-        <BookGrid books={books} />
+        <BookGrid
+          books={books}
+          householdUsers={householdUsers}
+          currentUserId={currentUserId}
+        />
       )}
     </div>
   )

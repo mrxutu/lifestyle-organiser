@@ -11,16 +11,26 @@ import {
 } from '@/components/ui/select'
 import { BookCard } from '@/components/books/book-card'
 import { ALL_RATINGS, NOT_RATED, filterBooks } from '@/lib/book-filters'
+import { ALL_MEMBERS, memberFilterLabel } from '@/lib/member-filters'
 import { RATINGS, ratingLabel } from '@/lib/rating'
 import type { listBooks } from '@/lib/books'
 
-export function BookGrid({ books }: { books: Awaited<ReturnType<typeof listBooks>> }) {
+export function BookGrid({
+  books,
+  householdUsers,
+  currentUserId,
+}: {
+  books: Awaited<ReturnType<typeof listBooks>>
+  householdUsers?: { id: string; name: string | null }[]
+  currentUserId?: string
+}) {
   const [search, setSearch] = useState('')
   const [ratingFilter, setRatingFilter] = useState<string>(ALL_RATINGS)
+  const [readerFilter, setReaderFilter] = useState<string>(ALL_MEMBERS)
 
   const filteredBooks = useMemo(
-    () => filterBooks(books, { search, ratingFilter }),
-    [books, search, ratingFilter]
+    () => filterBooks(books, { search, ratingFilter, readerFilter }),
+    [books, search, ratingFilter, readerFilter]
   )
 
   return (
@@ -48,6 +58,21 @@ export function BookGrid({ books }: { books: Awaited<ReturnType<typeof listBooks
             <SelectItem value={NOT_RATED}>Not rated</SelectItem>
           </SelectContent>
         </Select>
+        {householdUsers && currentUserId && (
+          <Select value={readerFilter} onValueChange={setReaderFilter}>
+            <SelectTrigger className="w-full sm:w-[180px]" aria-label="Filter by reader">
+              <SelectValue placeholder="All readers" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_MEMBERS}>All readers</SelectItem>
+              {householdUsers.map((user) => (
+                <SelectItem key={user.id} value={user.id}>
+                  {memberFilterLabel(user, currentUserId)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {filteredBooks.length === 0 ? (

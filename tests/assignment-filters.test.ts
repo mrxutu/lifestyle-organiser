@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { ALL_MEMBERS } from '../lib/member-filters'
+import { filterBooks } from '../lib/book-filters'
 import { filterRecipes } from '../lib/recipe-filters'
 import { filterWatchlistEntries } from '../lib/watchlist-filters'
 
@@ -29,4 +30,15 @@ test('watchlist filtering defaults to all viewers and filters by assignment memb
     filterWatchlistEntries(entries, { ...baseFilters, viewerFilter: 'user-2' }),
     [entries[1]]
   )
+})
+
+test('book filtering defaults to all readers and filters by reader assignment', () => {
+  const books = [
+    { title: 'Dune', rating: 5, readerId: 'user-1' },
+    { title: 'Piranesi', rating: null, readerId: 'user-2' },
+  ]
+
+  const baseFilters = { search: '', ratingFilter: 'ALL' }
+  assert.deepEqual(filterBooks(books, { ...baseFilters, readerFilter: ALL_MEMBERS }), books)
+  assert.deepEqual(filterBooks(books, { ...baseFilters, readerFilter: 'user-2' }), [books[1]])
 })
