@@ -89,7 +89,7 @@ its own lookup values independently.
 
 # Priority 2 – Security & Authorisation
 
-## 4. API Section Security
+## 4. API Section Security - **Status:** Complete
 
 Section permissions must be enforced consistently.
 
