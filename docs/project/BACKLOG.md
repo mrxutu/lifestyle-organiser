@@ -10,7 +10,7 @@ Items are prioritised by product value rather than implementation effort.
 
 # Priority 1 – Product Improvements
 
-## 1. Household Administration
+## 1. Household Administration - **Status:** Complete
 
 Introduce three user roles.
 
@@ -48,7 +48,7 @@ No administrative permissions.
 
 ---
 
-## 2. Household Default Data
+## 2. Household Default Data - **Status:** Complete
 
 When a new household is created, automatically create a default set of lookup records.
 
@@ -66,7 +66,7 @@ The default data should be defined in a single reusable location.
 
 ---
 
-## 3. Household Lookup Ownership
+## 3. Household Lookup Ownership - **Status:** Complete
 
 Convert lookup tables from globally shared records to household-owned records.
 
