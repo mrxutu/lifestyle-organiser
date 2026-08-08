@@ -2,7 +2,6 @@
 
 import { useRef, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
 import type { BookSource } from '@/generated/prisma/client'
 import type { BookStatus } from '@/generated/prisma/enums'
 import { bookStatusLabel } from '@/lib/book-status'
@@ -56,7 +55,8 @@ export function BookForm({
   const [author, setAuthor] = useState(initialBook?.author ?? '')
   const [summary, setSummary] = useState(initialBook?.summary ?? '')
   const [imageUrl, setImageUrl] = useState(initialBook?.imageUrl ?? null)
-  const [uploading, setUploading] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageAction, setImageAction] = useState<'keep' | 'remove' | 'replace'>('keep')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [dateRead, setDateRead] = useState(toDateInputValue(initialBook?.dateRead))
   const [status, setStatus] = useState<BookStatus>(initialBook?.status ?? 'TO_READ')
@@ -70,27 +70,22 @@ export function BookForm({
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) return
-
-    setUploading(true)
     setError(null)
+    if (imageUrl?.startsWith('blob:')) URL.revokeObjectURL(imageUrl)
+    setImageFile(file)
+    setImageAction('replace')
+    setImageUrl(URL.createObjectURL(file))
+    event.target.value = ''
+  }
 
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const res = await fetch('/api/books/upload', { method: 'POST', body: formData })
-    setUploading(false)
-
-    if (!res.ok) {
-      const data = await res.json().catch(() => null)
-      setError(data?.error ?? 'Image upload failed')
-      return
-    }
-
-    const data = await res.json()
-    setImageUrl(data.url)
+  function removeImage() {
+    if (imageUrl?.startsWith('blob:')) URL.revokeObjectURL(imageUrl)
+    setImageFile(null)
+    setImageAction('remove')
+    setImageUrl(null)
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -102,7 +97,6 @@ export function BookForm({
       title,
       author,
       summary: summary || null,
-      imageUrl: imageUrl || null,
       dateRead: dateRead || null,
       rating: rating === NO_RATING ? null : Number(rating),
       status,
@@ -111,10 +105,14 @@ export function BookForm({
       readerId,
     }
 
+    const formData = new FormData()
+    formData.append('data', JSON.stringify(body))
+    if (imageFile) formData.append('image', imageFile)
+    if (initialBook) formData.append('imageAction', imageAction)
+
     const res = await fetch(initialBook ? `/api/books/${initialBook.id}` : '/api/books', {
       method: initialBook ? 'PATCH' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: formData,
     })
 
     setSubmitting(false)
@@ -180,7 +178,7 @@ export function BookForm({
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp"
               className="hidden"
               onChange={handleFileChange}
             />
@@ -188,21 +186,16 @@ export function BookForm({
               type="button"
               variant="outline"
               size="sm"
-              disabled={uploading}
               onClick={() => fileInputRef.current?.click()}
             >
-              {uploading ? (
-                <>
-                  <Loader2 className="animate-spin" /> Uploading…
-                </>
-              ) : imageUrl ? (
+              {imageUrl ? (
                 'Replace image'
               ) : (
                 'Upload image'
               )}
             </Button>
             {imageUrl && (
-              <Button type="button" variant="ghost" size="sm" onClick={() => setImageUrl(null)}>
+              <Button type="button" variant="ghost" size="sm" onClick={removeImage}>
                 Remove image
               </Button>
             )}
@@ -329,7 +322,7 @@ export function BookForm({
         <Button type="button" variant="outline" onClick={() => router.push('/books')}>
           Cancel
         </Button>
-        <Button type="submit" disabled={submitting || uploading || sources.length === 0}>
+        <Button type="submit" disabled={submitting || sources.length === 0}>
           {submitting ? 'Saving…' : initialBook ? 'Save changes' : 'Add book'}
         </Button>
       </div>

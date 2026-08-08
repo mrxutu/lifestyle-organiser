@@ -13,6 +13,7 @@ import { CannotDeleteSelfError, CannotDisableSelfError, LastAdminError, UserHasC
 import { HouseholdInUseError } from '@/lib/admin-households'
 import { ForbiddenError } from '@/lib/current-user'
 import { InvalidChefError } from '@/lib/recipes'
+import { InvalidImageError } from '@/lib/image-storage'
 
 export function errorResponse(error: unknown) {
   if (error instanceof ZodError) {
@@ -35,7 +36,8 @@ export function errorResponse(error: unknown) {
     error instanceof InvalidViewersError ||
     error instanceof InvalidEventTypeError ||
     error instanceof InvalidWatchlistSourceError ||
-    error instanceof InvalidBookSourceError
+    error instanceof InvalidBookSourceError ||
+    error instanceof InvalidImageError
   ) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }

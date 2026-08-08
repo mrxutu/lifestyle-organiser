@@ -4,6 +4,13 @@ A running, dated log of specific decisions made during the build that aren't cap
 
 ---
 
+**2026-08 — Recipe and Book image security**
+Recipe photos and Book covers are now submitted with their owning create/update request rather than uploaded through a separate pre-save endpoint. The server accepts JPEG, PNG, and WebP only, decodes and re-encodes each image with Sharp, rejects animated/unsupported content, retains the 8MB compressed-input limit, and enforces 8,000px per-dimension and 40-megapixel processing limits. Blob pathnames are server-generated under `lifestyle-organiser/{recipes|books}/`; original filenames and client-supplied image URLs are not trusted.
+
+Image mutations use database-safe ordering: a newly uploaded Blob is deleted as compensation if the database write fails; obsolete managed Blobs are deleted only after a successful replacement, removal, or record deletion. Cleanup is restricted to HTTPS Vercel Blob URLs under the expected current or legacy feature prefix. Post-commit Blob cleanup errors are logged without changing the successful database response. No persistent cleanup queue or existing-orphan reconciliation is included; reconciliation remains a separate report-first operation.
+
+---
+
 **2026-08 — Household-scoped lookup ownership and defaults**
 `EventType`, `WatchlistSource`, and `BookSource` belong to exactly one household, with names unique per household. New households create their approved defaults as nested writes in the household create operation, so household and defaults are committed atomically; defaults are never reconciled later, allowing Admins to rename or delete them permanently. Legacy shared lookup rows are duplicated per referencing household and content foreign keys are repointed during migration. Unused legacy values are copied to each existing household because usage cannot identify a single owner and this preserves user-managed data and prior availability without an arbitrary assignment. Lookup foreign keys to `Household` cascade on household deletion, while Event/Watchlist/Book dependencies remain restrictive for direct lookup deletion.
 

@@ -2,7 +2,7 @@
 
 import { useRef, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Plus, Trash2, X } from 'lucide-react'
+import { Plus, Trash2, X } from 'lucide-react'
 import { MeasurementUnit } from '@/generated/prisma/enums'
 import { unitLabel } from '@/lib/measurement-units'
 import type { RecipeWithDetail } from '@/lib/recipes'
@@ -80,7 +80,8 @@ export function RecipeForm({
     initialRecipe?.cookMinutes != null ? String(initialRecipe.cookMinutes) : ''
   )
   const [imageUrl, setImageUrl] = useState(initialRecipe?.imageUrl ?? null)
-  const [uploading, setUploading] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageAction, setImageAction] = useState<'keep' | 'remove' | 'replace'>('keep')
   const [tags, setTags] = useState<string[]>(initialRecipe?.tags ?? [])
   const [tagDraft, setTagDraft] = useState('')
   const [ingredients, setIngredients] = useState<IngredientRow[]>(ingredientRowsFrom(initialRecipe))
@@ -115,27 +116,22 @@ export function RecipeForm({
     setIngredients(ingredients.filter((row) => row.key !== key))
   }
 
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) return
-
-    setUploading(true)
     setError(null)
+    if (imageUrl?.startsWith('blob:')) URL.revokeObjectURL(imageUrl)
+    setImageFile(file)
+    setImageAction('replace')
+    setImageUrl(URL.createObjectURL(file))
+    event.target.value = ''
+  }
 
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const res = await fetch('/api/recipes/upload', { method: 'POST', body: formData })
-    setUploading(false)
-
-    if (!res.ok) {
-      const data = await res.json().catch(() => null)
-      setError(data?.error ?? 'Image upload failed')
-      return
-    }
-
-    const data = await res.json()
-    setImageUrl(data.url)
+  function removeImage() {
+    if (imageUrl?.startsWith('blob:')) URL.revokeObjectURL(imageUrl)
+    setImageFile(null)
+    setImageAction('remove')
+    setImageUrl(null)
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -147,7 +143,6 @@ export function RecipeForm({
       title,
       chefId,
       description: description || null,
-      imageUrl: imageUrl || null,
       servings: servings || null,
       prepMinutes: prepMinutes || null,
       cookMinutes: cookMinutes || null,
@@ -163,10 +158,14 @@ export function RecipeForm({
       method: method.trim() || null,
     }
 
+    const formData = new FormData()
+    formData.append('data', JSON.stringify(body))
+    if (imageFile) formData.append('image', imageFile)
+    if (initialRecipe) formData.append('imageAction', imageAction)
+
     const res = await fetch(initialRecipe ? `/api/recipes/${initialRecipe.id}` : '/api/recipes', {
       method: initialRecipe ? 'PATCH' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: formData,
     })
 
     setSubmitting(false)
@@ -247,7 +246,7 @@ export function RecipeForm({
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp"
               className="hidden"
               onChange={handleFileChange}
             />
@@ -255,21 +254,16 @@ export function RecipeForm({
               type="button"
               variant="outline"
               size="sm"
-              disabled={uploading}
               onClick={() => fileInputRef.current?.click()}
             >
-              {uploading ? (
-                <>
-                  <Loader2 className="animate-spin" /> Uploading…
-                </>
-              ) : imageUrl ? (
+              {imageUrl ? (
                 'Replace photo'
               ) : (
                 'Upload photo'
               )}
             </Button>
             {imageUrl && (
-              <Button type="button" variant="ghost" size="sm" onClick={() => setImageUrl(null)}>
+              <Button type="button" variant="ghost" size="sm" onClick={removeImage}>
                 Remove photo
               </Button>
             )}
@@ -450,7 +444,7 @@ export function RecipeForm({
         <Button type="button" variant="outline" onClick={() => router.push('/recipes')}>
           Cancel
         </Button>
-        <Button type="submit" disabled={submitting || uploading || !chefId}>
+        <Button type="submit" disabled={submitting || !chefId}>
           {submitting ? 'Saving…' : initialRecipe ? 'Save changes' : 'Add recipe'}
         </Button>
       </div>

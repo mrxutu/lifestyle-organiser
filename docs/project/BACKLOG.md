@@ -105,7 +105,7 @@ Security must never rely solely on navigation restrictions.
 
 ---
 
-## 5. Image Upload Security
+## 5. Image Upload Security - **Status:** Complete
 
 Improve upload validation.
 

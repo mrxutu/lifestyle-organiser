@@ -17,7 +17,7 @@ const ingredientInputSchema = z.object({
 export const recipeInputSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(200),
   description: z.string().trim().max(2000).optional().nullable(),
-  imageUrl: z.string().trim().url().optional().nullable(),
+  imageUrl: z.never({ error: 'Image URLs cannot be supplied by clients' }).optional(),
   servings: z.preprocess(emptyToNull, z.coerce.number().int().positive().nullable()),
   prepMinutes: z.preprocess(emptyToNull, z.coerce.number().int().nonnegative().nullable()),
   cookMinutes: z.preprocess(emptyToNull, z.coerce.number().int().nonnegative().nullable()),
@@ -68,12 +68,13 @@ async function assertChefInHousehold(householdId: string, chefId: string) {
   if (!chef) throw new InvalidChefError()
 }
 
-export async function createRecipe(householdId: string, authorId: string, input: RecipeInput) {
+export async function createRecipe(householdId: string, authorId: string, input: RecipeInput, imageUrl: string | null) {
   await assertChefInHousehold(householdId, input.chefId)
   const { ingredients, ...recipe } = input
   return prisma.recipe.create({
     data: {
       ...recipe,
+      imageUrl,
       householdId,
       authorId,
       ingredients: { create: ingredients },
@@ -84,12 +85,12 @@ export async function createRecipe(householdId: string, authorId: string, input:
   })
 }
 
-export async function updateRecipe(householdId: string, recipeId: string, input: RecipeInput) {
+export async function updateRecipe(householdId: string, recipeId: string, input: RecipeInput, imageUrl: string | null) {
   await assertChefInHousehold(householdId, input.chefId)
   const { ingredients, ...recipe } = input
 
   return prisma.$transaction(async (tx) => {
-    const result = await tx.recipe.updateMany({ where: { id: recipeId, householdId }, data: recipe })
+    const result = await tx.recipe.updateMany({ where: { id: recipeId, householdId }, data: { ...recipe, imageUrl } })
     if (result.count === 0) return null
 
     await tx.ingredient.deleteMany({ where: { recipeId } })
