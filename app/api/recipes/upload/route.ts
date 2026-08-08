@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
-import { getCurrentUser } from '@/lib/current-user'
+import { requireApiSection } from '@/lib/current-user'
 import { errorResponse } from '@/lib/api-errors'
 
 const MAX_BYTES = 8 * 1024 * 1024
 
 export async function POST(request: NextRequest) {
   try {
-    await getCurrentUser()
+    await requireApiSection('recipes')
 
     const form = await request.formData()
     const file = form.get('file')

@@ -79,6 +79,35 @@ export async function requireSection(section: SectionKey) {
   return user
 }
 
+// API routes must return a JSON 403 rather than following the page guard's
+// redirect behaviour. Keep this separate from requireSection for that reason.
+type CurrentUser = Awaited<ReturnType<typeof getCurrentUser>>
+
+export function requireApiSection(section: SectionKey): Promise<CurrentUser>
+export function requireApiSection<T extends { sections: SectionFlags }>(
+  section: SectionKey,
+  loadUser: () => Promise<T>
+): Promise<T>
+export async function requireApiSection(
+  section: SectionKey,
+  loadUser: (() => Promise<CurrentUser>) | (() => Promise<{ sections: SectionFlags }>) = getCurrentUser
+) {
+  const user = await loadUser()
+  assertSectionEnabled(user.sections, section)
+  return user
+}
+
+const SECTION_LABELS: Record<SectionKey, string> = {
+  calendar: 'Calendar',
+  recipes: 'Recipes',
+  watchlist: 'Watchlist',
+  books: 'Books',
+}
+
+export function assertSectionEnabled(sections: SectionFlags, section: SectionKey) {
+  if (!sections[section]) throw new ForbiddenError(`${SECTION_LABELS[section]} section is disabled`)
+}
+
 export async function listHouseholdUsers(householdId: string) {
   return prisma.user.findMany({
     where: { householdId, isActive: true },
