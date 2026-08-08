@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { EmptyState } from '@/components/empty-state'
 import { RecipeGrid } from '@/components/recipes/recipe-grid'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listRecipes } from '@/lib/recipes'
 
@@ -15,12 +16,14 @@ export default async function RecipesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Recipes</h1>
-        <Button asChild size="sm">
-          <Link href="/recipes/new">Add recipe</Link>
-        </Button>
-      </div>
+      <PageHeader
+        title="Recipes"
+        actions={
+          <Button asChild size="sm">
+            <Link href="/recipes/new">Add recipe</Link>
+          </Button>
+        }
+      />
       {recipes.length === 0 ? (
         <EmptyState
           icon={ChefHat}

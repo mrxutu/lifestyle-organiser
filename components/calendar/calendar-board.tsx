@@ -9,6 +9,7 @@ import type { EventWithType } from '@/lib/events'
 import { toCalendarEventInput } from '@/lib/calendar-events'
 import { ALL_EVENT_TYPES, filterEventsByTypeAndUser } from '@/lib/event-filters'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { EventFilters } from '@/components/event-filters'
 import { CalendarView } from '@/components/calendar/calendar-view'
 import { ResponsiveDialog } from '@/components/responsive-dialog'
@@ -86,8 +87,33 @@ export function CalendarBoard({
   const formOpen = state.mode === 'create' || state.mode === 'edit'
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <div className="flex flex-col gap-4">
+      <PageHeader
+        title="Calendar"
+        titleTag="h2"
+        actions={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setState({ mode: 'manage-types' })}
+            >
+              Manage event types
+            </Button>
+            <Button
+              type="button"
+              variant="default"
+              size="sm"
+              onClick={() => setState({ mode: 'create', initialDate: null })}
+            >
+              Add event
+            </Button>
+          </>
+        }
+      />
+
+      <div className="flex flex-wrap items-center gap-3">
         <EventFilters
           eventTypes={eventTypes}
           eventTypeFilter={eventTypeFilter}
@@ -97,25 +123,6 @@ export function CalendarBoard({
           currentUserId={currentUserId}
           householdUsers={householdUsers}
         />
-
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setState({ mode: 'manage-types' })}
-          >
-            Manage types
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setState({ mode: 'create', initialDate: null })}
-          >
-            + Add event
-          </Button>
-        </div>
       </div>
 
       {eventsRaw.length > 0 && filteredEvents.length === 0 && (

@@ -18,7 +18,6 @@ export default async function CalendarPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Calendar</h1>
       {events.length === 0 && (
         <p className="text-sm text-muted-foreground">
           No events yet — plans and appointments will appear here once added.

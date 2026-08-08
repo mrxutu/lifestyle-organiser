@@ -10,6 +10,7 @@ import { watchStatusBadgeVariant, watchStatusLabel } from '@/lib/watchlist-statu
 import { RATINGS, ratingLabel, type Rating } from '@/lib/rating'
 import { formatFriendlyDate } from '@/lib/format-datetime'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { EmptyState } from '@/components/empty-state'
@@ -69,82 +70,86 @@ export function WatchlistCards({
   const formOpen = state.mode === 'create' || state.mode === 'edit'
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[160px]" aria-label="Filter by status">
-              <SelectValue placeholder="All statuses" />
+    <div className="flex flex-col gap-4">
+      <PageHeader
+        title="Watchlist"
+        titleTag="h2"
+        actions={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setState({ mode: 'manage-sources' })}
+            >
+              Manage sources
+            </Button>
+            <Button type="button" variant="default" size="sm" onClick={() => setState({ mode: 'create' })}>
+              Add entry
+            </Button>
+          </>
+        }
+      />
+
+      <div className="flex flex-wrap items-center gap-3">
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-[160px]" aria-label="Filter by status">
+            <SelectValue placeholder="All statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL_STATUSES}>All statuses</SelectItem>
+            {Object.entries(watchStatusLabel).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={sourceFilter} onValueChange={setSourceFilter}>
+          <SelectTrigger className="w-[160px]" aria-label="Filter by source">
+            <SelectValue placeholder="All sources" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL_SOURCES}>All sources</SelectItem>
+            {sources.map((source) => (
+              <SelectItem key={source.id} value={source.id}>
+                {source.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={ratingFilter} onValueChange={setRatingFilter}>
+          <SelectTrigger className="w-[160px]" aria-label="Filter by rating">
+            <SelectValue placeholder="All ratings" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL_RATINGS}>All ratings</SelectItem>
+            {RATINGS.map((rating) => (
+              <SelectItem key={rating} value={String(rating)}>
+                {ratingLabel[rating]}
+              </SelectItem>
+            ))}
+            <SelectItem value={NOT_RATED}>Not rated</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {showViewerFilter && (
+          <Select value={viewerFilter} onValueChange={setViewerFilter}>
+            <SelectTrigger className="w-[160px]" aria-label="Filter by viewer">
+              <SelectValue placeholder="All viewers" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ALL_STATUSES}>All statuses</SelectItem>
-              {Object.entries(watchStatusLabel).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
+              <SelectItem value={ALL_MEMBERS}>All viewers</SelectItem>
+              {householdUsers.map((user) => (
+                <SelectItem key={user.id} value={user.id}>
+                  {memberFilterLabel(user, currentUserId)}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-
-          <Select value={sourceFilter} onValueChange={setSourceFilter}>
-            <SelectTrigger className="w-[160px]" aria-label="Filter by source">
-              <SelectValue placeholder="All sources" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL_SOURCES}>All sources</SelectItem>
-              {sources.map((source) => (
-                <SelectItem key={source.id} value={source.id}>
-                  {source.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={ratingFilter} onValueChange={setRatingFilter}>
-            <SelectTrigger className="w-[160px]" aria-label="Filter by rating">
-              <SelectValue placeholder="All ratings" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL_RATINGS}>All ratings</SelectItem>
-              {RATINGS.map((rating) => (
-                <SelectItem key={rating} value={String(rating)}>
-                  {ratingLabel[rating]}
-                </SelectItem>
-              ))}
-              <SelectItem value={NOT_RATED}>Not rated</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {showViewerFilter && (
-            <Select value={viewerFilter} onValueChange={setViewerFilter}>
-              <SelectTrigger className="w-[160px]" aria-label="Filter by viewer">
-                <SelectValue placeholder="All viewers" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ALL_MEMBERS}>All viewers</SelectItem>
-                {householdUsers.map((user) => (
-                  <SelectItem key={user.id} value={user.id}>
-                    {memberFilterLabel(user, currentUserId)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        </div>
-
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setState({ mode: 'manage-sources' })}
-          >
-            Manage sources
-          </Button>
-          <Button type="button" variant="outline" size="sm" onClick={() => setState({ mode: 'create' })}>
-            + Add to watchlist
-          </Button>
-        </div>
+        )}
       </div>
 
       {entries.length === 0 && (

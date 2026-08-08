@@ -12,7 +12,6 @@ export default async function WatchlistPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Watchlist</h1>
       <WatchlistCards
         entries={entries}
         sources={sources}
