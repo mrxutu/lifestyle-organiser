@@ -7,8 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-
-const GENERIC_MESSAGE = "If that email is registered, we've sent a reset link."
+import { GENERIC_FORGOT_PASSWORD_MESSAGE } from '@/lib/auth-input'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -42,7 +41,7 @@ export default function ForgotPasswordPage() {
         <CardContent>
           {submitted ? (
             <Alert>
-              <AlertDescription>{GENERIC_MESSAGE}</AlertDescription>
+              <AlertDescription>{GENERIC_FORGOT_PASSWORD_MESSAGE}</AlertDescription>
             </Alert>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">

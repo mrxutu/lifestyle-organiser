@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import { PrismaClient } from '../generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { HOUSEHOLD_LOOKUP_DEFAULTS } from '../lib/lookup-defaults'
+import { normalizeEmail } from '../lib/auth-input'
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
@@ -12,6 +13,7 @@ function generatePassword() {
 }
 
 async function upsertUser(email: string, name: string, householdId: string, role: 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER' = 'MEMBER') {
+  email = normalizeEmail(email)
   const password = generatePassword()
   const passwordHash = await bcrypt.hash(password, 12)
 

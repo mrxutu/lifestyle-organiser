@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
+  AuthRateLimit: 'AuthRateLimit',
   Household: 'Household',
   Event: 'Event',
   EventType: 'EventType',
@@ -87,6 +88,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   passwordHash: 'passwordHash',
+  authVersion: 'authVersion',
   role: 'role',
   isActive: 'isActive',
   householdId: 'householdId',
@@ -98,13 +100,25 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const PasswordResetTokenScalarFieldEnum = {
   id: 'id',
-  token: 'token',
+  tokenHash: 'tokenHash',
   userId: 'userId',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt'
 } as const
 
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+export const AuthRateLimitScalarFieldEnum = {
+  action: 'action',
+  identifierHash: 'identifierHash',
+  attempts: 'attempts',
+  windowStartedAt: 'windowStartedAt',
+  expiresAt: 'expiresAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthRateLimitScalarFieldEnum = (typeof AuthRateLimitScalarFieldEnum)[keyof typeof AuthRateLimitScalarFieldEnum]
 
 
 export const HouseholdScalarFieldEnum = {

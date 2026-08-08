@@ -2,12 +2,13 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { Role } from '@/generated/prisma/enums'
 import { sendNewUserSetPasswordEmail } from '@/lib/password-reset'
+import { normalizeEmail } from '@/lib/auth-input'
 
 export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER'
 
 export const createUserInputSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(100),
-  email: z.string().trim().email(),
+  email: z.string().trim().email().transform(normalizeEmail),
   householdId: z.string().min(1, 'Household is required'),
   role: z.enum(Role).default('MEMBER'),
 })
@@ -100,7 +101,7 @@ export async function createUser(input: CreateUserInput, currentUser?: { role: U
     },
   })
 
-  void sendNewUserSetPasswordEmail(user)
+  await sendNewUserSetPasswordEmail(user)
 
   return user
 }
@@ -125,7 +126,7 @@ export async function updateUser(
     throw new LastSuperAdminError()
   }
 
-  const currentTarget = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } })
+  const currentTarget = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, isActive: true } })
   const isTargetSuperAdmin = currentTarget?.role === 'SUPER_ADMIN'
   if (isTargetSuperAdmin && scopedInput.role !== 'SUPER_ADMIN' && activeSuperAdminCount <= 1) {
     throw new LastSuperAdminError()
@@ -142,6 +143,7 @@ export async function updateUser(
       householdId: scopedInput.householdId,
       role: scopedInput.role,
       isActive: scopedInput.isActive,
+      authVersion: currentTarget?.isActive !== scopedInput.isActive ? { increment: 1 } : undefined,
     },
   })
 }

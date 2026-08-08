@@ -1,5 +1,10 @@
 import { findValidPasswordResetToken } from '@/lib/password-reset'
 import { ResetPasswordForm } from './reset-password-form'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  referrer: 'no-referrer',
+}
 
 export default async function ResetPasswordPage({
   searchParams,
