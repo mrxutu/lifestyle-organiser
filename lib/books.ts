@@ -8,7 +8,7 @@ export const bookInputSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(200),
   author: z.string().trim().min(1, 'Author is required').max(200),
   summary: z.string().trim().max(2000).optional().nullable(),
-  imageUrl: z.string().trim().url().optional().nullable(),
+  imageUrl: z.never({ error: 'Image URLs cannot be supplied by clients' }).optional(),
   dateRead: z.preprocess(emptyToNull, z.coerce.date().nullable()),
   rating: z.preprocess(emptyToNull, z.coerce.number().int().min(1).max(5).nullable()),
   status: z.enum(BookStatus).default('TO_READ'),
@@ -54,10 +54,10 @@ export async function getBook(householdId: string, bookId: string) {
 
 export type BookWithDetail = NonNullable<Awaited<ReturnType<typeof getBook>>>
 
-export async function createBook(householdId: string, input: BookInput) {
+export async function createBook(householdId: string, input: BookInput, imageUrl: string | null) {
   await assertBookSourceInHousehold(householdId, input.sourceId)
   return prisma.book.create({
-    data: { ...input, householdId },
+    data: { ...input, imageUrl, householdId },
     include: {
       source: true,
       reader: { select: { id: true, name: true } },
@@ -65,9 +65,9 @@ export async function createBook(householdId: string, input: BookInput) {
   })
 }
 
-export async function updateBook(householdId: string, bookId: string, input: BookInput) {
+export async function updateBook(householdId: string, bookId: string, input: BookInput, imageUrl: string | null) {
   await assertBookSourceInHousehold(householdId, input.sourceId)
-  const result = await prisma.book.updateMany({ where: { id: bookId, householdId }, data: input })
+  const result = await prisma.book.updateMany({ where: { id: bookId, householdId }, data: { ...input, imageUrl } })
   if (result.count === 0) return null
 
   return prisma.book.findUnique({
