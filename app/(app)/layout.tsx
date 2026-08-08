@@ -7,7 +7,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="app-pattern-bg flex min-h-screen flex-col">
       <TopNav
-        user={{ name: user.name, email: user.email, isAdmin: user.role === 'ADMIN', sections: user.sections }}
+        user={{
+          name: user.name,
+          email: user.email,
+          isAdmin: user.role === 'ADMIN' || user.role === 'SUPER_ADMIN',
+          sections: user.sections,
+        }}
       />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
     </div>

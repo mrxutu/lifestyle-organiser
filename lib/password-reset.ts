@@ -39,10 +39,18 @@ export async function deletePasswordResetToken(id: string) {
   await prisma.passwordResetToken.delete({ where: { id } })
 }
 
+export function hasPasswordResetEmailConfiguration() {
+  return Boolean(process.env.RESEND_API?.trim() && process.env.SENDER_EMAIL?.trim() && process.env.HOSTNAME?.trim())
+}
+
 async function sendPasswordSetupEmail(
   user: { id: string; email: string },
   { subject, text }: { subject: string; text: string },
 ) {
+  if (!hasPasswordResetEmailConfiguration()) {
+    return
+  }
+
   try {
     const resetToken = await createPasswordResetToken(user.id)
     const resetUrl = new URL('/reset-password', process.env.HOSTNAME)

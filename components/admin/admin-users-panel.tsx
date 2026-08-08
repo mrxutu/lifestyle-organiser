@@ -15,10 +15,14 @@ export function AdminUsersPanel({
   users,
   households,
   currentUserId,
+  canManageGlobal = true,
+  currentHouseholdId,
 }: {
   users: UserWithHousehold[]
   households: { id: string; name: string }[]
   currentUserId: string
+  canManageGlobal?: boolean
+  currentHouseholdId?: string
 }) {
   const router = useRouter()
   const [state, setState] = useState<BoardState>({ mode: 'closed' })
@@ -38,7 +42,7 @@ export function AdminUsersPanel({
     <div className="flex flex-col gap-3">
       <div className="flex justify-end">
         <Button type="button" variant="outline" size="sm" onClick={() => setState({ mode: 'create' })}>
-          + New user
+          {canManageGlobal ? '+ New user' : '+ New member'}
         </Button>
       </div>
 
@@ -50,8 +54,9 @@ export function AdminUsersPanel({
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Household</TableHead>
-              <TableHead>Role</TableHead>
+              {!canManageGlobal && <TableHead>Household</TableHead>}
+              {canManageGlobal && <TableHead>Household</TableHead>}
+              {canManageGlobal && <TableHead>Role</TableHead>}
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -65,9 +70,13 @@ export function AdminUsersPanel({
                 <TableCell className="font-medium">{user.name ?? '—'}</TableCell>
                 <TableCell className="text-muted-foreground">{user.email}</TableCell>
                 <TableCell className="text-muted-foreground">{user.household?.name ?? '—'}</TableCell>
-                <TableCell>
-                  <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'}>{user.role}</Badge>
-                </TableCell>
+                {canManageGlobal && (
+                  <TableCell>
+                    <Badge variant={user.role === 'SUPER_ADMIN' || user.role === 'ADMIN' ? 'default' : 'secondary'}>
+                      {user.role}
+                    </Badge>
+                  </TableCell>
+                )}
                 <TableCell>
                   {!user.isActive && <Badge variant="destructive">Disabled</Badge>}
                 </TableCell>
@@ -86,6 +95,8 @@ export function AdminUsersPanel({
           households={households}
           initialUser={state.mode === 'edit' ? state.user : null}
           currentUserId={currentUserId}
+          canManageGlobal={canManageGlobal}
+          defaultHouseholdId={currentHouseholdId}
           onSuccess={handleSuccess}
           onCancel={close}
         />

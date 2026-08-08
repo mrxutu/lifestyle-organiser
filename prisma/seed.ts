@@ -10,14 +10,14 @@ function generatePassword() {
   return randomBytes(9).toString('base64url')
 }
 
-async function upsertUser(email: string, name: string, householdId: string) {
+async function upsertUser(email: string, name: string, householdId: string, role: 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER' = 'MEMBER') {
   const password = generatePassword()
   const passwordHash = await bcrypt.hash(password, 12)
 
   await prisma.user.upsert({
     where: { email },
-    update: { passwordHash, name, householdId },
-    create: { email, name, passwordHash, householdId },
+    update: { passwordHash, name, householdId, role },
+    create: { email, name, passwordHash, householdId, role },
   })
 
   return { email, password }
@@ -34,7 +34,7 @@ async function main() {
   })
 
   const credentials = [
-    await upsertUser('p@ulcozens.com', 'Paul', household.id),
+    await upsertUser('p@ulcozens.com', 'Paul', household.id, 'SUPER_ADMIN'),
     await upsertUser('nichola@cozens.xyz', 'Nick', household.id),
   ]
 

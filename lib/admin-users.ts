@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { Role } from '@/generated/prisma/enums'
 import { sendNewUserSetPasswordEmail } from '@/lib/password-reset'
 
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER'
+
 export const createUserInputSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(100),
   email: z.string().trim().email(),
@@ -44,53 +46,114 @@ export class CannotDisableSelfError extends Error {
 
 export class LastAdminError extends Error {
   constructor() {
-    super("You're the only admin — promote another user to admin before demoting yourself")
+    super("You're the only active super admin — promote another user before demoting yourself")
     this.name = 'LastAdminError'
   }
 }
 
-export async function listUsers() {
+export class LastSuperAdminError extends Error {
+  constructor() {
+    super("You're the only active super admin")
+    this.name = 'LastSuperAdminError'
+  }
+}
+
+export function getRoleScopedUserInput<T extends CreateUserInput | UpdateUserInput>(
+  currentUser: { role: UserRole; householdId?: string | null; id?: string },
+  input: T
+): T {
+  if (currentUser.role === 'SUPER_ADMIN') return input
+
+  if (currentUser.role === 'ADMIN') {
+    const scopedHouseholdId = currentUser.householdId ?? input.householdId
+    return {
+      ...input,
+      householdId: scopedHouseholdId,
+      role: 'MEMBER',
+    } as T
+  }
+
+  return input
+}
+
+export async function listUsersForContext(currentUser: { role: UserRole; householdId?: string | null }) {
+  const where = currentUser.role === 'ADMIN' ? { householdId: currentUser.householdId ?? undefined } : {}
+
   return prisma.user.findMany({
+    where,
     include: { household: { select: { id: true, name: true } } },
     orderBy: { name: 'asc' },
   })
 }
 
-export type UserWithHousehold = Awaited<ReturnType<typeof listUsers>>[number]
+export type UserWithHousehold = Awaited<ReturnType<typeof listUsersForContext>>[number]
 
-export async function createUser(input: CreateUserInput) {
+export async function createUser(input: CreateUserInput, currentUser?: { role: UserRole; householdId?: string | null }) {
+  const scopedInput = currentUser ? getRoleScopedUserInput(currentUser, input) : input
   const user = await prisma.user.create({
     data: {
-      name: input.name,
-      email: input.email,
-      householdId: input.householdId,
-      role: input.role,
+      name: scopedInput.name,
+      email: scopedInput.email,
+      householdId: scopedInput.householdId,
+      role: scopedInput.role,
       passwordHash: null,
     },
   })
 
-  await sendNewUserSetPasswordEmail(user)
+  void sendNewUserSetPasswordEmail(user)
 
   return user
 }
 
-export async function updateUser(userId: string, input: UpdateUserInput, currentUserId: string) {
+export async function updateUser(
+  userId: string,
+  input: UpdateUserInput,
+  currentUserId: string,
+  currentUser?: { role: UserRole; householdId?: string | null }
+) {
+  const scopedInput = currentUser ? getRoleScopedUserInput(currentUser, input) : input
+
   if (userId === currentUserId) {
-    if (input.role !== 'ADMIN') {
-      const adminCount = await prisma.user.count({ where: { role: 'ADMIN' } })
-      if (adminCount <= 1) throw new LastAdminError()
-    }
-    if (!input.isActive) throw new CannotDisableSelfError()
+    if (!scopedInput.isActive) throw new CannotDisableSelfError()
+  }
+
+  const activeSuperAdminCount = await prisma.user.count({
+    where: { role: 'SUPER_ADMIN', isActive: true },
+  })
+
+  if (userId === currentUserId && scopedInput.role !== 'SUPER_ADMIN' && activeSuperAdminCount <= 1) {
+    throw new LastSuperAdminError()
+  }
+
+  const currentTarget = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } })
+  const isTargetSuperAdmin = currentTarget?.role === 'SUPER_ADMIN'
+  if (isTargetSuperAdmin && scopedInput.role !== 'SUPER_ADMIN' && activeSuperAdminCount <= 1) {
+    throw new LastSuperAdminError()
+  }
+
+  if (isTargetSuperAdmin && !scopedInput.isActive && activeSuperAdminCount <= 1) {
+    throw new LastSuperAdminError()
   }
 
   return prisma.user.update({
     where: { id: userId },
-    data: { name: input.name, householdId: input.householdId, role: input.role, isActive: input.isActive },
+    data: {
+      name: scopedInput.name,
+      householdId: scopedInput.householdId,
+      role: scopedInput.role,
+      isActive: scopedInput.isActive,
+    },
   })
 }
 
 export async function deleteUser(userId: string, currentUserId: string) {
   if (userId === currentUserId) throw new CannotDeleteSelfError()
+
+  const targetUser = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, isActive: true } })
+  if (targetUser?.role === 'SUPER_ADMIN' && targetUser.isActive) {
+    const activeSuperAdminCount = await prisma.user.count({ where: { role: 'SUPER_ADMIN', isActive: true } })
+    if (activeSuperAdminCount <= 1) throw new LastSuperAdminError()
+  }
 
   const [eventCount, authoredRecipeCount, chefRecipeCount, attendeeCount, viewerCount, bookCount] = await Promise.all([
     prisma.event.count({ where: { creatorId: userId } }),

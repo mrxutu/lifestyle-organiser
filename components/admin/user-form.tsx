@@ -31,19 +31,24 @@ export function UserForm({
   households,
   initialUser,
   currentUserId,
+  canManageGlobal = true,
+  defaultHouseholdId,
   onSuccess,
   onCancel,
 }: {
   households: { id: string; name: string }[]
   initialUser?: UserWithHousehold | null
   currentUserId: string
+  canManageGlobal?: boolean
+  defaultHouseholdId?: string
   onSuccess: () => void
   onCancel: () => void
 }) {
   const [name, setName] = useState(initialUser?.name ?? '')
   const [email, setEmail] = useState(initialUser?.email ?? '')
-  const [householdId, setHouseholdId] = useState(initialUser?.householdId ?? households[0]?.id ?? '')
+  const [householdId, setHouseholdId] = useState(initialUser?.householdId ?? defaultHouseholdId ?? households[0]?.id ?? '')
   const [role, setRole] = useState<Role>(initialUser?.role ?? 'MEMBER')
+  const effectiveHouseholdId = initialUser?.householdId ?? defaultHouseholdId ?? householdId
   const [isActive, setIsActive] = useState(initialUser?.isActive ?? true)
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -56,9 +61,12 @@ export function UserForm({
     setSubmitting(true)
     setError(null)
 
+    const effectiveHouseholdId = canManageGlobal ? householdId : (defaultHouseholdId ?? householdId)
+    const effectiveRole = canManageGlobal ? role : 'MEMBER'
+
     const body = initialUser
-      ? { name, householdId, role, isActive }
-      : { name, email, householdId, role }
+      ? { name, householdId: effectiveHouseholdId, role: effectiveRole, isActive }
+      : { name, email, householdId: effectiveHouseholdId, role: effectiveRole }
 
     const res = await fetch(initialUser ? `/api/admin/users/${initialUser.id}` : '/api/admin/users', {
       method: initialUser ? 'PATCH' : 'POST',
@@ -119,39 +127,51 @@ export function UserForm({
         )}
       </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="user-household">Household</Label>
-        <Select value={householdId} onValueChange={setHouseholdId}>
-          <SelectTrigger id="user-household" className="w-full">
-            <SelectValue placeholder="Select a household" />
-          </SelectTrigger>
-          <SelectContent>
-            {households.map((household) => (
-              <SelectItem key={household.id} value={household.id}>
-                {household.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      {canManageGlobal && (
+        <div className="space-y-1.5">
+          <Label htmlFor="user-household">Household</Label>
+          <Select value={householdId} onValueChange={setHouseholdId}>
+            <SelectTrigger id="user-household" className="w-full">
+              <SelectValue placeholder="Select a household" />
+            </SelectTrigger>
+            <SelectContent>
+              {households.map((household) => (
+                <SelectItem key={household.id} value={household.id}>
+                  {household.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
-      <div className="space-y-1.5">
-        <Label htmlFor="user-role">Role</Label>
-        <Select value={role} onValueChange={(value) => setRole(value as Role)}>
-          <SelectTrigger id="user-role" className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="MEMBER">Member</SelectItem>
-            <SelectItem value="ADMIN">Admin</SelectItem>
-          </SelectContent>
-        </Select>
-        {isSelf && (
-          <p className="text-sm text-muted-foreground">
-            You can&rsquo;t demote yourself if you&rsquo;re the only admin.
-          </p>
-        )}
-      </div>
+      {!canManageGlobal && effectiveHouseholdId && (
+        <div className="space-y-1.5">
+          <Label htmlFor="user-household">Household</Label>
+          <Input id="user-household" value={effectiveHouseholdId} disabled readOnly />
+        </div>
+      )}
+
+      {canManageGlobal && (
+        <div className="space-y-1.5">
+          <Label htmlFor="user-role">Role</Label>
+          <Select value={role} onValueChange={(value) => setRole(value as Role)}>
+            <SelectTrigger id="user-role" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="MEMBER">Member</SelectItem>
+              <SelectItem value="ADMIN">Admin</SelectItem>
+              <SelectItem value="SUPER_ADMIN">Super Admin</SelectItem>
+            </SelectContent>
+          </Select>
+          {isSelf && (
+            <p className="text-sm text-muted-foreground">
+              You can&rsquo;t demote yourself if you&rsquo;re the only active super admin.
+            </p>
+          )}
+        </div>
+      )}
 
       {initialUser && (
         <div className="flex items-center justify-between">
@@ -206,7 +226,7 @@ export function UserForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={submitting || households.length === 0}>
+        <Button type="submit" disabled={submitting || (!canManageGlobal && !effectiveHouseholdId) || (canManageGlobal && households.length === 0)}>
           {submitting ? 'Saving…' : initialUser ? 'Save changes' : 'Create user'}
         </Button>
       </div>

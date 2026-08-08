@@ -3,7 +3,7 @@ import { getCurrentUser } from '@/lib/current-user'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
-  if (user.role !== 'ADMIN') redirect('/reminders')
+  if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') redirect('/reminders')
 
   return <>{children}</>
 }

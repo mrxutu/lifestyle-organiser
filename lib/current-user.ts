@@ -47,15 +47,27 @@ export const getCurrentUser = cache(async () => {
 })
 
 export class ForbiddenError extends Error {
-  constructor() {
-    super('Admin access required')
+  constructor(message = 'Access denied') {
+    super(message)
     this.name = 'ForbiddenError'
   }
 }
 
 export async function requireAdmin() {
   const user = await getCurrentUser()
-  if (user.role !== 'ADMIN') throw new ForbiddenError()
+  if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') throw new ForbiddenError('Admin access required')
+  return user
+}
+
+export async function requireSuperAdmin() {
+  const user = await getCurrentUser()
+  if (user.role !== 'SUPER_ADMIN') throw new ForbiddenError('Super admin access required')
+  return user
+}
+
+export async function requireHouseholdAdmin() {
+  const user = await getCurrentUser()
+  if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') throw new ForbiddenError('Household admin access required')
   return user
 }
 

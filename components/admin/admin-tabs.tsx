@@ -10,11 +10,29 @@ export function AdminTabs({
   users,
   households,
   currentUserId,
+  currentUserRole,
+  currentUserHouseholdId,
 }: {
   users: UserWithHousehold[]
   households: HouseholdWithCount[]
   currentUserId: string
+  currentUserRole: 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER'
+  currentUserHouseholdId: string
 }) {
+  const canManageHouseholds = currentUserRole === 'SUPER_ADMIN'
+
+  if (!canManageHouseholds) {
+    return (
+      <AdminUsersPanel
+        users={users}
+        households={[]}
+        currentUserId={currentUserId}
+        canManageGlobal={false}
+        currentHouseholdId={currentUserHouseholdId}
+      />
+    )
+  }
+
   return (
     <Tabs defaultValue="users">
       <TabsList>
@@ -26,6 +44,7 @@ export function AdminTabs({
           users={users}
           households={households.map((h) => ({ id: h.id, name: h.name }))}
           currentUserId={currentUserId}
+          canManageGlobal
         />
       </TabsContent>
       <TabsContent value="households">
