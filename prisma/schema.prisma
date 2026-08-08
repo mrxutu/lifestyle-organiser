@@ -18,6 +18,7 @@ model User {
   email        String     @unique
   name         String?
   passwordHash String?
+  authVersion  Int        @default(0)
   role         Role       @default(MEMBER)
   isActive     Boolean    @default(true)
   household    Household? @relation(fields: [householdId], references: [id])
@@ -41,11 +42,25 @@ enum Role {
 
 model PasswordResetToken {
   id        String   @id @default(cuid())
-  token     String   @unique
-  userId    String
+  tokenHash String   @unique
+  userId    String   @unique
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+}
+
+model AuthRateLimit {
+  action          String
+  identifierHash  String
+  attempts        Int      @default(1)
+  windowStartedAt DateTime
+  expiresAt       DateTime
+  updatedAt       DateTime @updatedAt
+
+  @@id([action, identifierHash])
+  @@index([expiresAt])
 }
 
 model Household {

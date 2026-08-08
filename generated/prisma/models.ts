@@ -10,6 +10,7 @@
  */
 export type * from './models/User'
 export type * from './models/PasswordResetToken'
+export type * from './models/AuthRateLimit'
 export type * from './models/Household'
 export type * from './models/Event'
 export type * from './models/EventType'

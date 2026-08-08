@@ -1,46 +1,81 @@
-import { randomBytes } from 'node:crypto'
+import { createHash, randomBytes } from 'node:crypto'
 import { z } from 'zod'
 import { Resend } from 'resend'
+import { Prisma } from '@/generated/prisma/client'
+import { normalizeEmail, validatePassword } from '@/lib/auth-input'
 import { prisma } from '@/lib/prisma'
 
 const TOKEN_TTL_MS = 60 * 60 * 1000 // 1 hour
 
 export const forgotPasswordInputSchema = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim().email().transform(normalizeEmail),
 })
 
 export const resetPasswordInputSchema = z.object({
   token: z.string().min(1),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().superRefine((password, context) => {
+    const error = validatePassword(password)
+    if (error) context.addIssue({ code: 'custom', message: error })
+  }),
 })
 
+export function hashPasswordResetToken(token: string) {
+  return createHash('sha256').update(token).digest('hex')
+}
+
 export async function createPasswordResetToken(userId: string) {
-  await prisma.passwordResetToken.deleteMany({
-    where: { userId, expiresAt: { gt: new Date() } },
+  const token = randomBytes(32).toString('hex')
+  const tokenHash = hashPasswordResetToken(token)
+  const expiresAt = new Date(Date.now() + TOKEN_TTL_MS)
+
+  await prisma.passwordResetToken.deleteMany({ where: { expiresAt: { lte: new Date() } } })
+
+  const storedToken = await prisma.passwordResetToken.upsert({
+    where: { userId },
+    create: { userId, tokenHash, expiresAt },
+    update: { tokenHash, expiresAt, createdAt: new Date() },
   })
 
-  return prisma.passwordResetToken.create({
-    data: {
-      userId,
-      token: randomBytes(32).toString('hex'),
-      expiresAt: new Date(Date.now() + TOKEN_TTL_MS),
-    },
-  })
+  return { ...storedToken, token }
 }
 
 export async function findValidPasswordResetToken(token: string) {
   return prisma.passwordResetToken.findFirst({
-    where: { token, expiresAt: { gt: new Date() } },
+    where: { tokenHash: hashPasswordResetToken(token), expiresAt: { gt: new Date() } },
     include: { user: { select: { id: true, email: true } } },
   })
 }
 
-export async function deletePasswordResetToken(id: string) {
-  await prisma.passwordResetToken.delete({ where: { id } })
+export async function consumePasswordResetToken(token: string, passwordHash: string) {
+  const tokenHash = hashPasswordResetToken(token)
+  const now = new Date()
+
+  return prisma.$transaction(async (transaction) => {
+    const claimed = await transaction.$queryRaw<Array<{ userId: string }>>(Prisma.sql`
+      DELETE FROM "PasswordResetToken"
+      WHERE "tokenHash" = ${tokenHash} AND "expiresAt" > ${now}
+      RETURNING "userId"
+    `)
+
+    const userId = claimed[0]?.userId
+    if (!userId) return null
+
+    await transaction.user.update({
+      where: { id: userId },
+      data: { passwordHash, authVersion: { increment: 1 } },
+    })
+    await transaction.passwordResetToken.deleteMany({ where: { userId } })
+
+    return { userId }
+  })
 }
 
 export function hasPasswordResetEmailConfiguration() {
   return Boolean(process.env.RESEND_API?.trim() && process.env.SENDER_EMAIL?.trim() && process.env.HOSTNAME?.trim())
+}
+
+export function assertPasswordEmailAccepted(result: { error?: { message: string } | null }) {
+  if (result.error) throw new Error(`Resend rejected password email: ${result.error.message}`)
 }
 
 async function sendPasswordSetupEmail(
@@ -57,12 +92,13 @@ async function sendPasswordSetupEmail(
     resetUrl.searchParams.set('token', resetToken.token)
 
     const resend = new Resend(process.env.RESEND_API)
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: `Lifestyle Organiser <${process.env.SENDER_EMAIL}>`,
       to: user.email,
       subject,
       text: text.replace('{{resetUrl}}', resetUrl.toString()),
     })
+    assertPasswordEmailAccepted(result)
   } catch (sendError) {
     // Swallowed deliberately: callers (e.g. forgot-password) must not let a delivery
     // failure change their response, since that could be used to enumerate emails.

@@ -8,6 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  PASSWORD_MAX_UTF8_BYTES,
+  PASSWORD_MIN_CHARACTERS,
+  validatePassword,
+} from '@/lib/auth-input'
 
 function InvalidLink() {
   return (
@@ -45,8 +50,9 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
     event.preventDefault()
     setError(null)
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters.')
+    const passwordError = validatePassword(password)
+    if (passwordError) {
+      setError(`${passwordError}.`)
       return
     }
 
@@ -106,11 +112,13 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
                 id="password"
                 type="password"
                 required
-                minLength={8}
+                minLength={PASSWORD_MIN_CHARACTERS}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground">Must be at least 8 characters.</p>
+              <p className="text-xs text-muted-foreground">
+                At least {PASSWORD_MIN_CHARACTERS} characters and no more than {PASSWORD_MAX_UTF8_BYTES} UTF-8 bytes.
+              </p>
             </div>
 
             <div className="space-y-1.5">
@@ -119,7 +127,7 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
                 id="confirmPassword"
                 type="password"
                 required
-                minLength={8}
+                minLength={PASSWORD_MIN_CHARACTERS}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />

@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
+  AuthRateLimit: 'AuthRateLimit',
   Household: 'Household',
   Event: 'Event',
   EventType: 'EventType',
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordResetToken" | "household" | "event" | "eventType" | "eventAttendee" | "recipe" | "ingredient" | "watchlistEntry" | "watchlistViewer" | "watchlistSource" | "book" | "bookSource"
+    modelProps: "user" | "passwordResetToken" | "authRateLimit" | "household" | "event" | "eventType" | "eventAttendee" | "recipe" | "ingredient" | "watchlistEntry" | "watchlistViewer" | "watchlistSource" | "book" | "bookSource"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -561,6 +562,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PasswordResetTokenCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenCountAggregateOutputType> | number
+        }
+      }
+    }
+    AuthRateLimit: {
+      payload: Prisma.$AuthRateLimitPayload<ExtArgs>
+      fields: Prisma.AuthRateLimitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthRateLimitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthRateLimitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>
+        }
+        findFirst: {
+          args: Prisma.AuthRateLimitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthRateLimitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>
+        }
+        findMany: {
+          args: Prisma.AuthRateLimitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>[]
+        }
+        create: {
+          args: Prisma.AuthRateLimitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>
+        }
+        createMany: {
+          args: Prisma.AuthRateLimitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthRateLimitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>[]
+        }
+        delete: {
+          args: Prisma.AuthRateLimitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>
+        }
+        update: {
+          args: Prisma.AuthRateLimitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthRateLimitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthRateLimitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthRateLimitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthRateLimitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthRateLimitPayload>
+        }
+        aggregate: {
+          args: Prisma.AuthRateLimitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthRateLimit>
+        }
+        groupBy: {
+          args: Prisma.AuthRateLimitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthRateLimitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthRateLimitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthRateLimitCountAggregateOutputType> | number
         }
       }
     }
@@ -1422,6 +1497,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   passwordHash: 'passwordHash',
+  authVersion: 'authVersion',
   role: 'role',
   isActive: 'isActive',
   householdId: 'householdId',
@@ -1433,13 +1509,25 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const PasswordResetTokenScalarFieldEnum = {
   id: 'id',
-  token: 'token',
+  tokenHash: 'tokenHash',
   userId: 'userId',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt'
 } as const
 
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+export const AuthRateLimitScalarFieldEnum = {
+  action: 'action',
+  identifierHash: 'identifierHash',
+  attempts: 'attempts',
+  windowStartedAt: 'windowStartedAt',
+  expiresAt: 'expiresAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthRateLimitScalarFieldEnum = (typeof AuthRateLimitScalarFieldEnum)[keyof typeof AuthRateLimitScalarFieldEnum]
 
 
 export const HouseholdScalarFieldEnum = {
@@ -1631,6 +1719,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
@@ -1676,20 +1778,6 @@ export type EnumRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'Recurrence[]'
  */
 export type ListEnumRecurrenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Recurrence[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1860,6 +1948,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
+  authRateLimit?: Prisma.AuthRateLimitOmit
   household?: Prisma.HouseholdOmit
   event?: Prisma.EventOmit
   eventType?: Prisma.EventTypeOmit

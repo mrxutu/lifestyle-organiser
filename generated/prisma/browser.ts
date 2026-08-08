@@ -28,6 +28,11 @@ export type User = Prisma.UserModel
  */
 export type PasswordResetToken = Prisma.PasswordResetTokenModel
 /**
+ * Model AuthRateLimit
+ * 
+ */
+export type AuthRateLimit = Prisma.AuthRateLimitModel
+/**
  * Model Household
  * 
  */
