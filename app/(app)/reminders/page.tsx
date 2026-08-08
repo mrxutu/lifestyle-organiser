@@ -9,7 +9,7 @@ export default async function RemindersPage() {
   const { id: currentUserId, householdId } = await requireSection('calendar')
   const [reminders, eventTypes, householdUsers] = await Promise.all([
     listUpcomingReminders(householdId),
-    listEventTypes(),
+    listEventTypes(householdId),
     listHouseholdUsers(householdId),
   ])
 

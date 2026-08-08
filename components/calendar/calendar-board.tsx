@@ -28,12 +28,14 @@ export function CalendarBoard({
   currentUserId,
   householdUsers,
   initialEventId,
+  canManageLookups,
 }: {
   eventsRaw: EventWithType[]
   eventTypes: EventType[]
   currentUserId: string
   householdUsers: { id: string; name: string | null }[]
   initialEventId?: string | null
+  canManageLookups: boolean
 }) {
   const router = useRouter()
 
@@ -93,14 +95,16 @@ export function CalendarBoard({
         titleTag="h2"
         actions={
           <>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setState({ mode: 'manage-types' })}
-            >
-              Manage event types
-            </Button>
+            {canManageLookups && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setState({ mode: 'manage-types' })}
+              >
+                Manage event types
+              </Button>
+            )}
             <Button
               type="button"
               variant="default"

@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto'
 import bcrypt from 'bcryptjs'
 import { PrismaClient } from '../generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { HOUSEHOLD_LOOKUP_DEFAULTS } from '../lib/lookup-defaults'
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
@@ -23,9 +24,6 @@ async function upsertUser(email: string, name: string, householdId: string, role
   return { email, password }
 }
 
-const WATCHLIST_SOURCES = ['Apple TV', 'Netflix', 'IP Stream', 'Prime', 'Terrestrial']
-const BOOK_SOURCES = ['Kindle', 'Physical Book', 'Audiobook', 'Library']
-
 async function main() {
   const household = await prisma.household.upsert({
     where: { id: 'seed-household' },
@@ -38,12 +36,28 @@ async function main() {
     await upsertUser('nichola@cozens.xyz', 'Nick', household.id),
   ]
 
-  for (const name of WATCHLIST_SOURCES) {
-    await prisma.watchlistSource.upsert({ where: { name }, update: {}, create: { name } })
+  for (const value of HOUSEHOLD_LOOKUP_DEFAULTS.eventTypes) {
+    await prisma.eventType.upsert({
+      where: { householdId_name: { householdId: household.id, name: value.name } },
+      update: {},
+      create: { ...value, householdId: household.id },
+    })
   }
 
-  for (const name of BOOK_SOURCES) {
-    await prisma.bookSource.upsert({ where: { name }, update: {}, create: { name } })
+  for (const value of HOUSEHOLD_LOOKUP_DEFAULTS.watchlistSources) {
+    await prisma.watchlistSource.upsert({
+      where: { householdId_name: { householdId: household.id, name: value.name } },
+      update: {},
+      create: { ...value, householdId: household.id },
+    })
+  }
+
+  for (const value of HOUSEHOLD_LOOKUP_DEFAULTS.bookSources) {
+    await prisma.bookSource.upsert({
+      where: { householdId_name: { householdId: household.id, name: value.name } },
+      update: {},
+      create: { ...value, householdId: household.id },
+    })
   }
 
   console.log('\nSeeded accounts (save these now, they will not be shown again):\n')

@@ -2,6 +2,8 @@
 
 This file is the entry point for any AI coding agent working in this repository.
 
+Unless explicitly instructed otherwise, assume every new feature request begins in Discovery mode.
+
 Before beginning significant work, read and follow the documentation described below.
 
 ---

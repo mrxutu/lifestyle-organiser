@@ -27,16 +27,19 @@ export type AggregateBookSource = {
 export type BookSourceMinAggregateOutputType = {
   id: string | null
   name: string | null
+  householdId: string | null
 }
 
 export type BookSourceMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  householdId: string | null
 }
 
 export type BookSourceCountAggregateOutputType = {
   id: number
   name: number
+  householdId: number
   _all: number
 }
 
@@ -44,16 +47,19 @@ export type BookSourceCountAggregateOutputType = {
 export type BookSourceMinAggregateInputType = {
   id?: true
   name?: true
+  householdId?: true
 }
 
 export type BookSourceMaxAggregateInputType = {
   id?: true
   name?: true
+  householdId?: true
 }
 
 export type BookSourceCountAggregateInputType = {
   id?: true
   name?: true
+  householdId?: true
   _all?: true
 }
 
@@ -132,6 +138,7 @@ export type BookSourceGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type BookSourceGroupByOutputType = {
   id: string
   name: string
+  householdId: string
   _count: BookSourceCountAggregateOutputType | null
   _min: BookSourceMinAggregateOutputType | null
   _max: BookSourceMaxAggregateOutputType | null
@@ -158,27 +165,35 @@ export type BookSourceWhereInput = {
   NOT?: Prisma.BookSourceWhereInput | Prisma.BookSourceWhereInput[]
   id?: Prisma.StringFilter<"BookSource"> | string
   name?: Prisma.StringFilter<"BookSource"> | string
+  householdId?: Prisma.StringFilter<"BookSource"> | string
+  household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
   books?: Prisma.BookListRelationFilter
 }
 
 export type BookSourceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  householdId?: Prisma.SortOrder
+  household?: Prisma.HouseholdOrderByWithRelationInput
   books?: Prisma.BookOrderByRelationAggregateInput
 }
 
 export type BookSourceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: string
+  householdId_name?: Prisma.BookSourceHouseholdIdNameCompoundUniqueInput
   AND?: Prisma.BookSourceWhereInput | Prisma.BookSourceWhereInput[]
   OR?: Prisma.BookSourceWhereInput[]
   NOT?: Prisma.BookSourceWhereInput | Prisma.BookSourceWhereInput[]
+  name?: Prisma.StringFilter<"BookSource"> | string
+  householdId?: Prisma.StringFilter<"BookSource"> | string
+  household?: Prisma.XOR<Prisma.HouseholdScalarRelationFilter, Prisma.HouseholdWhereInput>
   books?: Prisma.BookListRelationFilter
-}, "id" | "name">
+}, "id" | "householdId_name">
 
 export type BookSourceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  householdId?: Prisma.SortOrder
   _count?: Prisma.BookSourceCountOrderByAggregateInput
   _max?: Prisma.BookSourceMaxOrderByAggregateInput
   _min?: Prisma.BookSourceMinOrderByAggregateInput
@@ -190,35 +205,41 @@ export type BookSourceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BookSourceScalarWhereWithAggregatesInput | Prisma.BookSourceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"BookSource"> | string
   name?: Prisma.StringWithAggregatesFilter<"BookSource"> | string
+  householdId?: Prisma.StringWithAggregatesFilter<"BookSource"> | string
 }
 
 export type BookSourceCreateInput = {
   id?: string
   name: string
+  household: Prisma.HouseholdCreateNestedOneWithoutBookSourcesInput
   books?: Prisma.BookCreateNestedManyWithoutSourceInput
 }
 
 export type BookSourceUncheckedCreateInput = {
   id?: string
   name: string
+  householdId: string
   books?: Prisma.BookUncheckedCreateNestedManyWithoutSourceInput
 }
 
 export type BookSourceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutBookSourcesNestedInput
   books?: Prisma.BookUpdateManyWithoutSourceNestedInput
 }
 
 export type BookSourceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
   books?: Prisma.BookUncheckedUpdateManyWithoutSourceNestedInput
 }
 
 export type BookSourceCreateManyInput = {
   id?: string
   name: string
+  householdId: string
 }
 
 export type BookSourceUpdateManyMutationInput = {
@@ -229,6 +250,17 @@ export type BookSourceUpdateManyMutationInput = {
 export type BookSourceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type BookSourceListRelationFilter = {
+  every?: Prisma.BookSourceWhereInput
+  some?: Prisma.BookSourceWhereInput
+  none?: Prisma.BookSourceWhereInput
+}
+
+export type BookSourceOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type BookSourceScalarRelationFilter = {
@@ -236,19 +268,69 @@ export type BookSourceScalarRelationFilter = {
   isNot?: Prisma.BookSourceWhereInput
 }
 
+export type BookSourceHouseholdIdNameCompoundUniqueInput = {
+  householdId: string
+  name: string
+}
+
 export type BookSourceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  householdId?: Prisma.SortOrder
 }
 
 export type BookSourceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  householdId?: Prisma.SortOrder
 }
 
 export type BookSourceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  householdId?: Prisma.SortOrder
+}
+
+export type BookSourceCreateNestedManyWithoutHouseholdInput = {
+  create?: Prisma.XOR<Prisma.BookSourceCreateWithoutHouseholdInput, Prisma.BookSourceUncheckedCreateWithoutHouseholdInput> | Prisma.BookSourceCreateWithoutHouseholdInput[] | Prisma.BookSourceUncheckedCreateWithoutHouseholdInput[]
+  connectOrCreate?: Prisma.BookSourceCreateOrConnectWithoutHouseholdInput | Prisma.BookSourceCreateOrConnectWithoutHouseholdInput[]
+  createMany?: Prisma.BookSourceCreateManyHouseholdInputEnvelope
+  connect?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+}
+
+export type BookSourceUncheckedCreateNestedManyWithoutHouseholdInput = {
+  create?: Prisma.XOR<Prisma.BookSourceCreateWithoutHouseholdInput, Prisma.BookSourceUncheckedCreateWithoutHouseholdInput> | Prisma.BookSourceCreateWithoutHouseholdInput[] | Prisma.BookSourceUncheckedCreateWithoutHouseholdInput[]
+  connectOrCreate?: Prisma.BookSourceCreateOrConnectWithoutHouseholdInput | Prisma.BookSourceCreateOrConnectWithoutHouseholdInput[]
+  createMany?: Prisma.BookSourceCreateManyHouseholdInputEnvelope
+  connect?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+}
+
+export type BookSourceUpdateManyWithoutHouseholdNestedInput = {
+  create?: Prisma.XOR<Prisma.BookSourceCreateWithoutHouseholdInput, Prisma.BookSourceUncheckedCreateWithoutHouseholdInput> | Prisma.BookSourceCreateWithoutHouseholdInput[] | Prisma.BookSourceUncheckedCreateWithoutHouseholdInput[]
+  connectOrCreate?: Prisma.BookSourceCreateOrConnectWithoutHouseholdInput | Prisma.BookSourceCreateOrConnectWithoutHouseholdInput[]
+  upsert?: Prisma.BookSourceUpsertWithWhereUniqueWithoutHouseholdInput | Prisma.BookSourceUpsertWithWhereUniqueWithoutHouseholdInput[]
+  createMany?: Prisma.BookSourceCreateManyHouseholdInputEnvelope
+  set?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  disconnect?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  delete?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  connect?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  update?: Prisma.BookSourceUpdateWithWhereUniqueWithoutHouseholdInput | Prisma.BookSourceUpdateWithWhereUniqueWithoutHouseholdInput[]
+  updateMany?: Prisma.BookSourceUpdateManyWithWhereWithoutHouseholdInput | Prisma.BookSourceUpdateManyWithWhereWithoutHouseholdInput[]
+  deleteMany?: Prisma.BookSourceScalarWhereInput | Prisma.BookSourceScalarWhereInput[]
+}
+
+export type BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput = {
+  create?: Prisma.XOR<Prisma.BookSourceCreateWithoutHouseholdInput, Prisma.BookSourceUncheckedCreateWithoutHouseholdInput> | Prisma.BookSourceCreateWithoutHouseholdInput[] | Prisma.BookSourceUncheckedCreateWithoutHouseholdInput[]
+  connectOrCreate?: Prisma.BookSourceCreateOrConnectWithoutHouseholdInput | Prisma.BookSourceCreateOrConnectWithoutHouseholdInput[]
+  upsert?: Prisma.BookSourceUpsertWithWhereUniqueWithoutHouseholdInput | Prisma.BookSourceUpsertWithWhereUniqueWithoutHouseholdInput[]
+  createMany?: Prisma.BookSourceCreateManyHouseholdInputEnvelope
+  set?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  disconnect?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  delete?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  connect?: Prisma.BookSourceWhereUniqueInput | Prisma.BookSourceWhereUniqueInput[]
+  update?: Prisma.BookSourceUpdateWithWhereUniqueWithoutHouseholdInput | Prisma.BookSourceUpdateWithWhereUniqueWithoutHouseholdInput[]
+  updateMany?: Prisma.BookSourceUpdateManyWithWhereWithoutHouseholdInput | Prisma.BookSourceUpdateManyWithWhereWithoutHouseholdInput[]
+  deleteMany?: Prisma.BookSourceScalarWhereInput | Prisma.BookSourceScalarWhereInput[]
 }
 
 export type BookSourceCreateNestedOneWithoutBooksInput = {
@@ -265,14 +347,63 @@ export type BookSourceUpdateOneRequiredWithoutBooksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BookSourceUpdateToOneWithWhereWithoutBooksInput, Prisma.BookSourceUpdateWithoutBooksInput>, Prisma.BookSourceUncheckedUpdateWithoutBooksInput>
 }
 
+export type BookSourceCreateWithoutHouseholdInput = {
+  id?: string
+  name: string
+  books?: Prisma.BookCreateNestedManyWithoutSourceInput
+}
+
+export type BookSourceUncheckedCreateWithoutHouseholdInput = {
+  id?: string
+  name: string
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutSourceInput
+}
+
+export type BookSourceCreateOrConnectWithoutHouseholdInput = {
+  where: Prisma.BookSourceWhereUniqueInput
+  create: Prisma.XOR<Prisma.BookSourceCreateWithoutHouseholdInput, Prisma.BookSourceUncheckedCreateWithoutHouseholdInput>
+}
+
+export type BookSourceCreateManyHouseholdInputEnvelope = {
+  data: Prisma.BookSourceCreateManyHouseholdInput | Prisma.BookSourceCreateManyHouseholdInput[]
+  skipDuplicates?: boolean
+}
+
+export type BookSourceUpsertWithWhereUniqueWithoutHouseholdInput = {
+  where: Prisma.BookSourceWhereUniqueInput
+  update: Prisma.XOR<Prisma.BookSourceUpdateWithoutHouseholdInput, Prisma.BookSourceUncheckedUpdateWithoutHouseholdInput>
+  create: Prisma.XOR<Prisma.BookSourceCreateWithoutHouseholdInput, Prisma.BookSourceUncheckedCreateWithoutHouseholdInput>
+}
+
+export type BookSourceUpdateWithWhereUniqueWithoutHouseholdInput = {
+  where: Prisma.BookSourceWhereUniqueInput
+  data: Prisma.XOR<Prisma.BookSourceUpdateWithoutHouseholdInput, Prisma.BookSourceUncheckedUpdateWithoutHouseholdInput>
+}
+
+export type BookSourceUpdateManyWithWhereWithoutHouseholdInput = {
+  where: Prisma.BookSourceScalarWhereInput
+  data: Prisma.XOR<Prisma.BookSourceUpdateManyMutationInput, Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdInput>
+}
+
+export type BookSourceScalarWhereInput = {
+  AND?: Prisma.BookSourceScalarWhereInput | Prisma.BookSourceScalarWhereInput[]
+  OR?: Prisma.BookSourceScalarWhereInput[]
+  NOT?: Prisma.BookSourceScalarWhereInput | Prisma.BookSourceScalarWhereInput[]
+  id?: Prisma.StringFilter<"BookSource"> | string
+  name?: Prisma.StringFilter<"BookSource"> | string
+  householdId?: Prisma.StringFilter<"BookSource"> | string
+}
+
 export type BookSourceCreateWithoutBooksInput = {
   id?: string
   name: string
+  household: Prisma.HouseholdCreateNestedOneWithoutBookSourcesInput
 }
 
 export type BookSourceUncheckedCreateWithoutBooksInput = {
   id?: string
   name: string
+  householdId: string
 }
 
 export type BookSourceCreateOrConnectWithoutBooksInput = {
@@ -294,9 +425,33 @@ export type BookSourceUpdateToOneWithWhereWithoutBooksInput = {
 export type BookSourceUpdateWithoutBooksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  household?: Prisma.HouseholdUpdateOneRequiredWithoutBookSourcesNestedInput
 }
 
 export type BookSourceUncheckedUpdateWithoutBooksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  householdId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type BookSourceCreateManyHouseholdInput = {
+  id?: string
+  name: string
+}
+
+export type BookSourceUpdateWithoutHouseholdInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  books?: Prisma.BookUpdateManyWithoutSourceNestedInput
+}
+
+export type BookSourceUncheckedUpdateWithoutHouseholdInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  books?: Prisma.BookUncheckedUpdateManyWithoutSourceNestedInput
+}
+
+export type BookSourceUncheckedUpdateManyWithoutHouseholdInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -335,6 +490,8 @@ export type BookSourceCountOutputTypeCountBooksArgs<ExtArgs extends runtime.Type
 export type BookSourceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  householdId?: boolean
+  household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   books?: boolean | Prisma.BookSource$booksArgs<ExtArgs>
   _count?: boolean | Prisma.BookSourceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookSource"]>
@@ -342,34 +499,46 @@ export type BookSourceSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type BookSourceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  householdId?: boolean
+  household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookSource"]>
 
 export type BookSourceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  householdId?: boolean
+  household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookSource"]>
 
 export type BookSourceSelectScalar = {
   id?: boolean
   name?: boolean
+  householdId?: boolean
 }
 
-export type BookSourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["bookSource"]>
+export type BookSourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "householdId", ExtArgs["result"]["bookSource"]>
 export type BookSourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
   books?: boolean | Prisma.BookSource$booksArgs<ExtArgs>
   _count?: boolean | Prisma.BookSourceCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type BookSourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type BookSourceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type BookSourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+}
+export type BookSourceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  household?: boolean | Prisma.HouseholdDefaultArgs<ExtArgs>
+}
 
 export type $BookSourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "BookSource"
   objects: {
+    household: Prisma.$HouseholdPayload<ExtArgs>
     books: Prisma.$BookPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    householdId: string
   }, ExtArgs["result"]["bookSource"]>
   composites: {}
 }
@@ -764,6 +933,7 @@ readonly fields: BookSourceFieldRefs;
  */
 export interface Prisma__BookSourceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  household<T extends Prisma.HouseholdDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HouseholdDefaultArgs<ExtArgs>>): Prisma.Prisma__HouseholdClient<runtime.Types.Result.GetResult<Prisma.$HouseholdPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   books<T extends Prisma.BookSource$booksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BookSource$booksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -796,6 +966,7 @@ export interface Prisma__BookSourceClient<T, Null = never, ExtArgs extends runti
 export interface BookSourceFieldRefs {
   readonly id: Prisma.FieldRef<"BookSource", 'String'>
   readonly name: Prisma.FieldRef<"BookSource", 'String'>
+  readonly householdId: Prisma.FieldRef<"BookSource", 'String'>
 }
     
 
@@ -1050,6 +1221,10 @@ export type BookSourceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    */
   data: Prisma.BookSourceCreateManyInput | Prisma.BookSourceCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookSourceIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1120,6 +1295,10 @@ export type BookSourceUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many BookSources to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookSourceIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

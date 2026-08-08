@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
+import { householdLookupDefaults } from '@/lib/lookup-defaults'
 
 export const householdInputSchema = z
   .object({
@@ -25,7 +26,12 @@ export class HouseholdInUseError extends Error {
 
 export async function listHouseholds() {
   return prisma.household.findMany({
-    include: { _count: { select: { users: true } } },
+    include: {
+      _count: { select: { users: true } },
+      eventTypes: { orderBy: { name: 'asc' } },
+      watchlistSources: { orderBy: { name: 'asc' } },
+      bookSources: { orderBy: { name: 'asc' } },
+    },
     orderBy: { name: 'asc' },
   })
 }
@@ -33,7 +39,12 @@ export async function listHouseholds() {
 export type HouseholdWithCount = Awaited<ReturnType<typeof listHouseholds>>[number]
 
 export async function createHousehold(input: HouseholdInput) {
-  return prisma.household.create({ data: input })
+  return prisma.household.create({
+    data: {
+      ...input,
+      ...householdLookupDefaults(),
+    },
+  })
 }
 
 export async function updateHousehold(householdId: string, input: HouseholdInput) {

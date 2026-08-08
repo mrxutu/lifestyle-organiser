@@ -66,6 +66,18 @@ export class InvalidAttendeesError extends Error {
   }
 }
 
+export class InvalidEventTypeError extends Error {
+  constructor() {
+    super('The selected event type must belong to this household')
+    this.name = 'InvalidEventTypeError'
+  }
+}
+
+async function assertEventTypeInHousehold(householdId: string, eventTypeId: string) {
+  const count = await prisma.eventType.count({ where: { id: eventTypeId, householdId } })
+  if (count !== 1) throw new InvalidEventTypeError()
+}
+
 async function assertAttendeesInHousehold(householdId: string, attendeeUserIds: string[]) {
   const memberCount = await prisma.user.count({
     where: { householdId, id: { in: attendeeUserIds } },
@@ -75,7 +87,10 @@ async function assertAttendeesInHousehold(householdId: string, attendeeUserIds: 
 
 export async function createEvent(householdId: string, creatorId: string, input: EventInput) {
   const { attendeeUserIds, ...event } = input
-  await assertAttendeesInHousehold(householdId, attendeeUserIds)
+  await Promise.all([
+    assertAttendeesInHousehold(householdId, attendeeUserIds),
+    assertEventTypeInHousehold(householdId, input.eventTypeId),
+  ])
   return prisma.event.create({
     data: {
       ...event,
@@ -93,7 +108,10 @@ export async function createEvent(householdId: string, creatorId: string, input:
 
 export async function updateEvent(householdId: string, eventId: string, input: EventInput) {
   const { attendeeUserIds, ...event } = input
-  await assertAttendeesInHousehold(householdId, attendeeUserIds)
+  await Promise.all([
+    assertAttendeesInHousehold(householdId, attendeeUserIds),
+    assertEventTypeInHousehold(householdId, input.eventTypeId),
+  ])
 
   return prisma.$transaction(async (tx) => {
     const result = await tx.event.updateMany({ where: { id: eventId, householdId }, data: event })

@@ -36,6 +36,18 @@ export class InvalidViewersError extends Error {
   }
 }
 
+export class InvalidWatchlistSourceError extends Error {
+  constructor() {
+    super('The selected source must belong to this household')
+    this.name = 'InvalidWatchlistSourceError'
+  }
+}
+
+async function assertWatchlistSourceInHousehold(householdId: string, sourceId: string) {
+  const count = await prisma.watchlistSource.count({ where: { id: sourceId, householdId } })
+  if (count !== 1) throw new InvalidWatchlistSourceError()
+}
+
 async function assertViewersInHousehold(householdId: string, viewerUserIds: string[]) {
   const uniqueViewerIds = new Set(viewerUserIds)
   const memberCount = await prisma.user.count({
@@ -48,7 +60,10 @@ async function assertViewersInHousehold(householdId: string, viewerUserIds: stri
 
 export async function createWatchlistEntry(householdId: string, input: WatchlistEntryInput) {
   const { viewerUserIds, ...entry } = input
-  await assertViewersInHousehold(householdId, viewerUserIds)
+  await Promise.all([
+    assertViewersInHousehold(householdId, viewerUserIds),
+    assertWatchlistSourceInHousehold(householdId, input.sourceId),
+  ])
   return prisma.watchlistEntry.create({
     data: {
       ...entry,
@@ -68,7 +83,10 @@ export async function updateWatchlistEntry(
   input: WatchlistEntryInput
 ) {
   const { viewerUserIds, ...entry } = input
-  await assertViewersInHousehold(householdId, viewerUserIds)
+  await Promise.all([
+    assertViewersInHousehold(householdId, viewerUserIds),
+    assertWatchlistSourceInHousehold(householdId, input.sourceId),
+  ])
 
   return prisma.$transaction(async (tx) => {
     const result = await tx.watchlistEntry.updateMany({
@@ -97,8 +115,8 @@ export async function deleteWatchlistEntry(householdId: string, entryId: string)
   return result.count > 0
 }
 
-export async function listWatchlistSources() {
-  return prisma.watchlistSource.findMany({ orderBy: { name: 'asc' } })
+export async function listWatchlistSources(householdId: string) {
+  return prisma.watchlistSource.findMany({ where: { householdId }, orderBy: { name: 'asc' } })
 }
 
 export const watchlistSourceInputSchema = z.object({
@@ -107,12 +125,21 @@ export const watchlistSourceInputSchema = z.object({
 
 export type WatchlistSourceInput = z.infer<typeof watchlistSourceInputSchema>
 
-export async function createWatchlistSource(input: WatchlistSourceInput) {
-  return prisma.watchlistSource.create({ data: input })
+export async function createWatchlistSource(householdId: string, input: WatchlistSourceInput) {
+  return prisma.watchlistSource.create({ data: { ...input, householdId } })
 }
 
-export async function updateWatchlistSource(sourceId: string, input: WatchlistSourceInput) {
-  return prisma.watchlistSource.update({ where: { id: sourceId }, data: input })
+export async function updateWatchlistSource(
+  householdId: string,
+  sourceId: string,
+  input: WatchlistSourceInput
+) {
+  const result = await prisma.watchlistSource.updateMany({
+    where: { id: sourceId, householdId },
+    data: input,
+  })
+  if (result.count === 0) return null
+  return prisma.watchlistSource.findUnique({ where: { id: sourceId } })
 }
 
 export class WatchlistSourceInUseError extends Error {
@@ -122,8 +149,9 @@ export class WatchlistSourceInUseError extends Error {
   }
 }
 
-export async function deleteWatchlistSource(sourceId: string) {
-  const usageCount = await prisma.watchlistEntry.count({ where: { sourceId } })
+export async function deleteWatchlistSource(householdId: string, sourceId: string) {
+  const usageCount = await prisma.watchlistEntry.count({ where: { sourceId, householdId } })
   if (usageCount > 0) throw new WatchlistSourceInUseError(usageCount)
-  return prisma.watchlistSource.delete({ where: { id: sourceId } })
+  const result = await prisma.watchlistSource.deleteMany({ where: { id: sourceId, householdId } })
+  return result.count > 0
 }

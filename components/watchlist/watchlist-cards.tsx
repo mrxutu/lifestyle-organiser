@@ -39,12 +39,14 @@ export function WatchlistCards({
   householdUsers,
   currentUserId,
   showViewerFilter = true,
+  canManageLookups = false,
 }: {
   entries: WatchlistEntryWithSource[]
   sources: WatchlistSource[]
   householdUsers: { id: string; name: string | null }[]
   currentUserId: string
   showViewerFilter?: boolean
+  canManageLookups?: boolean
 }) {
   const router = useRouter()
   const [state, setState] = useState<BoardState>({ mode: 'closed' })
@@ -76,14 +78,16 @@ export function WatchlistCards({
         titleTag="h2"
         actions={
           <>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setState({ mode: 'manage-sources' })}
-            >
-              Manage sources
-            </Button>
+            {canManageLookups && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setState({ mode: 'manage-sources' })}
+              >
+                Manage sources
+              </Button>
+            )}
             <Button type="button" variant="default" size="sm" onClick={() => setState({ mode: 'create' })}>
               Add entry
             </Button>

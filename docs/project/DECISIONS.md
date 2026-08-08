@@ -4,6 +4,11 @@ A running, dated log of specific decisions made during the build that aren't cap
 
 ---
 
+**2026-08 — Household-scoped lookup ownership and defaults**
+`EventType`, `WatchlistSource`, and `BookSource` belong to exactly one household, with names unique per household. New households create their approved defaults as nested writes in the household create operation, so household and defaults are committed atomically; defaults are never reconciled later, allowing Admins to rename or delete them permanently. Legacy shared lookup rows are duplicated per referencing household and content foreign keys are repointed during migration. Unused legacy values are copied to each existing household because usage cannot identify a single owner and this preserves user-managed data and prior availability without an arbitrary assignment. Lookup foreign keys to `Household` cascade on household deletion, while Event/Watchlist/Book dependencies remain restrictive for direct lookup deletion.
+
+---
+
 **2026-07 — Design direction**
 Clean/minimal style confirmed. shadcn/ui chosen as the component library over hand-rolling.
 

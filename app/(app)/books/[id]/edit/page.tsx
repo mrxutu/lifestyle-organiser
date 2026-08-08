@@ -8,7 +8,7 @@ export default async function EditBookPage({ params }: { params: Promise<{ id: s
   const { id: currentUserId, householdId } = await requireSection('books')
   const [book, sources, householdUsers] = await Promise.all([
     getBook(householdId, id),
-    listBookSources(),
+    listBookSources(householdId),
     listHouseholdUsers(householdId),
   ])
 

@@ -5,7 +5,7 @@ import { listBookSources } from '@/lib/books'
 export default async function NewBookPage() {
   const { id: currentUserId, householdId } = await requireSection('books')
   const [sources, householdUsers] = await Promise.all([
-    listBookSources(),
+    listBookSources(householdId),
     listHouseholdUsers(householdId),
   ])
 

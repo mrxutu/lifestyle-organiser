@@ -66,16 +66,24 @@ function EditRow({
   )
 }
 
-export function BookSourceManager({ sources }: { sources: BookSource[] }) {
+export function BookSourceManager({
+  sources,
+  householdId,
+}: {
+  sources: BookSource[]
+  householdId?: string
+}) {
   const router = useRouter()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const scopedUrl = (url: string) =>
+    householdId ? `${url}?householdId=${encodeURIComponent(householdId)}` : url
 
   async function submit(url: string, method: string, input: { name: string }) {
     setError(null)
-    const res = await fetch(url, {
+    const res = await fetch(scopedUrl(url), {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input),
@@ -93,7 +101,7 @@ export function BookSourceManager({ sources }: { sources: BookSource[] }) {
   async function handleDelete(id: string) {
     setError(null)
     setDeletingId(id)
-    const res = await fetch(`/api/book-sources/${id}`, { method: 'DELETE' })
+    const res = await fetch(scopedUrl(`/api/book-sources/${id}`), { method: 'DELETE' })
     setDeletingId(null)
     if (!res.ok) {
       const data = await res.json().catch(() => null)

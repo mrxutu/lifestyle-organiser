@@ -8,10 +8,10 @@ export default async function CalendarPage({
 }: {
   searchParams: Promise<{ eventId?: string }>
 }) {
-  const { id: currentUserId, householdId } = await requireSection('calendar')
+  const { id: currentUserId, householdId, role } = await requireSection('calendar')
   const [events, eventTypes, householdUsers, { eventId }] = await Promise.all([
     listEvents(householdId),
-    listEventTypes(),
+    listEventTypes(householdId),
     listHouseholdUsers(householdId),
     searchParams,
   ])
@@ -29,6 +29,7 @@ export default async function CalendarPage({
         currentUserId={currentUserId}
         householdUsers={householdUsers}
         initialEventId={eventId ?? null}
+        canManageLookups={role === 'ADMIN' || role === 'SUPER_ADMIN'}
       />
     </div>
   )

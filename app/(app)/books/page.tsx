@@ -9,10 +9,10 @@ import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listBooks, listBookSources } from '@/lib/books'
 
 export default async function BooksPage() {
-  const { id: currentUserId, householdId } = await requireSection('books')
+  const { id: currentUserId, householdId, role } = await requireSection('books')
   const [books, sources, householdUsers] = await Promise.all([
     listBooks(householdId),
-    listBookSources(),
+    listBookSources(householdId),
     listHouseholdUsers(householdId),
   ])
 
@@ -22,7 +22,7 @@ export default async function BooksPage() {
         title="Books"
         actions={
           <>
-            <BookSourceManagerDialog sources={sources} />
+            {(role === 'ADMIN' || role === 'SUPER_ADMIN') && <BookSourceManagerDialog sources={sources} />}
             <Button asChild size="sm">
               <Link href="/books/new">Add book</Link>
             </Button>

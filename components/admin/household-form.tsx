@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
+import { EventTypeManager } from '@/components/calendar/event-type-manager'
+import { WatchlistSourceManager } from '@/components/watchlist/watchlist-source-manager'
+import { BookSourceManager } from '@/components/books/book-source-manager'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   AlertDialog,
@@ -136,6 +139,23 @@ export function HouseholdForm({
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
+      )}
+
+      {initialHousehold && (
+        <div className="flex flex-col gap-5 border-t pt-4">
+          <div className="space-y-2">
+            <Label>Event types</Label>
+            <EventTypeManager eventTypes={initialHousehold.eventTypes} householdId={initialHousehold.id} />
+          </div>
+          <div className="space-y-2">
+            <Label>Watchlist sources</Label>
+            <WatchlistSourceManager sources={initialHousehold.watchlistSources} householdId={initialHousehold.id} />
+          </div>
+          <div className="space-y-2">
+            <Label>Book sources</Label>
+            <BookSourceManager sources={initialHousehold.bookSources} householdId={initialHousehold.id} />
+          </div>
+        </div>
       )}
 
       <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">

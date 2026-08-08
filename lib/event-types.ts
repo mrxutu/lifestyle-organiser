@@ -9,16 +9,25 @@ export const eventTypeInputSchema = z.object({
 
 export type EventTypeInput = z.infer<typeof eventTypeInputSchema>
 
-export async function listEventTypes() {
-  return prisma.eventType.findMany({ orderBy: { name: 'asc' } })
+export async function listEventTypes(householdId: string) {
+  return prisma.eventType.findMany({ where: { householdId }, orderBy: { name: 'asc' } })
 }
 
-export async function createEventType(input: EventTypeInput) {
-  return prisma.eventType.create({ data: input })
+export async function createEventType(householdId: string, input: EventTypeInput) {
+  return prisma.eventType.create({ data: { ...input, householdId } })
 }
 
-export async function updateEventType(eventTypeId: string, input: EventTypeInput) {
-  return prisma.eventType.update({ where: { id: eventTypeId }, data: input })
+export async function updateEventType(
+  householdId: string,
+  eventTypeId: string,
+  input: EventTypeInput
+) {
+  const result = await prisma.eventType.updateMany({
+    where: { id: eventTypeId, householdId },
+    data: input,
+  })
+  if (result.count === 0) return null
+  return prisma.eventType.findUnique({ where: { id: eventTypeId } })
 }
 
 export class EventTypeInUseError extends Error {
@@ -28,8 +37,9 @@ export class EventTypeInUseError extends Error {
   }
 }
 
-export async function deleteEventType(eventTypeId: string) {
-  const usageCount = await prisma.event.count({ where: { eventTypeId } })
+export async function deleteEventType(householdId: string, eventTypeId: string) {
+  const usageCount = await prisma.event.count({ where: { eventTypeId, householdId } })
   if (usageCount > 0) throw new EventTypeInUseError(usageCount)
-  return prisma.eventType.delete({ where: { id: eventTypeId } })
+  const result = await prisma.eventType.deleteMany({ where: { id: eventTypeId, householdId } })
+  return result.count > 0
 }

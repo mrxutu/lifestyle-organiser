@@ -19,6 +19,18 @@ export const bookInputSchema = z.object({
 
 export type BookInput = z.infer<typeof bookInputSchema>
 
+export class InvalidBookSourceError extends Error {
+  constructor() {
+    super('The selected source must belong to this household')
+    this.name = 'InvalidBookSourceError'
+  }
+}
+
+async function assertBookSourceInHousehold(householdId: string, sourceId: string) {
+  const count = await prisma.bookSource.count({ where: { id: sourceId, householdId } })
+  if (count !== 1) throw new InvalidBookSourceError()
+}
+
 export async function listBooks(householdId: string) {
   return prisma.book.findMany({
     where: { householdId },
@@ -43,6 +55,7 @@ export async function getBook(householdId: string, bookId: string) {
 export type BookWithDetail = NonNullable<Awaited<ReturnType<typeof getBook>>>
 
 export async function createBook(householdId: string, input: BookInput) {
+  await assertBookSourceInHousehold(householdId, input.sourceId)
   return prisma.book.create({
     data: { ...input, householdId },
     include: {
@@ -53,6 +66,7 @@ export async function createBook(householdId: string, input: BookInput) {
 }
 
 export async function updateBook(householdId: string, bookId: string, input: BookInput) {
+  await assertBookSourceInHousehold(householdId, input.sourceId)
   const result = await prisma.book.updateMany({ where: { id: bookId, householdId }, data: input })
   if (result.count === 0) return null
 
@@ -70,8 +84,8 @@ export async function deleteBook(householdId: string, bookId: string) {
   return result.count > 0
 }
 
-export async function listBookSources() {
-  return prisma.bookSource.findMany({ orderBy: { name: 'asc' } })
+export async function listBookSources(householdId: string) {
+  return prisma.bookSource.findMany({ where: { householdId }, orderBy: { name: 'asc' } })
 }
 
 export const bookSourceInputSchema = z.object({
@@ -80,12 +94,21 @@ export const bookSourceInputSchema = z.object({
 
 export type BookSourceInput = z.infer<typeof bookSourceInputSchema>
 
-export async function createBookSource(input: BookSourceInput) {
-  return prisma.bookSource.create({ data: input })
+export async function createBookSource(householdId: string, input: BookSourceInput) {
+  return prisma.bookSource.create({ data: { ...input, householdId } })
 }
 
-export async function updateBookSource(sourceId: string, input: BookSourceInput) {
-  return prisma.bookSource.update({ where: { id: sourceId }, data: input })
+export async function updateBookSource(
+  householdId: string,
+  sourceId: string,
+  input: BookSourceInput
+) {
+  const result = await prisma.bookSource.updateMany({
+    where: { id: sourceId, householdId },
+    data: input,
+  })
+  if (result.count === 0) return null
+  return prisma.bookSource.findUnique({ where: { id: sourceId } })
 }
 
 export class BookSourceInUseError extends Error {
@@ -95,8 +118,9 @@ export class BookSourceInUseError extends Error {
   }
 }
 
-export async function deleteBookSource(sourceId: string) {
-  const usageCount = await prisma.book.count({ where: { sourceId } })
+export async function deleteBookSource(householdId: string, sourceId: string) {
+  const usageCount = await prisma.book.count({ where: { sourceId, householdId } })
   if (usageCount > 0) throw new BookSourceInUseError(usageCount)
-  return prisma.bookSource.delete({ where: { id: sourceId } })
+  const result = await prisma.bookSource.deleteMany({ where: { id: sourceId, householdId } })
+  return result.count > 0
 }

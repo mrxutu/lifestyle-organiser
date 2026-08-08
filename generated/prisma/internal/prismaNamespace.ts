@@ -1477,7 +1477,8 @@ export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof Ev
 export const EventTypeScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  color: 'color'
+  color: 'color',
+  householdId: 'householdId'
 } as const
 
 export type EventTypeScalarFieldEnum = (typeof EventTypeScalarFieldEnum)[keyof typeof EventTypeScalarFieldEnum]
@@ -1550,7 +1551,8 @@ export type WatchlistViewerScalarFieldEnum = (typeof WatchlistViewerScalarFieldE
 
 export const WatchlistSourceScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  householdId: 'householdId'
 } as const
 
 export type WatchlistSourceScalarFieldEnum = (typeof WatchlistSourceScalarFieldEnum)[keyof typeof WatchlistSourceScalarFieldEnum]
@@ -1577,7 +1579,8 @@ export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof Book
 
 export const BookSourceScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  householdId: 'householdId'
 } as const
 
 export type BookSourceScalarFieldEnum = (typeof BookSourceScalarFieldEnum)[keyof typeof BookSourceScalarFieldEnum]

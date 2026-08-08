@@ -75,16 +75,24 @@ function EditRow({
   )
 }
 
-export function EventTypeManager({ eventTypes }: { eventTypes: EventType[] }) {
+export function EventTypeManager({
+  eventTypes,
+  householdId,
+}: {
+  eventTypes: EventType[]
+  householdId?: string
+}) {
   const router = useRouter()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const scopedUrl = (url: string) =>
+    householdId ? `${url}?householdId=${encodeURIComponent(householdId)}` : url
 
   async function submit(url: string, method: string, input: { name: string; color: string }) {
     setError(null)
-    const res = await fetch(url, {
+    const res = await fetch(scopedUrl(url), {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input),
@@ -102,7 +110,7 @@ export function EventTypeManager({ eventTypes }: { eventTypes: EventType[] }) {
   async function handleDelete(id: string) {
     setError(null)
     setDeletingId(id)
-    const res = await fetch(`/api/event-types/${id}`, { method: 'DELETE' })
+    const res = await fetch(scopedUrl(`/api/event-types/${id}`), { method: 'DELETE' })
     setDeletingId(null)
     if (!res.ok) {
       const data = await res.json().catch(() => null)

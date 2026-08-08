@@ -12,11 +12,11 @@ export default async function ProfilePage() {
   const [reminders, eventTypes, householdUsers, recipes, watchlistEntries, watchlistSources, books] =
     await Promise.all([
       sections.calendar ? listUpcomingReminders(householdId) : Promise.resolve([]),
-      sections.calendar ? listEventTypes() : Promise.resolve([]),
+      sections.calendar ? listEventTypes(householdId) : Promise.resolve([]),
       listHouseholdUsers(householdId),
       sections.recipes ? listRecipes(householdId) : Promise.resolve([]),
       sections.watchlist ? listWatchlistEntries(householdId) : Promise.resolve([]),
-      sections.watchlist ? listWatchlistSources() : Promise.resolve([]),
+      sections.watchlist ? listWatchlistSources(householdId) : Promise.resolve([]),
       sections.books ? listBooks(householdId) : Promise.resolve([]),
     ])
 

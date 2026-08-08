@@ -2,9 +2,13 @@ import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 import { EventTypeInUseError } from '@/lib/event-types'
-import { InvalidAttendeesError } from '@/lib/events'
-import { InvalidViewersError, WatchlistSourceInUseError } from '@/lib/watchlist'
-import { BookSourceInUseError } from '@/lib/books'
+import { InvalidAttendeesError, InvalidEventTypeError } from '@/lib/events'
+import {
+  InvalidViewersError,
+  InvalidWatchlistSourceError,
+  WatchlistSourceInUseError,
+} from '@/lib/watchlist'
+import { BookSourceInUseError, InvalidBookSourceError } from '@/lib/books'
 import { CannotDeleteSelfError, CannotDisableSelfError, LastAdminError, UserHasContentError } from '@/lib/admin-users'
 import { HouseholdInUseError } from '@/lib/admin-households'
 import { ForbiddenError } from '@/lib/current-user'
@@ -28,7 +32,10 @@ export function errorResponse(error: unknown) {
     error instanceof LastAdminError ||
     error instanceof InvalidAttendeesError ||
     error instanceof InvalidChefError ||
-    error instanceof InvalidViewersError
+    error instanceof InvalidViewersError ||
+    error instanceof InvalidEventTypeError ||
+    error instanceof InvalidWatchlistSourceError ||
+    error instanceof InvalidBookSourceError
   ) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }
@@ -45,6 +52,17 @@ export function errorResponse(error: unknown) {
 
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+
+  if (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === 'P2002' &&
+    String(error.meta?.target).includes('householdId')
+  ) {
+    return NextResponse.json(
+      { error: 'A lookup value with this name already exists in this household' },
+      { status: 409 }
+    )
   }
 
   console.error(error)
