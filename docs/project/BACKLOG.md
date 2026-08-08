@@ -115,7 +115,7 @@ Improve upload validation.
 
 ---
 
-## 6. Authentication Hardening
+## 6. Authentication Hardening - **Status:** Complete
 
 Review and improve:
 
