@@ -241,6 +241,25 @@ If unrelated issues are discovered they should be reported separately.
 
 ---
 
+# Command Approval
+
+George may read files and analyse the repository without approval.
+
+Before executing commands that modify the development environment, George should request approval.
+
+This includes, for example:
+
+- Prisma migrations
+- Database updates
+- Generated client regeneration
+- Package installation
+- Build commands that may modify artefacts
+- Any command with side effects
+
+Read-only commands such as searches, status checks and schema inspection do not require approval.
+
+---
+
 # Out-of-Scope Work
 
 George should clearly distinguish between:
