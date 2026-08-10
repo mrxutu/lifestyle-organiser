@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { householdLookupDefaults } from '@/lib/lookup-defaults'
+import { ForbiddenError } from '@/lib/current-user'
 
 export const householdInputSchema = z
   .object({
@@ -24,15 +25,97 @@ export class HouseholdInUseError extends Error {
   }
 }
 
-export async function listHouseholds() {
-  return prisma.household.findMany({
-    include: {
-      _count: { select: { users: true } },
-      eventTypes: { orderBy: { name: 'asc' } },
-      watchlistSources: { orderBy: { name: 'asc' } },
-      bookSources: { orderBy: { name: 'asc' } },
-    },
-    orderBy: { name: 'asc' },
+type ContentAggregate = {
+  householdId: string
+  _count: { id: number }
+  _max: { createdAt: Date | null }
+}
+
+type ContentStatistic = { count: number; lastCreatedAt: Date | null }
+
+function indexContentAggregates(aggregates: ContentAggregate[]) {
+  return new Map<string, ContentStatistic>(
+    aggregates.map((aggregate) => [
+      aggregate.householdId,
+      { count: aggregate._count.id, lastCreatedAt: aggregate._max.createdAt },
+    ])
+  )
+}
+
+function latestDate(dates: Array<Date | null>) {
+  return dates.reduce<Date | null>(
+    (latest, date) => (!latest || (date && date > latest) ? date : latest),
+    null
+  )
+}
+
+export async function listHouseholds(currentUser: { role: 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER' }) {
+  if (currentUser.role !== 'SUPER_ADMIN') throw new ForbiddenError('Super admin access required')
+
+  const [households, eventAggregates, recipeAggregates, watchlistAggregates, bookAggregates] =
+    await Promise.all([
+      prisma.household.findMany({
+        include: {
+          _count: { select: { users: true } },
+          eventTypes: { orderBy: { name: 'asc' } },
+          watchlistSources: { orderBy: { name: 'asc' } },
+          bookSources: { orderBy: { name: 'asc' } },
+        },
+        orderBy: { name: 'asc' },
+      }),
+      prisma.event.groupBy({
+        by: ['householdId'],
+        _count: { id: true },
+        _max: { createdAt: true },
+      }),
+      prisma.recipe.groupBy({
+        by: ['householdId'],
+        _count: { id: true },
+        _max: { createdAt: true },
+      }),
+      prisma.watchlistEntry.groupBy({
+        by: ['householdId'],
+        _count: { id: true },
+        _max: { createdAt: true },
+      }),
+      prisma.book.groupBy({
+        by: ['householdId'],
+        _count: { id: true },
+        _max: { createdAt: true },
+      }),
+    ])
+
+  const contentByType = {
+    events: indexContentAggregates(eventAggregates),
+    recipes: indexContentAggregates(recipeAggregates),
+    watchlistItems: indexContentAggregates(watchlistAggregates),
+    books: indexContentAggregates(bookAggregates),
+  }
+
+  return households.map((household) => {
+    const events = contentByType.events.get(household.id) ?? { count: 0, lastCreatedAt: null }
+    const recipes = contentByType.recipes.get(household.id) ?? { count: 0, lastCreatedAt: null }
+    const watchlistItems = contentByType.watchlistItems.get(household.id) ?? {
+      count: 0,
+      lastCreatedAt: null,
+    }
+    const books = contentByType.books.get(household.id) ?? { count: 0, lastCreatedAt: null }
+
+    return {
+      ...household,
+      statistics: {
+        events: events.count,
+        recipes: recipes.count,
+        watchlistItems: watchlistItems.count,
+        books: books.count,
+        lastActivityAt: latestDate([
+          events.lastCreatedAt,
+          recipes.lastCreatedAt,
+          watchlistItems.lastCreatedAt,
+          books.lastCreatedAt,
+        ]),
+      },
+    }
   })
 }
 

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ResponsiveDialog } from '@/components/responsive-dialog'
 import { HouseholdForm } from '@/components/admin/household-form'
+import { formatHouseholdActivityDate } from '@/lib/format-datetime'
 
 type BoardState =
   | { mode: 'closed' }
@@ -28,6 +29,15 @@ export function AdminHouseholdsPanel({ households }: { households: HouseholdWith
 
   const formOpen = state.mode === 'create' || state.mode === 'edit'
 
+  function lastActivity(household: HouseholdWithCount) {
+    if (!household.statistics.lastActivityAt) return 'Never'
+    return formatHouseholdActivityDate(household.statistics.lastActivityAt)
+  }
+
+  function openHousehold(household: HouseholdWithCount) {
+    setState({ mode: 'edit', household })
+  }
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex justify-end">
@@ -39,26 +49,106 @@ export function AdminHouseholdsPanel({ households }: { households: HouseholdWith
       {households.length === 0 ? (
         <p className="text-sm text-muted-foreground">No households yet.</p>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Members</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <>
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead className="text-center">Members</TableHead>
+                  <TableHead className="text-center">Events</TableHead>
+                  <TableHead className="text-center">Recipes</TableHead>
+                  <TableHead className="text-center">Watchlist</TableHead>
+                  <TableHead className="text-center">Books</TableHead>
+                  <TableHead className="text-right">Last activity</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {households.map((household) => (
+                  <TableRow
+                    key={household.id}
+                    className="cursor-pointer"
+                    onClick={() => openHousehold(household)}
+                  >
+                    <TableCell className="font-medium">
+                      <button
+                        type="button"
+                        className="rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          openHousehold(household)
+                        }}
+                      >
+                        {household.name}
+                      </button>
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground tabular-nums">
+                      {household._count.users}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground tabular-nums">
+                      {household.statistics.events}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground tabular-nums">
+                      {household.statistics.recipes}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground tabular-nums">
+                      {household.statistics.watchlistItems}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground tabular-nums">
+                      {household.statistics.books}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground">
+                      {household.statistics.lastActivityAt ? (
+                        <time dateTime={household.statistics.lastActivityAt.toISOString()}>
+                          {lastActivity(household)}
+                        </time>
+                      ) : (
+                        'Never'
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="flex flex-col gap-3 md:hidden">
             {households.map((household) => (
-              <TableRow
+              <button
                 key={household.id}
-                className="cursor-pointer"
-                onClick={() => setState({ mode: 'edit', household })}
+                type="button"
+                className="rounded-lg border bg-card p-4 text-left transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={() => openHousehold(household)}
               >
-                <TableCell className="font-medium">{household.name}</TableCell>
-                <TableCell className="text-muted-foreground">{household._count.users}</TableCell>
-              </TableRow>
+                <span className="font-medium">{household.name}</span>
+                <span className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                  {[
+                    ['Members', household._count.users],
+                    ['Events', household.statistics.events],
+                    ['Recipes', household.statistics.recipes],
+                    ['Watchlist', household.statistics.watchlistItems],
+                    ['Books', household.statistics.books],
+                  ].map(([label, count]) => (
+                    <span key={label} className="flex items-baseline justify-between gap-2">
+                      <span className="text-muted-foreground">{label}</span>
+                      <span className="font-medium tabular-nums">{count}</span>
+                    </span>
+                  ))}
+                </span>
+                <span className="mt-3 flex justify-between gap-3 border-t pt-3 text-sm">
+                  <span className="text-muted-foreground">Last activity</span>
+                  {household.statistics.lastActivityAt ? (
+                    <time dateTime={household.statistics.lastActivityAt.toISOString()}>
+                      {lastActivity(household)}
+                    </time>
+                  ) : (
+                    <span>Never</span>
+                  )}
+                </span>
+              </button>
             ))}
-          </TableBody>
-        </Table>
+          </div>
+        </>
       )}
 
       <ResponsiveDialog

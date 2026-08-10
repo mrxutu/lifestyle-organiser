@@ -7,7 +7,7 @@ export default async function AdminPage() {
   const currentUser = await getCurrentUser()
   const [users, households] = await Promise.all([
     listUsersForContext(currentUser),
-    currentUser.role === 'SUPER_ADMIN' ? listHouseholds() : Promise.resolve([]),
+    currentUser.role === 'SUPER_ADMIN' ? listHouseholds(currentUser) : Promise.resolve([]),
   ])
 
   return (

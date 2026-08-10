@@ -233,14 +233,14 @@ Improved mobile and tablet navigation sizing and touch reliability.
 
 ---
 
-## 15. Household Statistics
+## 15. Household Statistics - **Status:** Complete
 
-Enhance the Super Admin household view with useful household statistics, including:
+The Super Admin household view shows:
 
-- counts of household users and content;
-- date of the most recent household entry or activity.
+- member, Event, Recipe, Watchlist item and Book counts;
+- the latest `createdAt` date across Events, Recipes, Watchlist entries and Books.
 
-Discovery must first establish exactly which entities constitute an entry or count and how the latest activity date should be calculated. Avoid expensive or unnecessarily repetitive queries.
+Reminder-style records count as Events because Reminders share the Event model. Members and administrative or configuration records never contribute to Last activity, and editing existing content is not new activity. Server-side grouped aggregations avoid per-household queries and allow the future To-do model to be added as another content type.
 
 ---
 
