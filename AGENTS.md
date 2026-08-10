@@ -19,6 +19,7 @@ Mandatory:
 Read when relevant:
 
 - `docs/operational/RELEASE.md`
+- `docs/operational/SESSION_BACKUP.md`
 - `docs/operational/TESTING.md`
 - `docs/operational/WORKFLOW.md`
 - `docs/operational/CODING_STANDARDS.md`
@@ -54,6 +55,14 @@ Read the documents that are present and relevant.
 ---
 
 ## 3. Required working method
+
+Before making any development changes:
+
+1. Run `npm run backup` from the repository root.
+2. Confirm that the session backup completed successfully.
+3. Check the current Git branch and status.
+
+Follow `docs/operational/SESSION_BACKUP.md`. If the backup fails, stop and resolve the failure before changing the project.
 
 Unless explicitly instructed otherwise, significant work follows this sequence:
 
