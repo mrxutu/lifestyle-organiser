@@ -19,7 +19,6 @@ const exclusions = [
   '/coverage/',
   '/.turbo/',
   '/.cache/',
-  '/app/generated/prisma/',
   '*.tsbuildinfo',
   'next-env.d.ts',
   '.DS_Store',

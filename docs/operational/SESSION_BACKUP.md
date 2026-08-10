@@ -53,7 +53,6 @@ build/
 coverage/
 .turbo/
 .cache/
-app/generated/prisma/
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
@@ -63,7 +62,7 @@ yarn-error.log*
 .pnpm-debug.log*
 ```
 
-Dependencies can be restored from `package-lock.json`, build output can be regenerated, and Prisma output can be regenerated from the tracked schema and migrations.
+Dependencies can be restored from `package-lock.json`, and build output can be regenerated. The active Prisma Client output at `generated/prisma/` is tracked, so it remains included in each snapshot together with any local changes.
 
 ## Completion and retention
 

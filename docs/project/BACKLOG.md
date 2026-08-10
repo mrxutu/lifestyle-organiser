@@ -130,7 +130,7 @@ Review and improve:
 
 # Priority 3 – Quality & Testing
 
-## 7. Automated Testing
+## 7. Automated Testing - **Status:** Complete
 
 Introduce automated tests.
 
@@ -146,7 +146,7 @@ Initial focus:
 
 ---
 
-## 8. Resolve Existing Lint Issue
+## 8. Resolve Existing Lint Issue - **Status:** Complete
 
 Resolve the existing Theme Toggle lint warning as an isolated task.
 
@@ -154,7 +154,7 @@ Resolve the existing Theme Toggle lint warning as an isolated task.
 
 # Priority 4 – Documentation
 
-## 9. Replace Starter README
+## 9. Replace Starter README - **Status:** Complete
 
 Create project documentation covering:
 
