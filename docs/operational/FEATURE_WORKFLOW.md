@@ -2,298 +2,51 @@
 
 ## Purpose
 
-This document defines the standard workflow used for all significant development work.
+This document defines the review gates for significant product and engineering work. Binding agent, source-control, database and production boundaries live in `AGENTS.md`.
 
-Its purpose is to ensure:
+Small, explicitly authorised maintenance tasks may use a proportionate version of this workflow, but they still require understood scope and verification.
 
-- clear product decisions before implementation;
-- minimal rework;
-- controlled schema and architectural changes;
-- consistent review;
-- predictable releases.
+## 1. Product definition
 
-This workflow applies to every project using the shared operational documentation.
+The repository owner defines the desired outcome, boundaries and success criteria. Product choices that materially affect the solution should be resolved before implementation.
 
----
+## 2. Discovery
 
-# Roles
+Discovery is repository analysis only unless implementation has already been explicitly authorised. The implementation agent should:
 
-## Product Owner
+- inspect relevant code, configuration, schema and documentation;
+- identify established patterns and affected systems;
+- assess database, security, compatibility and migration implications;
+- identify risks, blockers and testing needs;
+- propose a concrete implementation plan.
 
-Responsible for:
+No approval is implied by presenting a plan.
 
-- defining product behaviour;
-- approving architectural decisions;
-- approving implementation;
-- performing manual testing;
-- deciding when changes are released.
+## 3. Approval
 
----
+The repository owner reviews, amends or approves the proposal. Schema changes, migrations, authentication or authorisation changes, destructive operations, architectural refactors and production actions always require explicit approval.
 
-## Sydney
+## 4. Implementation
 
-Acts as:
+Implement only the approved scope. Preserve existing architecture where practical and minimise unrelated changes.
 
-- architect;
-- technical reviewer;
-- product reviewer;
-- implementation critic.
+If implementation exposes a material new product decision, security concern, data risk or architectural change, pause and return to the approval gate.
 
-Responsibilities include:
+## 5. Verification
 
-- refining feature ideas;
-- identifying edge cases;
-- reviewing George's plans;
-- reviewing implementation;
-- identifying architectural risks;
-- maintaining operational documentation.
+Run checks appropriate to the change. Use `docs/operational/TESTING.md` for the automated-test suites and their database safeguards.
 
-Sydney does not modify the repository.
+Investigate failures and distinguish regressions introduced by the work from pre-existing failures. Do not fix unrelated failures without approval.
 
----
+## 6. Handoff and human review
 
-## George
+Provide:
 
-Acts as implementation engineer.
+- a complete changed-file summary;
+- important implementation decisions;
+- database and migration details;
+- checks run and their results;
+- known limitations and regression risks;
+- recommended manual testing.
 
-Responsibilities include:
-
-- repository analysis;
-- implementation planning;
-- code changes;
-- migrations;
-- testing;
-- verification.
-
-George follows AGENTS.md and the Development Charter.
-
-George never commits, pushes or deploys.
-
----
-
-# Standard Feature Lifecycle
-
-Every significant feature follows these stages.
-
----
-
-# Phase 1 – Product Definition
-
-Objective:
-
-Define the desired behaviour before any technical work begins.
-
-Typical activities:
-
-- clarify requirements;
-- identify user behaviour;
-- define boundaries;
-- identify dependencies;
-- agree success criteria.
-
-No repository analysis occurs during this phase.
-
-Output:
-
-Approved product definition.
-
----
-
-# Phase 2 – Discovery
-
-Repository analysis only.
-
-George must:
-
-- analyse the existing implementation;
-- identify affected components;
-- identify affected APIs;
-- identify affected database objects;
-- identify affected UI;
-- identify migration implications;
-- identify risks;
-- identify blockers;
-- propose an implementation plan.
-
-George must NOT:
-
-- modify files;
-- create migrations;
-- edit code;
-- run migrations.
-
-Output:
-
-Implementation proposal.
-
-The final line of every discovery report should be equivalent to:
-
-> Awaiting approval before modifying any files.
-
----
-
-# Phase 3 – Design Review
-
-Sydney and the Product Owner review the proposal.
-
-Objectives:
-
-- confirm architecture;
-- resolve product decisions;
-- reduce unnecessary complexity;
-- identify unintended consequences.
-
-Possible outcomes:
-
-- approved;
-- approved with amendments;
-- returned for further discovery.
-
----
-
-# Phase 4 – Implementation
-
-Only begins after explicit approval.
-
-George may:
-
-- modify files;
-- create migrations;
-- update documentation;
-- regenerate generated files;
-- execute approved development commands.
-
-George should remain within the approved scope.
-
-If implementation uncovers a significant architectural issue or product decision, implementation should pause and return to Discovery.
-
----
-
-# Phase 5 – Verification
-
-George performs technical verification.
-
-Typical activities:
-
-- Prisma validation;
-- TypeScript;
-- build;
-- lint;
-- automated tests;
-- migration verification.
-
-George produces:
-
-- implementation summary;
-- changed-file summary;
-- generated-file summary;
-- manual testing checklist.
-
----
-
-# Phase 6 – Manual Testing
-
-The Product Owner performs application testing.
-
-Any defects are:
-
-- corrected;
-- re-tested;
-- verified.
-
-Repeat until accepted.
-
----
-
-# Phase 7 – Release
-
-Follow RELEASE.md.
-
-Includes:
-
-- production migration;
-- deployment;
-- smoke testing;
-- branch merge;
-- branch cleanup.
-
----
-
-# Scope Control
-
-Every implementation request must explicitly state one of the following.
-
-## Discovery Only
-
-George may analyse the repository only.
-
-No files may be modified.
-
----
-
-## Implementation
-
-George may implement only the previously approved design.
-
-Implementation should remain within the approved scope.
-
-If unrelated issues are discovered they should be reported separately.
-
----
-
-# Command Approval
-
-George may read files and analyse the repository without approval.
-
-Before executing commands that modify the development environment, George should request approval.
-
-This includes, for example:
-
-- Prisma migrations
-- Database updates
-- Generated client regeneration
-- Package installation
-- Build commands that may modify artefacts
-- Any command with side effects
-
-Read-only commands such as searches, status checks and schema inspection do not require approval.
-
----
-
-# Out-of-Scope Work
-
-George should clearly distinguish between:
-
-- required work;
-- optional improvements;
-- unrelated technical debt.
-
-Unrelated issues should not be implemented without approval.
-
----
-
-# Decision Gates
-
-The following always require explicit approval before implementation:
-
-- schema changes;
-- migrations;
-- authentication;
-- authorisation;
-- permissions;
-- architectural refactoring;
-- destructive changes;
-- data migration;
-- deployment strategy changes.
-
----
-
-# Working Principle
-
-Think first.
-
-Implement second.
-
-Review third.
-
-Release last.
+The repository owner performs final review and decides whether the work is accepted. Release is a separate human-controlled process governed by `docs/operational/RELEASE.md`.

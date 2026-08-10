@@ -1,48 +1,49 @@
 # Automated Testing
 
-## Test categories
-
-The repository separates tests by execution cost and environment requirements:
+## Test suites
 
 - `tests/unit/` contains lightweight tests with no database or external-service access.
-- `tests/integration/` contains PostgreSQL-backed helper and authentication integration tests.
-- `tests/routes/` contains representative real route-handler tests with controlled authentication modules.
+- `tests/integration/` covers PostgreSQL-backed authentication, household isolation, assignments and deletion safeguards.
+- `tests/routes/` exercises representative real route handlers with controlled authentication modules.
 - `tests/migrations/` verifies fresh migration deployment and targeted data upgrades in disposable PostgreSQL databases.
-- `tests/fixtures/` contains shared database lifecycle and cleanup helpers and is not a test-discovery root.
+- `tests/fixtures/` contains shared lifecycle and cleanup helpers; it is not a test-discovery root.
 
-Test discovery is recursive. Every `.test.ts` file below the selected category is printed before execution, and a category fails if no tests are found.
+Discovery is recursive. Each selected `.test.ts` file is printed before execution, and a suite fails if no tests are found.
 
-## Commands
+## Test commands
 
 ```bash
-npm test                  # lightweight/unit tests only
-npm run test:integration # PostgreSQL-backed helper/authentication integration
-npm run test:routes      # PostgreSQL-backed real route handlers
+npm test                  # unit tests only
+npm run test:integration # PostgreSQL-backed integration tests
+npm run test:routes      # PostgreSQL-backed route-handler tests
 npm run test:migrations  # disposable-database migration regressions
-npm run test:all         # all categories in sequence
-npm run typecheck        # standalone TypeScript verification
+npm run test:all         # the four test suites above, in sequence
 ```
 
-Database commands deliberately do not run during `npm test`.
+`npm run test:all` does not run static analysis or a production build. A fuller verification pass may also include:
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Choose checks in proportion to the change. Database commands deliberately do not run during `npm test`.
 
 ## Test database safety
 
-Database-writing categories require an explicit `TEST_DATABASE_URL`. They refuse to run when it is missing, equal to the normal `DATABASE_URL`, outside the approved `lifestyle_organiser_test_<identifier>` naming convention, or production-like. Remote test hosts additionally require an explicit `ALLOW_REMOTE_TEST_DATABASE=1` acknowledgement.
+Every database-writing suite requires an explicit `TEST_DATABASE_URL`. The runner refuses a value that is missing, equals the normal `DATABASE_URL`, is not PostgreSQL, has a database name outside `lifestyle_organiser_test_<identifier>`, or appears production-like. A remote test host additionally requires `ALLOW_REMOTE_TEST_DATABASE=1` after the target has been approved.
 
-The test runner passes the validated `TEST_DATABASE_URL` to application code as `DATABASE_URL`; it never falls back to the normal application database.
+The runner passes the validated test URL to application code as `DATABASE_URL`; it never falls back to the normal application database.
 
-Migration tests create uniquely named `lifestyle_organiser_test_*` disposable databases through the approved test connection and drop only those exact databases during cleanup. They run serially.
+Migration tests create uniquely named `lifestyle_organiser_test_*` disposable databases through the approved test connection and drop only those exact databases. Stateful database suites run one test file at a time.
 
 ## Isolation and cleanup
 
-Database fixtures use UUID-prefixed records so concurrent or interrupted runs are identifiable. Tests register cleanup in dependency-safe reverse order and use `finally` blocks. Stateful database categories run one test file at a time to avoid shared rate-limit, migration, or fixture state races.
-
-An interrupted process may prevent cleanup. Before reusing a test database after an interruption, inspect only the approved test target for records prefixed `automated-test-` and disposable databases prefixed `lifestyle_organiser_test_`.
+Fixtures use UUID-prefixed records, register cleanup in dependency-safe reverse order and use `finally` blocks. An interrupted process may prevent cleanup. Before reusing a test database after interruption, inspect only the approved test target for records prefixed `automated-test-` and disposable databases prefixed `lifestyle_organiser_test_`.
 
 ## External services
 
-Automated tests must not call Resend or Vercel Blob. Authentication tests disable delivery configuration or exercise pre-delivery logic, and image tests use local fakes. Real email delivery, deployed Blob credentials, browser behavior, and production smoke testing remain manual checks.
+Automated tests must not call Resend or Vercel Blob. Authentication tests disable delivery configuration or test pre-delivery logic, and image tests use local fakes. Real email delivery, deployed Blob credentials, browser behaviour and production smoke testing remain manual checks.
 
-## Coverage philosophy
-
-Tests should protect important security, authorization, data-integrity, migration, and filter behavior. Do not add tests solely to increase a coverage percentage, and do not duplicate every trivial route permutation when representative route coverage plus focused helper coverage protects the same rule.
+Tests should protect important security, authorisation, data-integrity, migration and filtering behaviour. Do not add tests solely to increase a coverage percentage or duplicate permutations already protected by representative route and helper coverage.

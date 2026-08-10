@@ -1,6 +1,8 @@
-# Lifestyle Organiser — v1.0 Scope
+# Lifestyle Organiser — Frozen v1.0 Scope
 
-**Status: v1.0 shipped — live on Vercel/Neon, July 2026.**
+**Status: Historical baseline. v1.0 shipped in July 2026.**
+
+This file preserves the scope and assumptions used for the original v1 release. It is intentionally not updated to describe the current application. See `docs/project/OVERVIEW.md` for current capabilities and `docs/project/BACKLOG.md` for active or future work.
 
 ## Purpose
 A shared web app for a household of two (you + Nick) to manage renewal reminders, a colour-coded events calendar, and a recipe collection — accessible from phone, tablet, and laptop.
@@ -49,7 +51,9 @@ Reminders are not a separate feature — they're events with a lead time set. On
 ## Definition of done for v1.0
 Two users can log in, each independently add/edit calendar events (including reminder-style ones with a lead time), see them colour-coded on the calendar and reflected on the Reminders view, manage recipes, and see a shared, up-to-date view of all of it across any device — with no email sending required to consider v1.0 complete.
 
-## Added after v1.0
+## Historical additions recorded after v1.0
+
+The following notes were appended at the time and are also preserved as history; they are not a complete or current product specification.
 
 ### Watchlist (added 2026-07)
 A TV/movie tracking page, table/row-based rather than card-based like the other pages.

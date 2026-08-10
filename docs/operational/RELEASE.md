@@ -1,207 +1,82 @@
-# Release Procedure
+# Production Release Procedure
 
-**Version:** 1.0  
-**Status:** Active
+## Purpose
 
----
+This document governs production code deployment and database migrations. Production release is always deliberate and human-controlled; successful local verification does not authorise it.
 
-# Purpose
+## 1. Confirm readiness
 
-This document defines the standard release procedure for all projects.
+Before release, the repository owner confirms that:
 
-Its purpose is to ensure that every production deployment follows the same repeatable process, reducing the risk of human error and ensuring that code, database changes and deployments remain synchronised.
+- implementation and relevant documentation are complete;
+- automated verification and required manual testing have passed;
+- the complete working-tree diff is understood;
+- generated files and migration SQL have been reviewed;
+- only intended changes will be released.
 
-Production release is always a human-controlled activity.
+The repository owner controls commits, merges and pushes.
 
-George must never perform any release action without explicit instruction.
+## 2. Approve the release sequence
 
----
+Decide whether the release contains database migrations and approve the order of migration and code deployment based on compatibility. Prefer changes that keep old and new application versions compatible during deployment.
 
-# Release Principles
+Do not assume that every release has a migration or that code must always deploy before the database changes. If safe ordering is unclear, stop and resolve it before touching production.
 
-Every release should satisfy the following principles:
+## 3. Prepare production migrations
 
-- Production changes are deliberate.
-- Database changes are reversible where practical.
-- Code reaches production only after successful local verification.
-- Production deployments should contain no unexpected changes.
-- Every release should leave the repository in a known-good state.
+Production commands read `DATABASE_URL` from the ignored `.env.production-migrate` file. Confirm the exact production target without printing credentials.
 
----
+Before applying a migration:
 
-# Phase 1 – Development Complete
-
-Before considering a release:
-
-- Requested functionality has been implemented.
-- Manual testing has completed successfully.
-- Relevant automated checks have passed.
-- The user has approved the implementation.
-- The working tree has been reviewed.
-
-Nothing should be committed until these conditions are satisfied.
-
----
-
-# Phase 2 – Prepare Release
-
-Confirm:
-
-- Git working tree is understood.
-- Only intended files have changed.
-- Generated files have been reviewed where appropriate.
-- Database migrations have been reviewed.
-- Documentation has been updated where required.
-
-Review:
-
-- modified files
-- migration SQL
-- generated output
-- documentation changes
-
----
-
-# Phase 3 – Commit
-
-The user alone performs Git commits.
-
-George must never:
-
-- create commits;
-- amend commits;
-- push commits.
-
-Commit messages should accurately describe the completed feature.
-
----
-
-# Phase 4 – Deploy Code
-
-Merge the approved feature branch into the production branch.
-
-Pushing to the production branch may automatically deploy to Vercel.
-
-George should never trigger deployment automatically.
-
----
-
-# Phase 5 – Database Migration
-
-Production database migrations are performed only after:
-
-- code review;
-- successful testing;
-- deployment approval.
-
-Use:
+- confirm an appropriate database backup or Neon restore point;
+- review the expected migration SQL and data implications;
+- check migration status and confirm the expected pending migrations:
 
 ```bash
-npx prisma migrate deploy
+npm run db:status:prod
 ```
 
-Never use:
+Never use `prisma migrate dev`, `db push`, reset commands or development seeds against production.
+
+## 4. Execute the approved release
+
+The repository owner performs the approved code deployment and, when required, applies checked-in migrations with:
 
 ```bash
-prisma migrate dev
+npm run db:migrate:prod
 ```
 
-against production.
+`db:migrate:prod` runs `prisma migrate deploy`; it applies existing migrations and does not create new ones.
 
-Before migrating:
+After migration, run `npm run db:status:prod` again and confirm that the expected migrations succeeded. Do not continue past an unexpected migration or deployment result.
 
-- confirm production backup or Neon restore point;
-- confirm pending migrations; - 'npm run db:status:prod'
-- confirm expected migration name.
+## 5. Smoke test
 
-Migrate
+Verify at minimum:
 
-- Migrate changes - 'npm run db:migrate:prod'
-
-After migrating:
-
-- confirm migration success;
-- verify migration status;
-- perform smoke testing.
-
----
-
-# Phase 6 – Production Smoke Test
-
-Verify:
-
-- application loads;
-- authentication works;
-- affected feature behaves correctly;
-- existing data displays correctly;
-- new data can be created;
+- the application loads and authentication works;
+- affected features behave correctly;
+- existing data remains readable;
+- representative create or update operations work where safe;
+- relevant roles, permissions and household boundaries still hold;
 - production logs show no unexpected errors.
 
-Where practical:
+Avoid leaving unnecessary test data in production.
 
-- create one representative record;
-- edit one representative record;
-- verify filters;
-- verify permissions.
+## 6. Complete the release
 
----
+After production verification, the repository owner performs any branch synchronization or cleanup appropriate to the repository’s configured branch model. Do not hardcode or assume a branch topology.
 
-# Phase 7 – Branch Cleanup
+Record any release problem, rollback, hotfix or operational follow-up in the appropriate backlog or decision history.
 
-Once production has been verified:
+## Failure and rollback
 
-1. Merge feature branch into `main`.
-2. Delete the remote feature branch.
-3. Switch the local repository back to `main`.
-4. Pull the latest `main`.
-5. Delete the local feature branch. 'git branch -d branch-name'
-6. Confirm:
+If a production problem appears:
 
-   - current branch is `main`;
-   - working tree is clean;
-   - local repository matches GitHub.
+1. Stop further release actions.
+2. Assess user, code and data impact.
+3. Choose a forward fix, code rollback or database recovery based on the migration’s compatibility and data effects.
+4. Restore data only when necessary and from a verified recovery point.
+5. Re-run focused smoke tests after remediation.
 
----
-
-# Phase 8 – Retrospective
-
-After every completed release ask:
-
-- What worked well?
-- What could be improved?
-- Should the Development Charter change?
-- Should Testing change?
-- Should Release procedures change?
-- Was unexpected technical debt introduced?
-- Was documentation sufficient?
-
-The operational documents should improve continuously.
-
----
-
-# Emergency Rollback
-
-If production problems are discovered:
-
-1. Stop further releases.
-2. Assess impact.
-3. Determine whether rollback or hotfix is appropriate.
-4. Restore the database only if necessary.
-5. Deploy the corrected version.
-6. Document the cause.
-
-Never perform an emergency rollback without understanding the database implications.
-
----
-
-# Definition of Complete
-
-A release is complete only when:
-
-- production deployment has succeeded;
-- production database migration has completed;
-- smoke testing has passed;
-- repository cleanup has completed;
-- retrospective has been considered.
-
-A successful Git push alone does not constitute a successful release.
+Never reverse or restore a production database without understanding the consequences for code compatibility and data written since release.

@@ -1,192 +1,100 @@
 # Repository Agent Guidance
 
-This file is the entry point for any AI coding agent working in this repository.
+This file is the binding entry point for Codex and any other AI coding agent working in this repository. Explicit instructions from the repository owner for the current task take precedence.
 
-Unless explicitly instructed otherwise, assume every new feature request begins in Discovery mode.
+Unless explicitly authorised to implement, treat significant feature and architecture requests as discovery work: inspect the repository, report findings and propose a plan without modifying files.
 
-Before beginning significant work, read and follow the documentation described below.
+## Documentation routing
 
----
+Read only the documents relevant to the task, but always respect the operational boundaries in this file.
 
-## 1. Operational documentation
+- Developer setup and commands: `README.md`
+- Feature lifecycle and approval gates: `docs/operational/FEATURE_WORKFLOW.md`
+- Automated testing: `docs/operational/TESTING.md`
+- Local backup and recovery: `docs/operational/SESSION_BACKUP.md`
+- Production release and migrations: `docs/operational/RELEASE.md`
+- Current product and architecture: `docs/project/OVERVIEW.md`
+- Current UI conventions: `docs/project/DESIGN.md`
+- Historical decisions: `docs/project/DECISIONS.md`
+- Active and future work: `docs/project/BACKLOG.md`
+- Frozen v1 baseline: `docs/project/v1_scope.md`
+- Current database model and history: `prisma/schema.prisma` and `prisma/migrations/`
 
-Operational documentation defines **how development work must be performed**.
+Current code, configuration, schema, migrations and package scripts take precedence over descriptive documentation when establishing executable behaviour. Report material drift rather than silently following stale prose.
 
-Mandatory:
+## Before changing files
 
-- `docs/operational/DEVELOPMENT_CHARTER.md`
+1. Run `npm run backup` from the repository root and confirm success.
+2. Check the current Git branch and complete working-tree status.
+3. Identify pre-existing changes and preserve user-owned work.
+4. Confirm the approved scope and any database, security, compatibility or release implications.
 
-Read when relevant:
+If the backup fails, stop and resolve the failure before changing the project.
 
-- `docs/operational/RELEASE.md`
-- `docs/operational/SESSION_BACKUP.md`
-- `docs/operational/TESTING.md`
-- `docs/operational/WORKFLOW.md`
-- `docs/operational/CODING_STANDARDS.md`
-- Any other document within `docs/operational/` relevant to the requested task
+## Engineering principles
 
-The Development Charter takes precedence over ordinary implementation preferences.
+- Prefer correctness, maintainability and safe deployment over speed.
+- Extend established patterns before introducing new abstractions.
+- Keep changes as small and direct as practical.
+- Do not refactor or fix unrelated code without approval.
+- Do not add dependencies without clear need; explain maintenance, performance and realistic alternatives.
+- Pause for approval if new information materially changes the agreed plan.
+- Keep setup, operational and product documentation aligned when behaviour changes.
 
-Production, deployment, Git and database boundaries defined in the operational documentation must always be respected.
+Authentication, authorisation, ownership and household isolation are separate concerns. Enforce security on the server; never rely on hidden navigation or client-side validation as the only control.
 
----
+## Scope and source-control boundaries
 
-## 2. Project documentation
-
-Project documentation defines **what this application is, how it works and why particular decisions were made**.
-
-Before planning or implementing a significant change, review the relevant documents within:
-
-- `docs/project/`
-
-This may include:
-
-- `docs/project/DECISIONS.md`
-- `docs/project/ARCHITECTURE.md`
-- `docs/project/DATABASE.md`
-- `docs/project/FEATURES.md`
-- `docs/project/ROADMAP.md`
-- Any project-specific documentation relevant to the requested work
-
-Do not assume that every listed document exists.
-
-Read the documents that are present and relevant.
-
----
-
-## 3. Required working method
-
-Before making any development changes:
-
-1. Run `npm run backup` from the repository root.
-2. Confirm that the session backup completed successfully.
-3. Check the current Git branch and status.
-
-Follow `docs/operational/SESSION_BACKUP.md`. If the backup fails, stop and resolve the failure before changing the project.
-
-Unless explicitly instructed otherwise, significant work follows this sequence:
-
-1. Discovery and architecture
-2. Plan review and approval
-3. Implementation
-4. Automated verification
-5. Human testing and review
-6. Human-controlled release
-
-During discovery and planning:
-
-- inspect the existing implementation;
-- identify established project patterns;
-- identify affected files and systems;
-- identify database, security and compatibility implications;
-- do not modify files unless explicitly authorised.
-
-During implementation:
-
-- follow the approved plan;
-- minimise unrelated changes;
-- preserve existing architecture where practical;
-- stop and explain if new information materially changes the approved approach.
-
----
-
-## 4. Repository and Git boundaries
-
-Before modifying files:
-
-- inspect Git status;
-- identify pre-existing changes;
-- avoid overwriting unrelated user work.
+Treat the approved scope as a contractual boundary. Report unrelated issues separately and leave them unchanged unless the owner expands the scope.
 
 Unless explicitly instructed for a specific action, never:
 
-- stage files;
-- create or amend commits;
-- push changes;
-- merge or rebase branches;
-- create pull requests;
+- stage files, create or amend commits, or push;
+- merge, rebase, switch branches or create pull requests;
 - discard user changes;
-- switch branches;
-- trigger deployments.
+- trigger deployments;
+- modify production branches, settings, credentials or environment variables.
 
 The repository owner controls all commits, merges and releases.
 
----
+## Database and production boundaries
 
-## 5. Database boundaries
+Normal development uses only an approved local PostgreSQL database or approved Neon development branch. Before any database command, verify the target; an environment filename alone is not proof that it is safe.
 
-Normal development work must use only an approved non-production database.
+If an approved development database is blocked by sandbox or local-network restrictions, request the required permission rather than treating the database as unavailable or substituting another target.
 
-Before running database commands:
+- Use descriptive Prisma migrations rather than schema-synchronisation shortcuts.
+- Never run destructive resets without explicit approval.
+- Before a potentially data-losing change, explain affected data, preservation options, alternatives, backup needs and rollback implications.
+- Never access or modify production data without explicit authority for that exact action.
+- Production migrations are human-controlled and must follow `docs/operational/RELEASE.md`.
 
-- verify the active database target;
-- do not assume that a local environment file necessarily points to a safe database;
-- request local-network permission when required rather than concluding immediately that the database is unavailable.
+## Implementation and verification
 
-Never access or modify production data unless explicitly authorised for that specific action.
+Follow the approved plan and established architecture. Apply relevant checks in proportion to risk, which may include lint, typecheck, build, Prisma validation, unit tests, database-backed tests, route tests, migration tests and manual browser verification.
 
-Any destructive or potentially data-losing change must be explained and approved before execution.
+Resolve failures introduced by the work. Identify pre-existing failures separately and do not repair them without approval.
 
-Production migrations remain human-controlled and must follow `docs/operational/RELEASE.md`.
-
----
-
-## 6. Scope discipline
-
-Treat the approved task scope as a contractual boundary.
-
-Do not fix unrelated issues merely because they are encountered during verification.
-
-Pre-existing lint, build, test or type-check failures must be:
-
-- reported separately;
-- clearly identified as pre-existing;
-- left unchanged unless explicit approval is given.
-
-Related integrity corrections may be proposed, but must be identified separately and approved before being retained.
-
----
-
-## 7. Verification and handover
-
-Before requesting review:
+Before handoff:
 
 - inspect the complete working-tree diff;
-- account for every changed, added and deleted file;
-- distinguish generated files from hand-authored files;
-- identify any pre-existing user-owned changes;
-- identify anything outside the approved scope.
+- account for every modified, added and deleted file;
+- distinguish generated output from hand-authored changes;
+- identify pre-existing user-owned changes and anything outside scope;
+- report database changes, checks run, failures, limitations and recommended manual testing.
 
-Report:
+Successful automated checks do not authorise a commit, deployment or production change.
 
-- files changed, grouped by purpose;
-- database and migration changes;
-- checks run and their results;
-- pre-existing failures;
-- known limitations;
-- recommended manual testing.
+## Precedence
 
-Do not present only a selected subset of files as though it represents the full change set.
+When guidance conflicts, use this order:
 
----
-
-## 8. Documentation precedence
-
-Where instructions conflict, use this order:
-
-1. Explicit instruction from the repository owner for the current task
-2. `docs/operational/DEVELOPMENT_CHARTER.md`
+1. Explicit owner instruction for the current task
+2. This file
 3. Other documents in `docs/operational/`
-4. Relevant documents in `docs/project/`
-5. Existing repository conventions
-6. General engineering preference
+4. Current project documentation in `docs/project/`
+5. Historical project records
+6. Existing repository conventions
+7. General engineering preference
 
-If a conflict materially affects security, data integrity, architecture or production safety, stop and explain it before proceeding.
-
----
-
-## 9. General principle
-
-Behave as an experienced software engineer working alongside the repository owner.
-
-Exercise technical judgement, but keep all production, release and source-control authority under human control.
+If a conflict affects security, data integrity, architecture or production safety, stop and explain it before proceeding.
