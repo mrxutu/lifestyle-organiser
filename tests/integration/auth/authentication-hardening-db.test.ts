@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import test from 'node:test'
+import bcrypt from 'bcryptjs'
 import { NextRequest } from 'next/server'
 import { consumeAuthRateLimit, hashRateLimitIdentifier } from '../../../lib/auth-rate-limit'
 import {
@@ -11,8 +12,10 @@ import {
 } from '../../../lib/password-reset'
 import { prisma } from '../../../lib/prisma'
 import { POST as forgotPasswordPost } from '../../../app/api/auth/forgot-password/route'
+import { POST as resetPasswordPost } from '../../../app/api/auth/reset-password/route'
 import { GENERIC_FORGOT_PASSWORD_MESSAGE } from '../../../lib/auth-input'
 import { updateUser } from '../../../lib/admin-users'
+import { handlers } from '../../../lib/auth'
 
 test('real PostgreSQL token issuance remains atomic under eight concurrent requests', async () => {
   const suffix = randomUUID()
@@ -158,5 +161,145 @@ test('account disable and re-enable each revoke existing sessions without changi
   } finally {
     await prisma.user.delete({ where: { id: user.id } })
     await prisma.household.delete({ where: { id: household.id } })
+  }
+})
+
+test('reset-password route consumes a token once, updates the password, and revokes sessions', async () => {
+  const suffix = randomUUID()
+  const ip = `203.0.113.${Math.floor(Math.random() * 200) + 1}`
+  const oldHash = await bcrypt.hash('old password value', 4)
+  const user = await prisma.user.create({
+    data: { email: `reset-route-${suffix}@example.test`, passwordHash: oldHash },
+  })
+  const { token } = await createPasswordResetToken(user.id)
+  const request = () => new NextRequest('http://localhost/api/auth/reset-password', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-vercel-forwarded-for': ip },
+    body: JSON.stringify({ token, password: 'a new secure password' }),
+  })
+
+  try {
+    const first = await resetPasswordPost(request())
+    const replay = await resetPasswordPost(request())
+    const updated = await prisma.user.findUniqueOrThrow({ where: { id: user.id } })
+
+    assert.equal(first.status, 200)
+    assert.deepEqual(await first.json(), { message: 'Password reset. You can now log in.' })
+    assert.equal(replay.status, 400)
+    assert.deepEqual(await replay.json(), { error: 'This reset link is invalid or has expired.' })
+    assert.equal(updated.authVersion, 1)
+    assert.equal(await bcrypt.compare('a new secure password', updated.passwordHash!), true)
+    assert.equal(await prisma.passwordResetToken.count({ where: { userId: user.id } }), 0)
+  } finally {
+    await prisma.authRateLimit.deleteMany({
+      where: {
+        OR: [
+          { action: 'RESET_PASSWORD_TOKEN', identifierHash: hashRateLimitIdentifier('RESET_PASSWORD_TOKEN', hashPasswordResetToken(token)) },
+          { action: 'RESET_PASSWORD_IP', identifierHash: hashRateLimitIdentifier('RESET_PASSWORD_IP', ip) },
+        ],
+      },
+    })
+    await prisma.user.delete({ where: { id: user.id } })
+  }
+})
+
+test('reset-password route rejects an expired token without changing the account', async () => {
+  const suffix = randomUUID()
+  const ip = `198.51.100.${Math.floor(Math.random() * 200) + 1}`
+  const oldHash = await bcrypt.hash('old password value', 4)
+  const user = await prisma.user.create({
+    data: { email: `expired-reset-${suffix}@example.test`, passwordHash: oldHash },
+  })
+  const { token } = await createPasswordResetToken(user.id)
+  await prisma.passwordResetToken.update({
+    where: { userId: user.id },
+    data: { expiresAt: new Date(Date.now() - 1_000) },
+  })
+
+  try {
+    const response = await resetPasswordPost(new NextRequest('http://localhost/api/auth/reset-password', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-vercel-forwarded-for': ip },
+      body: JSON.stringify({ token, password: 'a new secure password' }),
+    }))
+    const unchanged = await prisma.user.findUniqueOrThrow({ where: { id: user.id } })
+
+    assert.equal(response.status, 400)
+    assert.deepEqual(await response.json(), { error: 'This reset link is invalid or has expired.' })
+    assert.equal(unchanged.authVersion, 0)
+    assert.equal(unchanged.passwordHash, oldHash)
+  } finally {
+    await prisma.authRateLimit.deleteMany({
+      where: {
+        OR: [
+          { action: 'RESET_PASSWORD_TOKEN', identifierHash: hashRateLimitIdentifier('RESET_PASSWORD_TOKEN', hashPasswordResetToken(token)) },
+          { action: 'RESET_PASSWORD_IP', identifierHash: hashRateLimitIdentifier('RESET_PASSWORD_IP', ip) },
+        ],
+      },
+    })
+    await prisma.user.delete({ where: { id: user.id } })
+  }
+})
+
+test('credential callback accepts valid login, stays generic for invalid accounts, and preserves disabled messaging', async () => {
+  const suffix = randomUUID()
+  const ip = `192.0.2.${Math.floor(Math.random() * 200) + 1}`
+  const password = 'valid credential password'
+  const active = await prisma.user.create({
+    data: { email: `active-login-${suffix}@example.test`, passwordHash: await bcrypt.hash(password, 4) },
+  })
+  const passwordless = await prisma.user.create({
+    data: { email: `passwordless-login-${suffix}@example.test`, passwordHash: null },
+  })
+  const disabled = await prisma.user.create({
+    data: {
+      email: `disabled-login-${suffix}@example.test`,
+      passwordHash: await bcrypt.hash(password, 4),
+      isActive: false,
+    },
+  })
+  const missingEmail = `missing-login-${suffix}@example.test`
+
+  const signIn = async (email: string, submittedPassword: string) => {
+    const csrf = await handlers.GET(new NextRequest('http://localhost/api/auth/csrf'))
+    const csrfBody = await csrf.json() as { csrfToken: string }
+    const cookie = csrf.headers.get('set-cookie')?.split(';')[0] ?? ''
+    return handlers.POST(new NextRequest('http://localhost/api/auth/callback/credentials', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        cookie,
+        'x-forwarded-for': ip,
+      },
+      body: new URLSearchParams({ email, password: submittedPassword, csrfToken: csrfBody.csrfToken }),
+    }))
+  }
+
+  try {
+    const accepted = await signIn(active.email.toUpperCase(), password)
+    const wrongPassword = await signIn(active.email, 'wrong password')
+    const nonexistent = await signIn(missingEmail, password)
+    const noPassword = await signIn(passwordless.email, password)
+    const disabledAccount = await signIn(disabled.email, password)
+
+    assert.equal(accepted.status, 302)
+    assert.match(accepted.headers.get('set-cookie') ?? '', /authjs\.session-token/)
+    assert.equal(wrongPassword.headers.get('location'), nonexistent.headers.get('location'))
+    assert.equal(nonexistent.headers.get('location'), noPassword.headers.get('location'))
+    assert.match(nonexistent.headers.get('location') ?? '', /error=CredentialsSignin/)
+    assert.match(disabledAccount.headers.get('location') ?? '', /code=account_disabled/)
+  } finally {
+    await prisma.authRateLimit.deleteMany({
+      where: {
+        OR: [
+          ...[active.email, passwordless.email, disabled.email, missingEmail].map((email) => ({
+            action: 'LOGIN_ACCOUNT',
+            identifierHash: hashRateLimitIdentifier('LOGIN_ACCOUNT', email),
+          })),
+          { action: 'LOGIN_IP', identifierHash: hashRateLimitIdentifier('LOGIN_IP', ip) },
+        ],
+      },
+    })
+    await prisma.user.deleteMany({ where: { id: { in: [active.id, passwordless.id, disabled.id] } } })
   }
 })

@@ -5,7 +5,10 @@ import { join, resolve } from 'node:path'
 const arguments_ = process.argv.slice(2)
 const serial = arguments_.includes('--serial')
 const database = arguments_.includes('--database')
-const roots = arguments_.filter((argument) => argument !== '--serial' && argument !== '--database')
+const moduleMocks = arguments_.includes('--module-mocks')
+const roots = arguments_.filter((argument) => (
+  argument !== '--serial' && argument !== '--database' && argument !== '--module-mocks'
+))
 
 if (roots.length === 0) {
   console.error('Provide at least one test directory')
@@ -81,7 +84,11 @@ function safeTestDatabaseEnvironment() {
   return { ...process.env, DATABASE_URL: value }
 }
 
-const environment = database ? safeTestDatabaseEnvironment() : process.env
-const result = spawnSync(tsx, [...options, ...files], { stdio: 'inherit', env: environment })
+const environment = database ? safeTestDatabaseEnvironment() : { ...process.env }
+const executable = moduleMocks ? process.execPath : tsx
+const executableArguments = moduleMocks
+  ? ['--experimental-test-module-mocks', '--import', 'tsx', ...options, ...files]
+  : [...options, ...files]
+const result = spawnSync(executable, executableArguments, { stdio: 'inherit', env: environment })
 if (result.error) throw result.error
 process.exit(result.status ?? 1)
