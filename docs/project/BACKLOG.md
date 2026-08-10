@@ -212,16 +212,14 @@ Reviewed the generated Prisma output and repository strategy.
 
 ---
 
-## 13. Application Version Number
+## 13. Application Version Number - **Status:** Complete
 
-Add a visible application/deployment version number.
+Added a visible application version to the authenticated Profile page.
 
-Discovery should determine:
-
-- the authoritative source of the version;
-- how and when it changes;
-- where it should be displayed;
-- how to avoid hard-coded version values scattered through components.
+- The root `package.json` version is the single authoritative source.
+- `1.0.0` is the first intentionally managed application version.
+- The version is incremented once per explicitly approved production release according to the release procedure.
+- A shared server-only accessor keeps the value out of individual components.
 
 ---
 
