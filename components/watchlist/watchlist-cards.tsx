@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Tv } from 'lucide-react'
+import { Pencil, Tv } from 'lucide-react'
 import type { WatchlistSource } from '@/generated/prisma/client'
 import type { WatchlistEntryWithSource } from '@/lib/watchlist'
 import { ALL_RATINGS, ALL_SOURCES, ALL_STATUSES, NOT_RATED, filterWatchlistEntries } from '@/lib/watchlist-filters'
@@ -139,11 +139,7 @@ function WatchlistContent({
       {filteredEntries.length > 0 && (
         <div className="grid grid-cols-1 gap-3">
           {filteredEntries.map((entry) => (
-            <Card
-              key={entry.id}
-              className="cursor-pointer"
-              onClick={() => onEdit(entry)}
-            >
+            <Card key={entry.id}>
               <CardContent className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-medium">{entry.name}</p>
@@ -161,9 +157,20 @@ function WatchlistContent({
                     Viewers: {entry.viewers.map((viewer) => viewer.user.name ?? 'Unnamed').join(', ')}
                   </span>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {formatFriendlyDate(new Date(entry.updatedAt))}
-                </p>
+                <div className="flex items-center justify-between gap-2 sm:justify-end">
+                  <p className="text-sm text-muted-foreground">
+                    {formatFriendlyDate(new Date(entry.updatedAt))}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onEdit(entry)}
+                    aria-label={`Edit ${entry.name}`}
+                  >
+                    <Pencil className="size-4" />
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
