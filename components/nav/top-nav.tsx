@@ -11,8 +11,11 @@ export function TopNav({
     <header className="border-b border-border">
       <div className="mx-auto flex w-full max-w-3xl items-center gap-2 px-2 py-3 sm:px-6 lg:px-8">
         <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-8">
-          <span className="hidden text-sm font-semibold whitespace-nowrap lg:inline">Lifestyle Organiser</span>
-          <div className="min-w-0 overflow-x-auto overscroll-x-contain">
+          <span className="hidden flex-col text-sm leading-4 font-semibold lg:flex">
+            <span>Lifestyle</span>
+            <span>Organiser</span>
+          </span>
+          <div className="min-w-0 overflow-x-auto overscroll-x-contain lg:flex-1">
             <NavLinks sections={user.sections} />
           </div>
         </div>

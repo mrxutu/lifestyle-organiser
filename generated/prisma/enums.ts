@@ -18,6 +18,15 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const TodoPriority = {
+  HIGH: 'HIGH',
+  NORMAL: 'NORMAL',
+  LOW: 'LOW'
+} as const
+
+export type TodoPriority = (typeof TodoPriority)[keyof typeof TodoPriority]
+
+
 export const Recurrence = {
   NONE: 'NONE',
   MONTHLY: 'MONTHLY',

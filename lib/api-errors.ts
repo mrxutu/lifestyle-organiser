@@ -14,6 +14,7 @@ import { HouseholdInUseError } from '@/lib/admin-households'
 import { ForbiddenError } from '@/lib/current-user'
 import { InvalidChefError } from '@/lib/recipes'
 import { InvalidImageError } from '@/lib/image-storage'
+import { InvalidTodoOwnersError } from '@/lib/todos'
 
 export function errorResponse(error: unknown) {
   if (error instanceof ZodError) {
@@ -38,7 +39,8 @@ export function errorResponse(error: unknown) {
     error instanceof InvalidWatchlistSourceError ||
     error instanceof InvalidBookReaderError ||
     error instanceof InvalidBookSourceError ||
-    error instanceof InvalidImageError
+    error instanceof InvalidImageError ||
+    error instanceof InvalidTodoOwnersError
   ) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }

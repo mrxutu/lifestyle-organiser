@@ -57,6 +57,7 @@ export function AdminHouseholdsPanel({ households }: { households: HouseholdWith
                   <TableHead>Name</TableHead>
                   <TableHead className="text-center">Members</TableHead>
                   <TableHead className="text-center">Events</TableHead>
+                  <TableHead className="text-center">To-dos</TableHead>
                   <TableHead className="text-center">Recipes</TableHead>
                   <TableHead className="text-center">Watchlist</TableHead>
                   <TableHead className="text-center">Books</TableHead>
@@ -87,6 +88,9 @@ export function AdminHouseholdsPanel({ households }: { households: HouseholdWith
                     </TableCell>
                     <TableCell className="text-center text-muted-foreground tabular-nums">
                       {household.statistics.events}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground tabular-nums">
+                      {household.statistics.todos}
                     </TableCell>
                     <TableCell className="text-center text-muted-foreground tabular-nums">
                       {household.statistics.recipes}
@@ -125,6 +129,7 @@ export function AdminHouseholdsPanel({ households }: { households: HouseholdWith
                   {[
                     ['Members', household._count.users],
                     ['Events', household.statistics.events],
+                    ['To-dos', household.statistics.todos],
                     ['Recipes', household.statistics.recipes],
                     ['Watchlist', household.statistics.watchlistItems],
                     ['Books', household.statistics.books],

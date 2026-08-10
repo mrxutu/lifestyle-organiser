@@ -31,6 +31,7 @@ export type HouseholdMinAggregateOutputType = {
   showRecipes: boolean | null
   showWatchlist: boolean | null
   showBooks: boolean | null
+  showTodos: boolean | null
 }
 
 export type HouseholdMaxAggregateOutputType = {
@@ -40,6 +41,7 @@ export type HouseholdMaxAggregateOutputType = {
   showRecipes: boolean | null
   showWatchlist: boolean | null
   showBooks: boolean | null
+  showTodos: boolean | null
 }
 
 export type HouseholdCountAggregateOutputType = {
@@ -49,6 +51,7 @@ export type HouseholdCountAggregateOutputType = {
   showRecipes: number
   showWatchlist: number
   showBooks: number
+  showTodos: number
   _all: number
 }
 
@@ -60,6 +63,7 @@ export type HouseholdMinAggregateInputType = {
   showRecipes?: true
   showWatchlist?: true
   showBooks?: true
+  showTodos?: true
 }
 
 export type HouseholdMaxAggregateInputType = {
@@ -69,6 +73,7 @@ export type HouseholdMaxAggregateInputType = {
   showRecipes?: true
   showWatchlist?: true
   showBooks?: true
+  showTodos?: true
 }
 
 export type HouseholdCountAggregateInputType = {
@@ -78,6 +83,7 @@ export type HouseholdCountAggregateInputType = {
   showRecipes?: true
   showWatchlist?: true
   showBooks?: true
+  showTodos?: true
   _all?: true
 }
 
@@ -160,6 +166,7 @@ export type HouseholdGroupByOutputType = {
   showRecipes: boolean
   showWatchlist: boolean
   showBooks: boolean
+  showTodos: boolean
   _count: HouseholdCountAggregateOutputType | null
   _min: HouseholdMinAggregateOutputType | null
   _max: HouseholdMaxAggregateOutputType | null
@@ -190,11 +197,13 @@ export type HouseholdWhereInput = {
   showRecipes?: Prisma.BoolFilter<"Household"> | boolean
   showWatchlist?: Prisma.BoolFilter<"Household"> | boolean
   showBooks?: Prisma.BoolFilter<"Household"> | boolean
+  showTodos?: Prisma.BoolFilter<"Household"> | boolean
   users?: Prisma.UserListRelationFilter
   events?: Prisma.EventListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
   watchlist?: Prisma.WatchlistEntryListRelationFilter
   books?: Prisma.BookListRelationFilter
+  todos?: Prisma.TodoListRelationFilter
   eventTypes?: Prisma.EventTypeListRelationFilter
   watchlistSources?: Prisma.WatchlistSourceListRelationFilter
   bookSources?: Prisma.BookSourceListRelationFilter
@@ -207,11 +216,13 @@ export type HouseholdOrderByWithRelationInput = {
   showRecipes?: Prisma.SortOrder
   showWatchlist?: Prisma.SortOrder
   showBooks?: Prisma.SortOrder
+  showTodos?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
   recipes?: Prisma.RecipeOrderByRelationAggregateInput
   watchlist?: Prisma.WatchlistEntryOrderByRelationAggregateInput
   books?: Prisma.BookOrderByRelationAggregateInput
+  todos?: Prisma.TodoOrderByRelationAggregateInput
   eventTypes?: Prisma.EventTypeOrderByRelationAggregateInput
   watchlistSources?: Prisma.WatchlistSourceOrderByRelationAggregateInput
   bookSources?: Prisma.BookSourceOrderByRelationAggregateInput
@@ -227,11 +238,13 @@ export type HouseholdWhereUniqueInput = Prisma.AtLeast<{
   showRecipes?: Prisma.BoolFilter<"Household"> | boolean
   showWatchlist?: Prisma.BoolFilter<"Household"> | boolean
   showBooks?: Prisma.BoolFilter<"Household"> | boolean
+  showTodos?: Prisma.BoolFilter<"Household"> | boolean
   users?: Prisma.UserListRelationFilter
   events?: Prisma.EventListRelationFilter
   recipes?: Prisma.RecipeListRelationFilter
   watchlist?: Prisma.WatchlistEntryListRelationFilter
   books?: Prisma.BookListRelationFilter
+  todos?: Prisma.TodoListRelationFilter
   eventTypes?: Prisma.EventTypeListRelationFilter
   watchlistSources?: Prisma.WatchlistSourceListRelationFilter
   bookSources?: Prisma.BookSourceListRelationFilter
@@ -244,6 +257,7 @@ export type HouseholdOrderByWithAggregationInput = {
   showRecipes?: Prisma.SortOrder
   showWatchlist?: Prisma.SortOrder
   showBooks?: Prisma.SortOrder
+  showTodos?: Prisma.SortOrder
   _count?: Prisma.HouseholdCountOrderByAggregateInput
   _max?: Prisma.HouseholdMaxOrderByAggregateInput
   _min?: Prisma.HouseholdMinOrderByAggregateInput
@@ -259,6 +273,7 @@ export type HouseholdScalarWhereWithAggregatesInput = {
   showRecipes?: Prisma.BoolWithAggregatesFilter<"Household"> | boolean
   showWatchlist?: Prisma.BoolWithAggregatesFilter<"Household"> | boolean
   showBooks?: Prisma.BoolWithAggregatesFilter<"Household"> | boolean
+  showTodos?: Prisma.BoolWithAggregatesFilter<"Household"> | boolean
 }
 
 export type HouseholdCreateInput = {
@@ -268,11 +283,13 @@ export type HouseholdCreateInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
@@ -285,11 +302,13 @@ export type HouseholdUncheckedCreateInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
@@ -302,11 +321,13 @@ export type HouseholdUpdateInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
@@ -319,11 +340,13 @@ export type HouseholdUncheckedUpdateInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -336,6 +359,7 @@ export type HouseholdCreateManyInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
 }
 
 export type HouseholdUpdateManyMutationInput = {
@@ -345,6 +369,7 @@ export type HouseholdUpdateManyMutationInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HouseholdUncheckedUpdateManyInput = {
@@ -354,6 +379,7 @@ export type HouseholdUncheckedUpdateManyInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HouseholdNullableScalarRelationFilter = {
@@ -368,6 +394,7 @@ export type HouseholdCountOrderByAggregateInput = {
   showRecipes?: Prisma.SortOrder
   showWatchlist?: Prisma.SortOrder
   showBooks?: Prisma.SortOrder
+  showTodos?: Prisma.SortOrder
 }
 
 export type HouseholdMaxOrderByAggregateInput = {
@@ -377,6 +404,7 @@ export type HouseholdMaxOrderByAggregateInput = {
   showRecipes?: Prisma.SortOrder
   showWatchlist?: Prisma.SortOrder
   showBooks?: Prisma.SortOrder
+  showTodos?: Prisma.SortOrder
 }
 
 export type HouseholdMinOrderByAggregateInput = {
@@ -386,6 +414,7 @@ export type HouseholdMinOrderByAggregateInput = {
   showRecipes?: Prisma.SortOrder
   showWatchlist?: Prisma.SortOrder
   showBooks?: Prisma.SortOrder
+  showTodos?: Prisma.SortOrder
 }
 
 export type HouseholdScalarRelationFilter = {
@@ -407,6 +436,20 @@ export type HouseholdUpdateOneWithoutUsersNestedInput = {
   delete?: Prisma.HouseholdWhereInput | boolean
   connect?: Prisma.HouseholdWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutUsersInput, Prisma.HouseholdUpdateWithoutUsersInput>, Prisma.HouseholdUncheckedUpdateWithoutUsersInput>
+}
+
+export type HouseholdCreateNestedOneWithoutTodosInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutTodosInput, Prisma.HouseholdUncheckedCreateWithoutTodosInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutTodosInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+}
+
+export type HouseholdUpdateOneRequiredWithoutTodosNestedInput = {
+  create?: Prisma.XOR<Prisma.HouseholdCreateWithoutTodosInput, Prisma.HouseholdUncheckedCreateWithoutTodosInput>
+  connectOrCreate?: Prisma.HouseholdCreateOrConnectWithoutTodosInput
+  upsert?: Prisma.HouseholdUpsertWithoutTodosInput
+  connect?: Prisma.HouseholdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HouseholdUpdateToOneWithWhereWithoutTodosInput, Prisma.HouseholdUpdateWithoutTodosInput>, Prisma.HouseholdUncheckedUpdateWithoutTodosInput>
 }
 
 export type HouseholdCreateNestedOneWithoutEventsInput = {
@@ -514,10 +557,12 @@ export type HouseholdCreateWithoutUsersInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
@@ -530,10 +575,12 @@ export type HouseholdUncheckedCreateWithoutUsersInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
@@ -562,10 +609,12 @@ export type HouseholdUpdateWithoutUsersInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
@@ -578,6 +627,96 @@ export type HouseholdUncheckedUpdateWithoutUsersInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
+  recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
+  watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
+  eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
+  watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
+  bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdCreateWithoutTodosInput = {
+  id?: string
+  name: string
+  showCalendar?: boolean
+  showRecipes?: boolean
+  showWatchlist?: boolean
+  showBooks?: boolean
+  showTodos?: boolean
+  users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
+  events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
+  recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
+  watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
+  books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
+  watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
+  bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdUncheckedCreateWithoutTodosInput = {
+  id?: string
+  name: string
+  showCalendar?: boolean
+  showRecipes?: boolean
+  showWatchlist?: boolean
+  showBooks?: boolean
+  showTodos?: boolean
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
+  recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
+  watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
+  watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
+  bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
+}
+
+export type HouseholdCreateOrConnectWithoutTodosInput = {
+  where: Prisma.HouseholdWhereUniqueInput
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutTodosInput, Prisma.HouseholdUncheckedCreateWithoutTodosInput>
+}
+
+export type HouseholdUpsertWithoutTodosInput = {
+  update: Prisma.XOR<Prisma.HouseholdUpdateWithoutTodosInput, Prisma.HouseholdUncheckedUpdateWithoutTodosInput>
+  create: Prisma.XOR<Prisma.HouseholdCreateWithoutTodosInput, Prisma.HouseholdUncheckedCreateWithoutTodosInput>
+  where?: Prisma.HouseholdWhereInput
+}
+
+export type HouseholdUpdateToOneWithWhereWithoutTodosInput = {
+  where?: Prisma.HouseholdWhereInput
+  data: Prisma.XOR<Prisma.HouseholdUpdateWithoutTodosInput, Prisma.HouseholdUncheckedUpdateWithoutTodosInput>
+}
+
+export type HouseholdUpdateWithoutTodosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  showCalendar?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
+  events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
+  recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
+  watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
+  books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
+  watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
+  bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
+}
+
+export type HouseholdUncheckedUpdateWithoutTodosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  showCalendar?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -594,10 +733,12 @@ export type HouseholdCreateWithoutEventsInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
@@ -610,10 +751,12 @@ export type HouseholdUncheckedCreateWithoutEventsInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
@@ -642,10 +785,12 @@ export type HouseholdUpdateWithoutEventsInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
@@ -658,10 +803,12 @@ export type HouseholdUncheckedUpdateWithoutEventsInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -674,11 +821,13 @@ export type HouseholdCreateWithoutEventTypesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
 }
@@ -690,11 +839,13 @@ export type HouseholdUncheckedCreateWithoutEventTypesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
 }
@@ -722,11 +873,13 @@ export type HouseholdUpdateWithoutEventTypesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
 }
@@ -738,11 +891,13 @@ export type HouseholdUncheckedUpdateWithoutEventTypesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
 }
@@ -754,10 +909,12 @@ export type HouseholdCreateWithoutRecipesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
@@ -770,10 +927,12 @@ export type HouseholdUncheckedCreateWithoutRecipesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
@@ -802,10 +961,12 @@ export type HouseholdUpdateWithoutRecipesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
@@ -818,10 +979,12 @@ export type HouseholdUncheckedUpdateWithoutRecipesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -834,10 +997,12 @@ export type HouseholdCreateWithoutWatchlistInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
@@ -850,10 +1015,12 @@ export type HouseholdUncheckedCreateWithoutWatchlistInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
@@ -882,10 +1049,12 @@ export type HouseholdUpdateWithoutWatchlistInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
@@ -898,10 +1067,12 @@ export type HouseholdUncheckedUpdateWithoutWatchlistInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -914,11 +1085,13 @@ export type HouseholdCreateWithoutWatchlistSourcesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
 }
@@ -930,11 +1103,13 @@ export type HouseholdUncheckedCreateWithoutWatchlistSourcesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
 }
@@ -962,11 +1137,13 @@ export type HouseholdUpdateWithoutWatchlistSourcesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
 }
@@ -978,11 +1155,13 @@ export type HouseholdUncheckedUpdateWithoutWatchlistSourcesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
 }
@@ -994,10 +1173,12 @@ export type HouseholdCreateWithoutBooksInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceCreateNestedManyWithoutHouseholdInput
@@ -1010,10 +1191,12 @@ export type HouseholdUncheckedCreateWithoutBooksInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
   bookSources?: Prisma.BookSourceUncheckedCreateNestedManyWithoutHouseholdInput
@@ -1042,10 +1225,12 @@ export type HouseholdUpdateWithoutBooksInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUpdateManyWithoutHouseholdNestedInput
@@ -1058,10 +1243,12 @@ export type HouseholdUncheckedUpdateWithoutBooksInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
   bookSources?: Prisma.BookSourceUncheckedUpdateManyWithoutHouseholdNestedInput
@@ -1074,11 +1261,13 @@ export type HouseholdCreateWithoutBookSourcesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceCreateNestedManyWithoutHouseholdInput
 }
@@ -1090,11 +1279,13 @@ export type HouseholdUncheckedCreateWithoutBookSourcesInput = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: Prisma.UserUncheckedCreateNestedManyWithoutHouseholdInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutHouseholdInput
   recipes?: Prisma.RecipeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlist?: Prisma.WatchlistEntryUncheckedCreateNestedManyWithoutHouseholdInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutHouseholdInput
+  todos?: Prisma.TodoUncheckedCreateNestedManyWithoutHouseholdInput
   eventTypes?: Prisma.EventTypeUncheckedCreateNestedManyWithoutHouseholdInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedCreateNestedManyWithoutHouseholdInput
 }
@@ -1122,11 +1313,13 @@ export type HouseholdUpdateWithoutBookSourcesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUpdateManyWithoutHouseholdNestedInput
 }
@@ -1138,11 +1331,13 @@ export type HouseholdUncheckedUpdateWithoutBookSourcesInput = {
   showRecipes?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showWatchlist?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showBooks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showTodos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   users?: Prisma.UserUncheckedUpdateManyWithoutHouseholdNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutHouseholdNestedInput
   recipes?: Prisma.RecipeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlist?: Prisma.WatchlistEntryUncheckedUpdateManyWithoutHouseholdNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutHouseholdNestedInput
+  todos?: Prisma.TodoUncheckedUpdateManyWithoutHouseholdNestedInput
   eventTypes?: Prisma.EventTypeUncheckedUpdateManyWithoutHouseholdNestedInput
   watchlistSources?: Prisma.WatchlistSourceUncheckedUpdateManyWithoutHouseholdNestedInput
 }
@@ -1158,6 +1353,7 @@ export type HouseholdCountOutputType = {
   recipes: number
   watchlist: number
   books: number
+  todos: number
   eventTypes: number
   watchlistSources: number
   bookSources: number
@@ -1169,6 +1365,7 @@ export type HouseholdCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   recipes?: boolean | HouseholdCountOutputTypeCountRecipesArgs
   watchlist?: boolean | HouseholdCountOutputTypeCountWatchlistArgs
   books?: boolean | HouseholdCountOutputTypeCountBooksArgs
+  todos?: boolean | HouseholdCountOutputTypeCountTodosArgs
   eventTypes?: boolean | HouseholdCountOutputTypeCountEventTypesArgs
   watchlistSources?: boolean | HouseholdCountOutputTypeCountWatchlistSourcesArgs
   bookSources?: boolean | HouseholdCountOutputTypeCountBookSourcesArgs
@@ -1222,6 +1419,13 @@ export type HouseholdCountOutputTypeCountBooksArgs<ExtArgs extends runtime.Types
 /**
  * HouseholdCountOutputType without action
  */
+export type HouseholdCountOutputTypeCountTodosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TodoWhereInput
+}
+
+/**
+ * HouseholdCountOutputType without action
+ */
 export type HouseholdCountOutputTypeCountEventTypesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EventTypeWhereInput
 }
@@ -1248,11 +1452,13 @@ export type HouseholdSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
   users?: boolean | Prisma.Household$usersArgs<ExtArgs>
   events?: boolean | Prisma.Household$eventsArgs<ExtArgs>
   recipes?: boolean | Prisma.Household$recipesArgs<ExtArgs>
   watchlist?: boolean | Prisma.Household$watchlistArgs<ExtArgs>
   books?: boolean | Prisma.Household$booksArgs<ExtArgs>
+  todos?: boolean | Prisma.Household$todosArgs<ExtArgs>
   eventTypes?: boolean | Prisma.Household$eventTypesArgs<ExtArgs>
   watchlistSources?: boolean | Prisma.Household$watchlistSourcesArgs<ExtArgs>
   bookSources?: boolean | Prisma.Household$bookSourcesArgs<ExtArgs>
@@ -1266,6 +1472,7 @@ export type HouseholdSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
 }, ExtArgs["result"]["household"]>
 
 export type HouseholdSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1275,6 +1482,7 @@ export type HouseholdSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
 }, ExtArgs["result"]["household"]>
 
 export type HouseholdSelectScalar = {
@@ -1284,15 +1492,17 @@ export type HouseholdSelectScalar = {
   showRecipes?: boolean
   showWatchlist?: boolean
   showBooks?: boolean
+  showTodos?: boolean
 }
 
-export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "showCalendar" | "showRecipes" | "showWatchlist" | "showBooks", ExtArgs["result"]["household"]>
+export type HouseholdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "showCalendar" | "showRecipes" | "showWatchlist" | "showBooks" | "showTodos", ExtArgs["result"]["household"]>
 export type HouseholdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Household$usersArgs<ExtArgs>
   events?: boolean | Prisma.Household$eventsArgs<ExtArgs>
   recipes?: boolean | Prisma.Household$recipesArgs<ExtArgs>
   watchlist?: boolean | Prisma.Household$watchlistArgs<ExtArgs>
   books?: boolean | Prisma.Household$booksArgs<ExtArgs>
+  todos?: boolean | Prisma.Household$todosArgs<ExtArgs>
   eventTypes?: boolean | Prisma.Household$eventTypesArgs<ExtArgs>
   watchlistSources?: boolean | Prisma.Household$watchlistSourcesArgs<ExtArgs>
   bookSources?: boolean | Prisma.Household$bookSourcesArgs<ExtArgs>
@@ -1309,6 +1519,7 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     recipes: Prisma.$RecipePayload<ExtArgs>[]
     watchlist: Prisma.$WatchlistEntryPayload<ExtArgs>[]
     books: Prisma.$BookPayload<ExtArgs>[]
+    todos: Prisma.$TodoPayload<ExtArgs>[]
     eventTypes: Prisma.$EventTypePayload<ExtArgs>[]
     watchlistSources: Prisma.$WatchlistSourcePayload<ExtArgs>[]
     bookSources: Prisma.$BookSourcePayload<ExtArgs>[]
@@ -1320,6 +1531,7 @@ export type $HouseholdPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     showRecipes: boolean
     showWatchlist: boolean
     showBooks: boolean
+    showTodos: boolean
   }, ExtArgs["result"]["household"]>
   composites: {}
 }
@@ -1719,6 +1931,7 @@ export interface Prisma__HouseholdClient<T, Null = never, ExtArgs extends runtim
   recipes<T extends Prisma.Household$recipesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$recipesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecipePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   watchlist<T extends Prisma.Household$watchlistArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$watchlistArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WatchlistEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   books<T extends Prisma.Household$booksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$booksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  todos<T extends Prisma.Household$todosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$todosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TodoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eventTypes<T extends Prisma.Household$eventTypesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$eventTypesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventTypePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   watchlistSources<T extends Prisma.Household$watchlistSourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$watchlistSourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WatchlistSourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookSources<T extends Prisma.Household$bookSourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Household$bookSourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookSourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1757,6 +1970,7 @@ export interface HouseholdFieldRefs {
   readonly showRecipes: Prisma.FieldRef<"Household", 'Boolean'>
   readonly showWatchlist: Prisma.FieldRef<"Household", 'Boolean'>
   readonly showBooks: Prisma.FieldRef<"Household", 'Boolean'>
+  readonly showTodos: Prisma.FieldRef<"Household", 'Boolean'>
 }
     
 
@@ -2267,6 +2481,30 @@ export type Household$booksArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.BookScalarFieldEnum | Prisma.BookScalarFieldEnum[]
+}
+
+/**
+ * Household.todos
+ */
+export type Household$todosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Todo
+   */
+  select?: Prisma.TodoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Todo
+   */
+  omit?: Prisma.TodoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TodoInclude<ExtArgs> | null
+  where?: Prisma.TodoWhereInput
+  orderBy?: Prisma.TodoOrderByWithRelationInput | Prisma.TodoOrderByWithRelationInput[]
+  cursor?: Prisma.TodoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TodoScalarFieldEnum | Prisma.TodoScalarFieldEnum[]
 }
 
 /**

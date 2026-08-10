@@ -14,6 +14,11 @@ This document is the concise source for current product capabilities and high-le
 - Calendar views support event-type and attendee filtering.
 - Reminders are not a separate data model. They are upcoming events with `leadTimeDays` set and are shown in a read-only, urgency-aware view.
 
+### To-dos
+
+- Household To-dos track date-independent tasks with a required title, optional description, Low/Normal/High priority, completion state and one or more assigned owners.
+- Owners must be active members of the same household when a To-do is created or edited. The list defaults to the current member's incomplete To-dos and supports status, priority and owner filters.
+
 ### Recipes
 
 - Household recipes support descriptions, servings, preparation and cooking times, tags, ingredients, free-form method text and an optional image.
@@ -32,7 +37,7 @@ This document is the concise source for current product capabilities and high-le
 
 ### Profile
 
-- Profile is an assignment-based summary of the signed-in member’s reminders, recipes, watchlist entries and books.
+- Profile is an assignment-based summary of the signed-in member’s reminders, To-dos, recipes, watchlist entries and books.
 - It does not currently provide self-service name or password editing.
 
 ### Accounts and administration
@@ -42,12 +47,12 @@ This document is the concise source for current product capabilities and high-le
 - Authentication attempts are rate-limited in PostgreSQL; reset tokens and limiter identifiers are stored as hashes.
 - Users can be active or inactive and have one of three roles: `SUPER_ADMIN`, `ADMIN` or `MEMBER`.
 - Super Admins manage households and users across the application. Admins manage members and lookup data within their own household. Members use enabled household features.
-- The Super Admin household view shows member and content counts plus the most recent qualifying content creation date. Content means Events (including Reminder-style Events), Recipes, Watchlist entries and Books; edits and administrative/configuration records do not count as activity.
-- Super Admins can enable or disable Calendar/Reminders, Recipes, Watchlist and Books for a whole household. Page and API access are both enforced server-side.
+- The Super Admin household view shows member and content counts plus the most recent qualifying content creation date. Content means Events (including Reminder-style Events), To-dos, Recipes, Watchlist entries and Books; edits and administrative/configuration records do not count as activity.
+- Super Admins can enable or disable Calendar/Reminders, To-dos, Recipes, Watchlist and Books for a whole household. Page and API access are both enforced server-side.
 
 ### Household-owned data
 
-Events, recipes, watchlist entries, books and their configurable lookup records are scoped to one household. Assignment inputs are validated against active members of the same household. Cross-household access is rejected on the server.
+Events, To-dos, recipes, watchlist entries, books and their configurable lookup records are scoped to one household. Assignment inputs are validated against active members of the same household. Cross-household access is rejected on the server.
 
 New households receive default Event Types, Watchlist Sources and Book Sources. Those records then belong to that household and can be managed independently.
 

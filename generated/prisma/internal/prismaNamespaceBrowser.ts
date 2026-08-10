@@ -55,6 +55,8 @@ export const ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   AuthRateLimit: 'AuthRateLimit',
   Household: 'Household',
+  Todo: 'Todo',
+  TodoOwner: 'TodoOwner',
   Event: 'Event',
   EventType: 'EventType',
   EventAttendee: 'EventAttendee',
@@ -127,10 +129,33 @@ export const HouseholdScalarFieldEnum = {
   showCalendar: 'showCalendar',
   showRecipes: 'showRecipes',
   showWatchlist: 'showWatchlist',
-  showBooks: 'showBooks'
+  showBooks: 'showBooks',
+  showTodos: 'showTodos'
 } as const
 
 export type HouseholdScalarFieldEnum = (typeof HouseholdScalarFieldEnum)[keyof typeof HouseholdScalarFieldEnum]
+
+
+export const TodoScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  priority: 'priority',
+  completed: 'completed',
+  householdId: 'householdId',
+  createdAt: 'createdAt'
+} as const
+
+export type TodoScalarFieldEnum = (typeof TodoScalarFieldEnum)[keyof typeof TodoScalarFieldEnum]
+
+
+export const TodoOwnerScalarFieldEnum = {
+  id: 'id',
+  todoId: 'todoId',
+  userId: 'userId'
+} as const
+
+export type TodoOwnerScalarFieldEnum = (typeof TodoOwnerScalarFieldEnum)[keyof typeof TodoOwnerScalarFieldEnum]
 
 
 export const EventScalarFieldEnum = {

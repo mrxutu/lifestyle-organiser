@@ -167,6 +167,23 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
+export type EnumTodoPriorityFilter<$PrismaModel = never> = {
+  equals?: $Enums.TodoPriority | Prisma.EnumTodoPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTodoPriorityFilter<$PrismaModel> | $Enums.TodoPriority
+}
+
+export type EnumTodoPriorityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TodoPriority | Prisma.EnumTodoPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTodoPriorityWithAggregatesFilter<$PrismaModel> | $Enums.TodoPriority
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTodoPriorityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTodoPriorityFilter<$PrismaModel>
+}
+
 export type DateTimeNullableFilter<$PrismaModel = never> = {
   equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel> | null
   in?: Date[] | string[] | Prisma.ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -478,6 +495,23 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
+}
+
+export type NestedEnumTodoPriorityFilter<$PrismaModel = never> = {
+  equals?: $Enums.TodoPriority | Prisma.EnumTodoPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTodoPriorityFilter<$PrismaModel> | $Enums.TodoPriority
+}
+
+export type NestedEnumTodoPriorityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TodoPriority | Prisma.EnumTodoPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TodoPriority[] | Prisma.ListEnumTodoPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTodoPriorityWithAggregatesFilter<$PrismaModel> | $Enums.TodoPriority
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTodoPriorityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTodoPriorityFilter<$PrismaModel>
 }
 
 export type NestedDateTimeNullableFilter<$PrismaModel = never> = {

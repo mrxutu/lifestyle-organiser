@@ -252,21 +252,18 @@ The convention is documented for future feature work, including the To-do page. 
 
 ---
 
-## 17. To-do List
+## 17. To-do List - **Status:** Complete
 
-Add household to-do functionality.
+Added a separately controlled, household-scoped To-do destination for tasks without a date or time requirement.
 
-This requires product design before implementation. Define at minimum:
+- To-dos have a title, optional description, Low/Normal/High priority, creation date, boolean completion state and one or more active household-member owners.
+- The list defaults to the current member's incomplete To-dos, supports status/priority/owner filters and orders High, Normal then Low with newest first within each priority.
+- Completion and reopening happen directly from the list; create/edit uses the responsive dialog/sheet convention.
+- Profile includes only To-dos assigned to the current member.
+- Household Statistics count To-dos and include their creation dates in Last activity; edits and completion changes do not contribute.
+- Page and API section guards, household scoping and active-owner validation are enforced server-side.
 
-- task ownership and assignment;
-- due dates;
-- completion behaviour;
-- recurrence, if appropriate;
-- filtering and display;
-- household scoping;
-- relationship with the existing Reminders functionality.
-
-Do not assume the final data model or UI until this has been discussed and approved.
+To-dos deliberately have no due date, time, recurrence, notification, reminder scheduling or conversion relationship with Reminders.
 
 ---
 

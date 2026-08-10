@@ -26,6 +26,7 @@ import {
 function sectionsFrom(household?: HouseholdWithCount | null): SectionFlags {
   return {
     calendar: household?.showCalendar ?? true,
+    todos: household?.showTodos ?? true,
     recipes: household?.showRecipes ?? true,
     watchlist: household?.showWatchlist ?? true,
     books: household?.showBooks ?? true,
@@ -70,6 +71,7 @@ export function HouseholdForm({
         body: JSON.stringify({
           name,
           showCalendar: sections.calendar,
+          showTodos: sections.todos,
           showRecipes: sections.recipes,
           showWatchlist: sections.watchlist,
           showBooks: sections.books,

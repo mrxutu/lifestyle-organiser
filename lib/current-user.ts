@@ -20,7 +20,7 @@ export const getCurrentUser = cache(async () => {
       role: true,
       isActive: true,
       household: {
-        select: { showCalendar: true, showRecipes: true, showWatchlist: true, showBooks: true },
+        select: { showCalendar: true, showTodos: true, showRecipes: true, showWatchlist: true, showBooks: true },
       },
     },
   })
@@ -38,6 +38,7 @@ export const getCurrentUser = cache(async () => {
 
   const sections: SectionFlags = {
     calendar: user.household.showCalendar,
+    todos: user.household.showTodos,
     recipes: user.household.showRecipes,
     watchlist: user.household.showWatchlist,
     books: user.household.showBooks,
@@ -99,6 +100,7 @@ export async function requireApiSection(
 
 const SECTION_LABELS: Record<SectionKey, string> = {
   calendar: 'Calendar',
+  todos: 'To-dos',
   recipes: 'Recipes',
   watchlist: 'Watchlist',
   books: 'Books',

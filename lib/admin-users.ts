@@ -157,17 +157,18 @@ export async function deleteUser(userId: string, currentUserId: string) {
     if (activeSuperAdminCount <= 1) throw new LastSuperAdminError()
   }
 
-  const [eventCount, authoredRecipeCount, chefRecipeCount, attendeeCount, viewerCount, bookCount] = await Promise.all([
+  const [eventCount, authoredRecipeCount, chefRecipeCount, attendeeCount, viewerCount, bookCount, todoOwnerCount] = await Promise.all([
     prisma.event.count({ where: { creatorId: userId } }),
     prisma.recipe.count({ where: { authorId: userId } }),
     prisma.recipe.count({ where: { chefId: userId } }),
     prisma.eventAttendee.count({ where: { userId } }),
     prisma.watchlistViewer.count({ where: { userId } }),
     prisma.book.count({ where: { readerId: userId } }),
+    prisma.todoOwner.count({ where: { userId } }),
   ])
 
   const contentCount =
-    eventCount + authoredRecipeCount + chefRecipeCount + attendeeCount + viewerCount + bookCount
+    eventCount + authoredRecipeCount + chefRecipeCount + attendeeCount + viewerCount + bookCount + todoOwnerCount
   if (contentCount > 0) throw new UserHasContentError(contentCount)
 
   await prisma.user.delete({ where: { id: userId } })
