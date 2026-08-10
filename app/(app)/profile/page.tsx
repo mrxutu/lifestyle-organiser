@@ -6,6 +6,8 @@ import { listRecipes } from '@/lib/recipes'
 import { listWatchlistEntries, listWatchlistSources } from '@/lib/watchlist'
 import { listBooks } from '@/lib/books'
 import { applicationVersionLabel } from '@/lib/application-version'
+import { Page } from '@/components/ui/page'
+import { PageHeader } from '@/components/ui/page-header'
 
 export default async function ProfilePage() {
   const { id: currentUserId, householdId, sections } = await getCurrentUser()
@@ -31,8 +33,8 @@ export default async function ProfilePage() {
   const myBooks = books.filter((book) => book.readerId === currentUserId)
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Profile</h1>
+    <Page>
+      <PageHeader title="Profile" />
       <ProfileTabs
         sections={sections}
         reminders={myReminders}
@@ -45,6 +47,6 @@ export default async function ProfilePage() {
         myBooks={myBooks}
       />
       <p className="text-center text-xs text-muted-foreground">{applicationVersionLabel}</p>
-    </div>
+    </Page>
   )
 }

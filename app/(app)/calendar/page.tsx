@@ -2,6 +2,7 @@ import { CalendarBoard } from '@/components/calendar/calendar-board'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listEvents } from '@/lib/events'
 import { listEventTypes } from '@/lib/event-types'
+import { Page } from '@/components/ui/page'
 
 export default async function CalendarPage({
   searchParams,
@@ -17,12 +18,7 @@ export default async function CalendarPage({
   ])
 
   return (
-    <div className="flex flex-col gap-6">
-      {events.length === 0 && (
-        <p className="text-sm text-muted-foreground">
-          No events yet — plans and appointments will appear here once added.
-        </p>
-      )}
+    <Page>
       <CalendarBoard
         eventsRaw={events}
         eventTypes={eventTypes}
@@ -31,6 +27,6 @@ export default async function CalendarPage({
         initialEventId={eventId ?? null}
         canManageLookups={role === 'ADMIN' || role === 'SUPER_ADMIN'}
       />
-    </div>
+    </Page>
   )
 }

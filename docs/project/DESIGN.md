@@ -22,7 +22,12 @@ The authenticated app shell uses a deliberately faint, code-generated dot patter
 - Design mobile-first, then expand within the existing centered content width.
 - Prefer generous cards and list rows over dense tables unless the data genuinely requires a table.
 - Use `ResponsiveDialog` for flows that should be a dialog on larger screens and a sheet on mobile.
-- Keep page headings and actions consistent through the shared `PageHeader` pattern.
+- Wrap authenticated page content in the shared `Page` component. It owns only the standard `flex flex-col gap-6` page rhythm; the authenticated app shell continues to own width, viewport padding, background and navigation.
+- Keep standard page headings, optional introductory text and primary actions consistent through `PageHeader`. Use one page-level `h1`, place the primary action last in the header action group and add a description only when it genuinely helps users understand the page.
+- Preserve bespoke detail or aggregate layouts when their content relationships require it rather than forcing them through `PageHeader`.
+- Group feature-local filters and results with `gap-4` unless that feature has a clearer established hierarchy.
+- Use a substantial `EmptyState` when a collection has no records and a concise inline message when records exist but filters match none. Calendar is intentionally lighter: its no-events message is inline so the empty calendar remains usable.
+- New feature pages, including the future To-do page, should use `Page`, a standard `PageHeader` with the primary action, the established empty-state distinction and no page-level width override.
 - Provide shape-appropriate loading skeletons for substantial route content.
 
 ## Themes

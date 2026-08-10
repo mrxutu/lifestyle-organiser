@@ -1,4 +1,6 @@
 import { BookForm } from '@/components/books/book-form'
+import { Page } from '@/components/ui/page'
+import { PageHeader } from '@/components/ui/page-header'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listBookSources } from '@/lib/books'
 
@@ -10,9 +12,9 @@ export default async function NewBookPage() {
   ])
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Add book</h1>
+    <Page>
+      <PageHeader title="Add book" />
       <BookForm sources={sources} householdUsers={householdUsers} currentUserId={currentUserId} />
-    </div>
+    </Page>
   )
 }

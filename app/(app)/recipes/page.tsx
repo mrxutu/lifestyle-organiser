@@ -4,6 +4,7 @@ import { EmptyState } from '@/components/empty-state'
 import { RecipeGrid } from '@/components/recipes/recipe-grid'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
+import { Page } from '@/components/ui/page'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listRecipes } from '@/lib/recipes'
 
@@ -15,7 +16,7 @@ export default async function RecipesPage() {
   ])
 
   return (
-    <div className="flex flex-col gap-6">
+    <Page>
       <PageHeader
         title="Recipes"
         actions={
@@ -33,6 +34,6 @@ export default async function RecipesPage() {
       ) : (
         <RecipeGrid recipes={recipes} householdUsers={householdUsers} currentUserId={currentUserId} />
       )}
-    </div>
+    </Page>
   )
 }

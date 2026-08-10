@@ -2,6 +2,8 @@ import { getCurrentUser } from '@/lib/current-user'
 import { listUsersForContext } from '@/lib/admin-users'
 import { listHouseholds } from '@/lib/admin-households'
 import { AdminTabs } from '@/components/admin/admin-tabs'
+import { Page } from '@/components/ui/page'
+import { PageHeader } from '@/components/ui/page-header'
 
 export default async function AdminPage() {
   const currentUser = await getCurrentUser()
@@ -11,8 +13,8 @@ export default async function AdminPage() {
   ])
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Admin</h1>
+    <Page>
+      <PageHeader title="Admin" />
       <AdminTabs
         users={users}
         households={households}
@@ -20,6 +22,6 @@ export default async function AdminPage() {
         currentUserRole={currentUser.role}
         currentUserHouseholdId={currentUser.householdId}
       />
-    </div>
+    </Page>
   )
 }

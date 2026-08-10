@@ -1,4 +1,5 @@
-import { WatchlistCards } from '@/components/watchlist/watchlist-cards'
+import { WatchlistPage as WatchlistPageContent } from '@/components/watchlist/watchlist-cards'
+import { Page } from '@/components/ui/page'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listWatchlistEntries, listWatchlistSources } from '@/lib/watchlist'
 
@@ -11,14 +12,14 @@ export default async function WatchlistPage() {
   ])
 
   return (
-    <div className="flex flex-col gap-6">
-      <WatchlistCards
+    <Page>
+      <WatchlistPageContent
         entries={entries}
         sources={sources}
         householdUsers={householdUsers}
         currentUserId={currentUserId}
         canManageLookups={role === 'ADMIN' || role === 'SUPER_ADMIN'}
       />
-    </div>
+    </Page>
   )
 }

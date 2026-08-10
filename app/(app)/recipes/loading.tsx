@@ -1,8 +1,9 @@
 import { Skeleton } from '@/components/ui/skeleton'
+import { Page } from '@/components/ui/page'
 
 export default function RecipesLoading() {
   return (
-    <div className="flex flex-col gap-6">
+    <Page>
       <div className="flex items-center justify-between">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="h-8 w-28" />
@@ -12,6 +13,6 @@ export default function RecipesLoading() {
         <Skeleton className="aspect-[4/5] w-full" />
         <Skeleton className="aspect-[4/5] w-full" />
       </div>
-    </div>
+    </Page>
   )
 }

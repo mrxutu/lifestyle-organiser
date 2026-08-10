@@ -27,7 +27,6 @@ export function ProfileWatchlistSection({
         sources={sources}
         householdUsers={householdUsers}
         currentUserId={currentUserId}
-        showViewerFilter={false}
       />
     </div>
   )

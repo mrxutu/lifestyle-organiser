@@ -92,7 +92,6 @@ export function CalendarBoard({
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Calendar"
-        titleTag="h2"
         actions={
           <>
             {canManageLookups && (
@@ -116,6 +115,12 @@ export function CalendarBoard({
           </>
         }
       />
+
+      {eventsRaw.length === 0 && (
+        <p className="text-sm text-muted-foreground">
+          No events yet — plans and appointments will appear here once added.
+        </p>
+      )}
 
       <div className="flex flex-wrap items-center gap-3">
         <EventFilters
