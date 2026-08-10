@@ -131,10 +131,11 @@ Vercel hosts the application and Neon hosts PostgreSQL. A merge or push to the c
 
 ## Documentation
 
-- Working rules and development process: [AGENTS.md](AGENTS.md), [Development Charter](docs/operational/DEVELOPMENT_CHARTER.md), and [Feature Workflow](docs/operational/FEATURE_WORKFLOW.md)
+- Working rules and development process: [AGENTS.md](AGENTS.md) and [Feature Workflow](docs/operational/FEATURE_WORKFLOW.md)
 - Testing, backup, and release operations: [Automated Testing](docs/operational/TESTING.md), [Session Backup](docs/operational/SESSION_BACKUP.md), and [Release Procedure](docs/operational/RELEASE.md)
-- Architecture and implementation rationale: [Decision Log](docs/project/DECISIONS.md)
+- Current capabilities and architecture: [Current System Overview](docs/project/OVERVIEW.md)
+- Historical implementation rationale: [Decision Log](docs/project/DECISIONS.md)
 - Database model: [Prisma schema](prisma/schema.prisma) and the checked-in migration history under `prisma/migrations/`
-- Current and planned features: [Product Backlog](docs/project/BACKLOG.md)
+- Active and future work: [Product Backlog](docs/project/BACKLOG.md)
 - Visual direction: [Design](docs/project/DESIGN.md)
 - Historical launch scope: [v1.0 Scope](docs/project/v1_scope.md) — retained as historical context, not the current complete product specification

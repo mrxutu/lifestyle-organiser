@@ -170,18 +170,22 @@ Create project documentation covering:
 
 ---
 
-## 10. Maintain Project Documentation
+## 10. Maintain Project Documentation - **Status:** Complete
 
-Keep project documentation aligned with implementation.
+Keep project documentation aligned with implementation while maintaining a small set of clear sources of truth.
 
 Review after significant features.
 
 Includes:
 
+- AGENTS.md
+- README.md
+- operational procedures
+- OVERVIEW.md
+- BACKLOG.md
 - DECISIONS.md
-- ARCHITECTURE.md
-- DATABASE.md
-- FEATURES.md
+- DESIGN.md
+- historical v1 scope
 
 ---
 
