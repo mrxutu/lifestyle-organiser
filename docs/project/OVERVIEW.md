@@ -42,6 +42,7 @@ This document is the concise source for current product capabilities and high-le
 - Authentication attempts are rate-limited in PostgreSQL; reset tokens and limiter identifiers are stored as hashes.
 - Users can be active or inactive and have one of three roles: `SUPER_ADMIN`, `ADMIN` or `MEMBER`.
 - Super Admins manage households and users across the application. Admins manage members and lookup data within their own household. Members use enabled household features.
+- The Super Admin household view shows member and content counts plus the most recent qualifying content creation date. Content means Events (including Reminder-style Events), Recipes, Watchlist entries and Books; edits and administrative/configuration records do not count as activity.
 - Super Admins can enable or disable Calendar/Reminders, Recipes, Watchlist and Books for a whole household. Page and API access are both enforced server-side.
 
 ### Household-owned data

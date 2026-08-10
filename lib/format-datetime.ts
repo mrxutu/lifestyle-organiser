@@ -35,3 +35,13 @@ export function formatFriendlyDateTime(date: Date, options?: { allDay?: boolean 
   if (options?.allDay) return datePart
   return `${datePart} at ${formatFriendlyTime(date)}`
 }
+
+// Household activity is an administrative calendar date, fixed to the application's UK timezone.
+export function formatHouseholdActivityDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'Europe/London',
+  }).format(date)
+}
