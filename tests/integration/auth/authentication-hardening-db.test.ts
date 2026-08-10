@@ -2,21 +2,19 @@ import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import test from 'node:test'
 import { NextRequest } from 'next/server'
-import { consumeAuthRateLimit, hashRateLimitIdentifier } from '../lib/auth-rate-limit'
+import { consumeAuthRateLimit, hashRateLimitIdentifier } from '../../../lib/auth-rate-limit'
 import {
   consumePasswordResetToken,
   createPasswordResetToken,
   findValidPasswordResetToken,
   hashPasswordResetToken,
-} from '../lib/password-reset'
-import { prisma } from '../lib/prisma'
-import { POST as forgotPasswordPost } from '../app/api/auth/forgot-password/route'
-import { GENERIC_FORGOT_PASSWORD_MESSAGE } from '../lib/auth-input'
-import { updateUser } from '../lib/admin-users'
+} from '../../../lib/password-reset'
+import { prisma } from '../../../lib/prisma'
+import { POST as forgotPasswordPost } from '../../../app/api/auth/forgot-password/route'
+import { GENERIC_FORGOT_PASSWORD_MESSAGE } from '../../../lib/auth-input'
+import { updateUser } from '../../../lib/admin-users'
 
-const runDatabaseTests = process.env.AUTH_DB_TESTS === '1'
-
-test('real PostgreSQL token issuance remains atomic under eight concurrent requests', { skip: !runDatabaseTests }, async () => {
+test('real PostgreSQL token issuance remains atomic under eight concurrent requests', async () => {
   const suffix = randomUUID()
   const user = await prisma.user.create({
     data: { email: `auth-issuance-${suffix}@example.test`, name: 'Auth issuance test' },
@@ -37,7 +35,7 @@ test('real PostgreSQL token issuance remains atomic under eight concurrent reque
   }
 })
 
-test('real PostgreSQL token consumption has exactly one winner and revokes sessions', { skip: !runDatabaseTests }, async () => {
+test('real PostgreSQL token consumption has exactly one winner and revokes sessions', async () => {
   const suffix = randomUUID()
   const user = await prisma.user.create({
     data: { email: `auth-consumption-${suffix}@example.test`, name: 'Auth consumption test' },
@@ -59,7 +57,7 @@ test('real PostgreSQL token consumption has exactly one winner and revokes sessi
   }
 })
 
-test('real PostgreSQL rate-limit increments are atomic under concurrent requests', { skip: !runDatabaseTests }, async () => {
+test('real PostgreSQL rate-limit increments are atomic under concurrent requests', async () => {
   const identifier = `atomic-${randomUUID()}`
   const action = 'LOGIN_IP' as const
   const results = await Promise.all(
@@ -77,7 +75,7 @@ test('real PostgreSQL rate-limit increments are atomic under concurrent requests
   }
 })
 
-test('forgot-password responses stay generic for existing, nonexistent, and throttled accounts', { skip: !runDatabaseTests }, async () => {
+test('forgot-password responses stay generic for existing, nonexistent, and throttled accounts', async () => {
   const suffix = randomUUID()
   const existingEmail = `auth-response-${suffix}@example.test`
   const missingEmail = `missing-${suffix}@example.test`
@@ -127,7 +125,7 @@ test('forgot-password responses stay generic for existing, nonexistent, and thro
   }
 })
 
-test('account disable and re-enable each revoke existing sessions without changing role', { skip: !runDatabaseTests }, async () => {
+test('account disable and re-enable each revoke existing sessions without changing role', async () => {
   const suffix = randomUUID()
   const household = await prisma.household.create({ data: { name: `Auth version ${suffix}` } })
   const user = await prisma.user.create({

@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import sharp from 'sharp'
-import { bookInputSchema } from '../lib/books'
-import { recipeInputSchema } from '../lib/recipes'
-import { createWithImage, deleteWithImage, updateWithImage } from '../lib/image-mutations'
+import { bookInputSchema } from '../../../lib/books'
+import { recipeInputSchema } from '../../../lib/recipes'
+import { createWithImage, deleteWithImage, updateWithImage } from '../../../lib/image-mutations'
 import {
   InvalidImageError,
   MAX_IMAGE_BYTES,
@@ -11,7 +11,7 @@ import {
   isManagedImageUrl,
   managedImagePathname,
   processImage,
-} from '../lib/image-storage'
+} from '../../../lib/image-storage'
 
 async function imageFile(format: 'jpeg' | 'png' | 'webp') {
   const data = await sharp({
@@ -19,7 +19,7 @@ async function imageFile(format: 'jpeg' | 'png' | 'webp') {
   })
     .toFormat(format)
     .toBuffer()
-  return new File([data], `untrusted.${format}`, { type: 'application/octet-stream' })
+  return new File([new Uint8Array(data)], `untrusted.${format}`, { type: 'application/octet-stream' })
 }
 
 for (const format of ['jpeg', 'png', 'webp'] as const) {
@@ -40,7 +40,7 @@ test('rejects SVG and GIF input', async () => {
   const svg = new File(['<svg xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1"/></svg>'], 'x.svg', {
     type: 'image/svg+xml',
   })
-  const gif = new File([Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64')], 'x.gif', {
+  const gif = new File([new Uint8Array(Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64'))], 'x.gif', {
     type: 'image/gif',
   })
   await assert.rejects(processImage(svg), InvalidImageError)
@@ -54,7 +54,7 @@ test('rejects empty and over-8MB inputs before processing', async () => {
 
 test('rejects excessive dimensions', async () => {
   const data = await sharp({ create: { width: 8001, height: 1, channels: 3, background: 'white' } }).png().toBuffer()
-  await assert.rejects(processImage(new File([data], 'wide.png')), /dimensions/)
+  await assert.rejects(processImage(new File([new Uint8Array(data)], 'wide.png')), /dimensions/)
 })
 
 test('generates pathnames without the original filename', () => {

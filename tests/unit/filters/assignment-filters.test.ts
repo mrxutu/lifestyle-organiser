@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { ALL_MEMBERS } from '../lib/member-filters'
-import { filterBooks } from '../lib/book-filters'
-import { filterRecipes } from '../lib/recipe-filters'
-import { filterWatchlistEntries } from '../lib/watchlist-filters'
+import { ALL_MEMBERS } from '../../../lib/member-filters'
+import { filterBooks } from '../../../lib/book-filters'
+import { filterRecipes } from '../../../lib/recipe-filters'
+import { filterWatchlistEntries } from '../../../lib/watchlist-filters'
 
 test('recipe filtering defaults to all chefs and ignores author provenance', () => {
   const recipes = [

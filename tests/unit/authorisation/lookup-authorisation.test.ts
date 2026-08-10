@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { ForbiddenError } from '../lib/current-user'
-import { lookupManagementHousehold } from '../lib/lookup-authorisation'
-import { HOUSEHOLD_LOOKUP_DEFAULTS } from '../lib/lookup-defaults'
+import { ForbiddenError } from '../../../lib/current-user'
+import { lookupManagementHousehold } from '../../../lib/lookup-authorisation'
+import { HOUSEHOLD_LOOKUP_DEFAULTS } from '../../../lib/lookup-defaults'
 
 test('Admin lookup management is pinned to their own household', () => {
   const admin = { role: 'ADMIN' as const, householdId: 'household-a' }
