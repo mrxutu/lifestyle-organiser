@@ -7,6 +7,7 @@ import type { SectionFlags, SectionKey } from '../../../lib/household-sections'
 
 const allEnabled: SectionFlags = {
   calendar: true,
+  todos: true,
   recipes: true,
   watchlist: true,
   books: true,

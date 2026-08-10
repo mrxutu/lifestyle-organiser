@@ -10,8 +10,9 @@ export const householdInputSchema = z
     showRecipes: z.boolean().default(true),
     showWatchlist: z.boolean().default(true),
     showBooks: z.boolean().default(true),
+    showTodos: z.boolean().default(true),
   })
-  .refine((data) => data.showCalendar || data.showRecipes || data.showWatchlist || data.showBooks, {
+  .refine((data) => data.showCalendar || data.showTodos || data.showRecipes || data.showWatchlist || data.showBooks, {
     message: 'At least one section must stay enabled',
     path: ['showCalendar'],
   })
@@ -52,7 +53,7 @@ function latestDate(dates: Array<Date | null>) {
 export async function listHouseholds(currentUser: { role: 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER' }) {
   if (currentUser.role !== 'SUPER_ADMIN') throw new ForbiddenError('Super admin access required')
 
-  const [households, eventAggregates, recipeAggregates, watchlistAggregates, bookAggregates] =
+  const [households, eventAggregates, todoAggregates, recipeAggregates, watchlistAggregates, bookAggregates] =
     await Promise.all([
       prisma.household.findMany({
         include: {
@@ -64,6 +65,11 @@ export async function listHouseholds(currentUser: { role: 'SUPER_ADMIN' | 'ADMIN
         orderBy: { name: 'asc' },
       }),
       prisma.event.groupBy({
+        by: ['householdId'],
+        _count: { id: true },
+        _max: { createdAt: true },
+      }),
+      prisma.todo.groupBy({
         by: ['householdId'],
         _count: { id: true },
         _max: { createdAt: true },
@@ -87,6 +93,7 @@ export async function listHouseholds(currentUser: { role: 'SUPER_ADMIN' | 'ADMIN
 
   const contentByType = {
     events: indexContentAggregates(eventAggregates),
+    todos: indexContentAggregates(todoAggregates),
     recipes: indexContentAggregates(recipeAggregates),
     watchlistItems: indexContentAggregates(watchlistAggregates),
     books: indexContentAggregates(bookAggregates),
@@ -94,6 +101,7 @@ export async function listHouseholds(currentUser: { role: 'SUPER_ADMIN' | 'ADMIN
 
   return households.map((household) => {
     const events = contentByType.events.get(household.id) ?? { count: 0, lastCreatedAt: null }
+    const todos = contentByType.todos.get(household.id) ?? { count: 0, lastCreatedAt: null }
     const recipes = contentByType.recipes.get(household.id) ?? { count: 0, lastCreatedAt: null }
     const watchlistItems = contentByType.watchlistItems.get(household.id) ?? {
       count: 0,
@@ -105,11 +113,13 @@ export async function listHouseholds(currentUser: { role: 'SUPER_ADMIN' | 'ADMIN
       ...household,
       statistics: {
         events: events.count,
+        todos: todos.count,
         recipes: recipes.count,
         watchlistItems: watchlistItems.count,
         books: books.count,
         lastActivityAt: latestDate([
           events.lastCreatedAt,
+          todos.lastCreatedAt,
           recipes.lastCreatedAt,
           watchlistItems.lastCreatedAt,
           books.lastCreatedAt,
@@ -135,15 +145,16 @@ export async function updateHousehold(householdId: string, input: HouseholdInput
 }
 
 export async function deleteHousehold(householdId: string) {
-  const [userCount, eventCount, recipeCount, watchlistCount, bookCount] = await Promise.all([
+  const [userCount, eventCount, todoCount, recipeCount, watchlistCount, bookCount] = await Promise.all([
     prisma.user.count({ where: { householdId } }),
     prisma.event.count({ where: { householdId } }),
+    prisma.todo.count({ where: { householdId } }),
     prisma.recipe.count({ where: { householdId } }),
     prisma.watchlistEntry.count({ where: { householdId } }),
     prisma.book.count({ where: { householdId } }),
   ])
 
-  if (userCount + eventCount + recipeCount + watchlistCount + bookCount > 0) {
+  if (userCount + eventCount + todoCount + recipeCount + watchlistCount + bookCount > 0) {
     throw new HouseholdInUseError()
   }
 

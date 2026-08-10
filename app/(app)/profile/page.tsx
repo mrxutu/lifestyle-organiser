@@ -5,6 +5,7 @@ import { listEventTypes } from '@/lib/event-types'
 import { listRecipes } from '@/lib/recipes'
 import { listWatchlistEntries, listWatchlistSources } from '@/lib/watchlist'
 import { listBooks } from '@/lib/books'
+import { listTodosForOwner } from '@/lib/todos'
 import { applicationVersionLabel } from '@/lib/application-version'
 import { Page } from '@/components/ui/page'
 import { PageHeader } from '@/components/ui/page-header'
@@ -12,11 +13,12 @@ import { PageHeader } from '@/components/ui/page-header'
 export default async function ProfilePage() {
   const { id: currentUserId, householdId, sections } = await getCurrentUser()
 
-  const [reminders, eventTypes, householdUsers, recipes, watchlistEntries, watchlistSources, books] =
+  const [reminders, eventTypes, householdUsers, todos, recipes, watchlistEntries, watchlistSources, books] =
     await Promise.all([
       sections.calendar ? listUpcomingReminders(householdId) : Promise.resolve([]),
       sections.calendar ? listEventTypes(householdId) : Promise.resolve([]),
       listHouseholdUsers(householdId),
+      sections.todos ? listTodosForOwner(householdId, currentUserId) : Promise.resolve([]),
       sections.recipes ? listRecipes(householdId) : Promise.resolve([]),
       sections.watchlist ? listWatchlistEntries(householdId) : Promise.resolve([]),
       sections.watchlist ? listWatchlistSources(householdId) : Promise.resolve([]),
@@ -41,6 +43,7 @@ export default async function ProfilePage() {
         eventTypes={eventTypes}
         currentUserId={currentUserId}
         householdUsers={householdUsers}
+        myTodos={todos}
         myRecipes={myRecipes}
         watchlistEntries={myWatchlistEntries}
         watchlistSources={watchlistSources}

@@ -77,6 +77,14 @@ test('household statistics are isolated, include edit data, and use qualifying c
         createdAt: new Date('2026-03-03T10:00:00.000Z'),
       },
     })
+    const todo = await prisma.todo.create({
+      data: {
+        householdId: populated.id,
+        title: `${fixture.prefix}-todo`,
+        createdAt: new Date('2026-04-20T10:00:00.000Z'),
+        owners: { create: { userId: member.id } },
+      },
+    })
     const otherBook = await prisma.book.create({
       data: {
         householdId: other.id,
@@ -93,11 +101,13 @@ test('household statistics are isolated, include edit data, and use qualifying c
     fixture.addCleanup(() =>
       prisma.book.deleteMany({ where: { id: { in: [book.id, otherBook.id] } } })
     )
+    fixture.addCleanup(() => prisma.todo.deleteMany({ where: { id: todo.id } }))
 
     await prisma.watchlistEntry.update({
       where: { id: watchlistEntry.id },
       data: { updatedAt: new Date('2042-01-01T00:00:00.000Z') },
     })
+    await prisma.todo.update({ where: { id: todo.id }, data: { completed: true, title: `${fixture.prefix}-edited-todo` } })
 
     const households = await listHouseholds({ role: 'SUPER_ADMIN' })
     const populatedResult = households.find((household) => household.id === populated.id)
@@ -107,10 +117,11 @@ test('household statistics are isolated, include edit data, and use qualifying c
     assert.ok(populatedResult)
     assert.deepEqual(populatedResult.statistics, {
       events: 1,
+      todos: 1,
       recipes: 1,
       watchlistItems: 1,
       books: 1,
-      lastActivityAt: new Date('2026-04-04T10:00:00.000Z'),
+      lastActivityAt: new Date('2026-04-20T10:00:00.000Z'),
     })
     assert.equal(populatedResult._count.users, 1)
     assert.deepEqual(populatedResult.eventTypes.map(({ id }) => id), [eventType.id])
@@ -120,6 +131,7 @@ test('household statistics are isolated, include edit data, and use qualifying c
     assert.ok(emptyResult)
     assert.deepEqual(emptyResult.statistics, {
       events: 0,
+      todos: 0,
       recipes: 0,
       watchlistItems: 0,
       books: 0,
@@ -130,6 +142,7 @@ test('household statistics are isolated, include edit data, and use qualifying c
     assert.ok(otherResult)
     assert.equal(otherResult.statistics.books, 1)
     assert.equal(otherResult.statistics.events, 0)
+    assert.equal(otherResult.statistics.todos, 0)
     assert.deepEqual(otherResult.statistics.lastActivityAt, new Date('2026-05-05T10:00:00.000Z'))
   } finally {
     await fixture.cleanup()

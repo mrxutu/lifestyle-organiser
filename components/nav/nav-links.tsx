@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bell, BookOpen, Calendar, ChefHat, Tv, type LucideIcon } from 'lucide-react'
+import { Bell, BookOpen, Calendar, ChefHat, ListTodo, Tv, type LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { SectionFlags } from '@/lib/household-sections'
 
 const links: { href: string; label: string; section: keyof SectionFlags; icon: LucideIcon }[] = [
   { href: '/reminders', label: 'Reminders', section: 'calendar', icon: Bell },
   { href: '/calendar', label: 'Calendar', section: 'calendar', icon: Calendar },
+  { href: '/todo', label: 'To-do', section: 'todos', icon: ListTodo },
   { href: '/recipes', label: 'Recipes', section: 'recipes', icon: ChefHat },
   { href: '/watchlist', label: 'Watchlist', section: 'watchlist', icon: Tv },
   { href: '/books', label: 'Books', section: 'books', icon: BookOpen },
@@ -19,7 +20,7 @@ export function NavLinks({ sections }: { sections: SectionFlags }) {
   const visibleLinks = links.filter((link) => sections[link.section])
 
   return (
-    <nav className="flex w-max items-center gap-1 lg:gap-6">
+    <nav className="flex w-max items-center gap-1 lg:w-full lg:justify-between lg:gap-5">
       {visibleLinks.map((link) => {
         const isActive = pathname.startsWith(link.href)
         const Icon = link.icon

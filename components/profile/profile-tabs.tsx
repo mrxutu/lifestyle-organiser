@@ -5,12 +5,14 @@ import { ProfileRemindersSection } from '@/components/profile/profile-reminders-
 import { ProfileRecipesSection } from '@/components/profile/profile-recipes-section'
 import { ProfileWatchlistSection } from '@/components/profile/profile-watchlist-section'
 import { ProfileBooksSection } from '@/components/profile/profile-books-section'
+import { ProfileTodosSection } from '@/components/profile/profile-todos-section'
 import type { EventType, WatchlistSource } from '@/generated/prisma/client'
 import type { UpcomingReminder } from '@/lib/events'
 import type { listRecipes } from '@/lib/recipes'
 import type { WatchlistEntryWithSource } from '@/lib/watchlist'
 import type { listBooks } from '@/lib/books'
 import type { SectionFlags } from '@/lib/household-sections'
+import type { TodoWithOwners } from '@/lib/todos'
 
 export function ProfileTabs({
   sections,
@@ -18,6 +20,7 @@ export function ProfileTabs({
   eventTypes,
   currentUserId,
   householdUsers,
+  myTodos,
   myRecipes,
   watchlistEntries,
   watchlistSources,
@@ -28,6 +31,7 @@ export function ProfileTabs({
   eventTypes: EventType[]
   currentUserId: string
   householdUsers: { id: string; name: string | null }[]
+  myTodos: TodoWithOwners[]
   myRecipes: Awaited<ReturnType<typeof listRecipes>>
   watchlistEntries: WatchlistEntryWithSource[]
   watchlistSources: WatchlistSource[]
@@ -46,6 +50,12 @@ export function ProfileTabs({
           householdUsers={householdUsers}
         />
       ),
+    },
+    {
+      key: 'todos',
+      enabled: sections.todos,
+      label: 'To-dos',
+      content: <ProfileTodosSection todos={myTodos} householdUsers={householdUsers} currentUserId={currentUserId} />,
     },
     {
       key: 'recipes',

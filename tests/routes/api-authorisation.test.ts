@@ -20,7 +20,7 @@ type TestUser = {
   householdId: string
   role: 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER'
   isActive: boolean
-  sections: { calendar: boolean; recipes: boolean; watchlist: boolean; books: boolean }
+  sections: { calendar: boolean; todos: boolean; recipes: boolean; watchlist: boolean; books: boolean }
 }
 
 let currentUser: TestUser | null = null
@@ -75,7 +75,7 @@ function asCurrentUser(
   currentUser = {
     ...user,
     householdId: user.householdId,
-    sections: { calendar: true, recipes: true, watchlist: true, books: true, ...sections },
+    sections: { calendar: true, todos: true, recipes: true, watchlist: true, books: true, ...sections },
   }
 }
 

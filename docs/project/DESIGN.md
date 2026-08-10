@@ -27,7 +27,7 @@ The authenticated app shell uses a deliberately faint, code-generated dot patter
 - Preserve bespoke detail or aggregate layouts when their content relationships require it rather than forcing them through `PageHeader`.
 - Group feature-local filters and results with `gap-4` unless that feature has a clearer established hierarchy.
 - Use a substantial `EmptyState` when a collection has no records and a concise inline message when records exist but filters match none. Calendar is intentionally lighter: its no-events message is inline so the empty calendar remains usable.
-- New feature pages, including the future To-do page, should use `Page`, a standard `PageHeader` with the primary action, the established empty-state distinction and no page-level width override.
+- New feature pages, including the To-do page, should use `Page`, a standard `PageHeader` with the primary action, the established empty-state distinction and no page-level width override.
 - Provide shape-appropriate loading skeletons for substantial route content.
 
 ## Themes

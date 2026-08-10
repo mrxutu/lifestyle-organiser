@@ -29,11 +29,12 @@ export async function requireHouseholdSection(
 async function loadHouseholdSections(householdId: string): Promise<SectionFlags | null> {
   const household = await prisma.household.findUnique({
     where: { id: householdId },
-    select: { showCalendar: true, showRecipes: true, showWatchlist: true, showBooks: true },
+    select: { showCalendar: true, showTodos: true, showRecipes: true, showWatchlist: true, showBooks: true },
   })
   if (!household) return null
   return {
     calendar: household.showCalendar,
+    todos: household.showTodos,
     recipes: household.showRecipes,
     watchlist: household.showWatchlist,
     books: household.showBooks,

@@ -31,6 +31,7 @@ model User {
   recipesAsChef        Recipe[]             @relation("RecipeChef")
   watchlistAssignments WatchlistViewer[]
   books                Book[]
+  todoAssignments      TodoOwner[]
   passwordResetTokens  PasswordResetToken[]
 }
 
@@ -71,6 +72,7 @@ model Household {
   recipes          Recipe[]
   watchlist        WatchlistEntry[]
   books            Book[]
+  todos            Todo[]
   eventTypes       EventType[]
   watchlistSources WatchlistSource[]
   bookSources      BookSource[]
@@ -81,6 +83,40 @@ model Household {
   showRecipes   Boolean @default(true)
   showWatchlist Boolean @default(true)
   showBooks     Boolean @default(true)
+  showTodos     Boolean @default(true)
+}
+
+// ---------- TO-DOS ----------
+
+model Todo {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  priority    TodoPriority @default(NORMAL)
+  completed   Boolean      @default(false)
+  household   Household    @relation(fields: [householdId], references: [id])
+  householdId String
+  owners      TodoOwner[]
+  createdAt   DateTime     @default(now())
+
+  @@index([householdId, priority, createdAt(sort: Desc)])
+}
+
+model TodoOwner {
+  id     String @id @default(cuid())
+  todo   Todo   @relation(fields: [todoId], references: [id], onDelete: Cascade)
+  todoId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@unique([todoId, userId])
+  @@index([userId])
+}
+
+enum TodoPriority {
+  HIGH
+  NORMAL
+  LOW
 }
 
 // ---------- EVENTS (colour-coded calendar — reminders are events too) ----------
