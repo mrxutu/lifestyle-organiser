@@ -191,15 +191,14 @@ Includes:
 
 # Priority 5 – Operational Improvements
 
-## 11. Remove Development Endpoints
+## 11. Remove Development Endpoints - **Status:** Complete
 
-Review development-only routes.
+Reviewed development-only and operational routes.
 
-Initially:
+- Removed the obsolete `/api/test-db` database diagnostic endpoint.
+- Reviewed `/api/health` and intentionally retained it as a public, database-free operational liveness endpoint.
 
-- `/api/test-db`
-
-Ensure no unnecessary diagnostic endpoints remain in production.
+No other unintended diagnostic endpoints were identified.
 
 ---
 
