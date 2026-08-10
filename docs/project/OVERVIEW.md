@@ -48,6 +48,7 @@ This document is the concise source for current product capabilities and high-le
 - Users can be active or inactive and have one of three roles: `SUPER_ADMIN`, `ADMIN` or `MEMBER`.
 - Super Admins manage households and users across the application. Admins manage members and lookup data within their own household. Members use enabled household features.
 - The Super Admin household view shows member and content counts plus the most recent qualifying content creation date. Content means Events (including Reminder-style Events), To-dos, Recipes, Watchlist entries and Books; edits and administrative/configuration records do not count as activity.
+- Super Admins can deliberately delete an eligible household and all of its household-owned data through an irreversible exact-name confirmation flow. A household containing any active or inactive Super Admin cannot be cascade-deleted. The server rechecks authorization, eligibility and the current name inside one locked serializable transaction; ordinary empty-household deletion remains separate.
 - Super Admins can enable or disable Calendar/Reminders, To-dos, Recipes, Watchlist and Books for a whole household. Page and API access are both enforced server-side.
 
 ### Household-owned data
@@ -55,6 +56,8 @@ This document is the concise source for current product capabilities and high-le
 Events, To-dos, recipes, watchlist entries, books and their configurable lookup records are scoped to one household. Assignment inputs are validated against active members of the same household. Cross-household access is rejected on the server.
 
 New households receive default Event Types, Watchlist Sources and Book Sources. Those records then belong to that household and can be managed independently.
+
+Household cascade deletion explicitly removes household content and dependent assignments before users, lookup records and the Household itself. Database work is atomic and scoped through the target household. Managed Recipe and Book images are cleaned from Vercel Blob only after commit; external image URLs are never deleted.
 
 ## High-level architecture
 

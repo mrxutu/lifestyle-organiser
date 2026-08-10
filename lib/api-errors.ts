@@ -10,7 +10,12 @@ import {
 } from '@/lib/watchlist'
 import { BookSourceInUseError, InvalidBookReaderError, InvalidBookSourceError } from '@/lib/books'
 import { CannotDeleteSelfError, CannotDisableSelfError, LastSuperAdminError, UserHasContentError } from '@/lib/admin-users'
-import { HouseholdInUseError } from '@/lib/admin-households'
+import {
+  HouseholdCascadeConflictError,
+  HouseholdCascadeIneligibleError,
+  HouseholdConfirmationError,
+  HouseholdInUseError,
+} from '@/lib/admin-households'
 import { ForbiddenError } from '@/lib/current-user'
 import { InvalidChefError } from '@/lib/recipes'
 import { InvalidImageError } from '@/lib/image-storage'
@@ -40,7 +45,8 @@ export function errorResponse(error: unknown) {
     error instanceof InvalidBookReaderError ||
     error instanceof InvalidBookSourceError ||
     error instanceof InvalidImageError ||
-    error instanceof InvalidTodoOwnersError
+    error instanceof InvalidTodoOwnersError ||
+    error instanceof HouseholdConfirmationError
   ) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }
@@ -50,7 +56,9 @@ export function errorResponse(error: unknown) {
     error instanceof WatchlistSourceInUseError ||
     error instanceof BookSourceInUseError ||
     error instanceof UserHasContentError ||
-    error instanceof HouseholdInUseError
+    error instanceof HouseholdInUseError ||
+    error instanceof HouseholdCascadeIneligibleError ||
+    error instanceof HouseholdCascadeConflictError
   ) {
     return NextResponse.json({ error: error.message }, { status: 409 })
   }
