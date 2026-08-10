@@ -267,21 +267,13 @@ To-dos deliberately have no due date, time, recurrence, notification, reminder s
 
 ---
 
-## 18. Household Cascade Deletion
+## 18. Household Cascade Deletion - **Status:** Complete
 
-Allow a Super Admin to deliberately delete an entire household together with its associated users, content, assignments and household-owned options.
+Super Admins can deliberately delete an eligible household together with its users, content, assignments and household-owned lookup records. The operation uses a dedicated endpoint, exact case-sensitive household-name confirmation and an explicit serializable database transaction. The household and its users are locked and revalidated before any destructive work, all deletes are derived through target-household content, and the Household is removed last.
 
-This is a destructive operation and requires detailed discovery before implementation. Requirements should include:
+A household containing any active or inactive Super Admin is ineligible. The UI explains this and the transaction enforces it again. Existing ordinary deletion remains available for already-empty households.
 
-- inventory every database relationship affected by household deletion;
-- perform deletion safely and transactionally;
-- ensure no records belonging to other households can be affected;
-- require explicit confirmation, such as entering the household name;
-- provide a clear indication of what will be permanently deleted;
-- consider using the Household Statistics introduced by Item 15 to show deletion impact;
-- retain server-side authorization and safeguards regardless of UI confirmation.
-
-Item 18 remains sequenced after Item 15 so the household statistics work can inform the deletion experience.
+Managed Recipe and Book image references are collected before the transaction deletes their records, filtered through the existing feature-owned Blob URL guards, deduplicated and cleaned only after database commit. Cleanup failure is reported as a non-fatal warning and never misrepresents the successful database deletion.
 
 ---
 

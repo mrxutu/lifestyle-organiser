@@ -11,6 +11,7 @@ import { EventTypeManager } from '@/components/calendar/event-type-manager'
 import { WatchlistSourceManager } from '@/components/watchlist/watchlist-source-manager'
 import { BookSourceManager } from '@/components/books/book-source-manager'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ResponsiveDialog } from '@/components/responsive-dialog'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,6 +47,8 @@ export function HouseholdForm({
   const [sections, setSections] = useState<SectionFlags>(sectionsFrom(initialHousehold))
   const [submitting, setSubmitting] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [cascadeOpen, setCascadeOpen] = useState(false)
+  const [confirmationName, setConfirmationName] = useState('')
   const [error, setError] = useState<string | null>(null)
 
   const noSectionsEnabled = SECTION_KEYS.every((key) => !sections[key])
@@ -108,6 +111,30 @@ export function HouseholdForm({
     onSuccess()
   }
 
+  async function handleCascadeDelete() {
+    if (!initialHousehold || confirmationName !== initialHousehold.name) return
+    setDeleting(true)
+    setError(null)
+
+    const res = await fetch(`/api/admin/households/${initialHousehold.id}/cascade-delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirmationName }),
+    })
+    const data = await res.json().catch(() => null)
+    setDeleting(false)
+
+    if (!res.ok) {
+      setError(data?.error ?? 'Something went wrong')
+      setCascadeOpen(false)
+      return
+    }
+
+    if (data?.warning) console.warn(data.warning, data.blobCleanup)
+    setCascadeOpen(false)
+    onSuccess()
+  }
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="space-y-1.5">
@@ -157,6 +184,28 @@ export function HouseholdForm({
             <Label>Book sources</Label>
             <BookSourceManager sources={initialHousehold.bookSources} householdId={initialHousehold.id} />
           </div>
+          <div className="space-y-3 border-t pt-4">
+            <div>
+              <Label>Delete household and all contents</Label>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Permanently removes this household, its members, and all household content.
+              </p>
+            </div>
+            {initialHousehold.hasSuperAdmin ? (
+              <>
+                <Button type="button" variant="destructive" disabled>
+                  Delete household and contents
+                </Button>
+                <p className="text-sm text-destructive">
+                  Move all Super Admins out of this household before deleting it.
+                </p>
+              </>
+            ) : (
+              <Button type="button" variant="destructive" onClick={() => setCascadeOpen(true)}>
+                Delete household and contents
+              </Button>
+            )}
+          </div>
         </div>
       )}
 
@@ -165,7 +214,7 @@ export function HouseholdForm({
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button type="button" variant="destructive" disabled={deleting} className="sm:mr-auto">
-                Delete
+                Delete empty household
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -192,6 +241,70 @@ export function HouseholdForm({
           {submitting ? 'Saving…' : initialHousehold ? 'Save changes' : 'Create household'}
         </Button>
       </div>
+
+      {initialHousehold && (
+        <ResponsiveDialog
+          open={cascadeOpen}
+          onOpenChange={(open) => {
+            setCascadeOpen(open)
+            if (!open) setConfirmationName('')
+          }}
+          title={`Permanently delete “${initialHousehold.name}”?`}
+          description="This action is irreversible."
+          footer={
+            <>
+              <Button type="button" variant="outline" onClick={() => setCascadeOpen(false)} disabled={deleting}>
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={deleting || confirmationName !== initialHousehold.name}
+                onClick={handleCascadeDelete}
+              >
+                {deleting ? 'Deleting…' : 'Permanently delete household'}
+              </Button>
+            </>
+          }
+        >
+          <div className="space-y-4">
+            <Alert variant="destructive">
+              <AlertDescription>
+                All members and household content will be permanently deleted. This cannot be undone.
+              </AlertDescription>
+            </Alert>
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg border p-4 text-sm">
+              {[
+                ['Members', initialHousehold._count.users],
+                ['Events', initialHousehold.statistics.events],
+                ['To-dos', initialHousehold.statistics.todos],
+                ['Recipes', initialHousehold.statistics.recipes],
+                ['Watchlist items', initialHousehold.statistics.watchlistItems],
+                ['Books', initialHousehold.statistics.books],
+              ].map(([label, count]) => (
+                <div key={label} className="contents">
+                  <dt className="text-muted-foreground">{label}</dt>
+                  <dd className="text-right font-medium tabular-nums">{count}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="text-sm text-muted-foreground">
+              These counts are informational. The server determines the current deletion set when you submit.
+            </p>
+            <div className="space-y-1.5">
+              <Label htmlFor="cascade-confirmation-name">
+                Type <span className="font-semibold text-foreground">{initialHousehold.name}</span> to confirm
+              </Label>
+              <Input
+                id="cascade-confirmation-name"
+                autoComplete="off"
+                value={confirmationName}
+                onChange={(event) => setConfirmationName(event.target.value)}
+              />
+            </div>
+          </div>
+        </ResponsiveDialog>
+      )}
     </form>
   )
 }
