@@ -5,7 +5,8 @@ import { Prisma } from '@/generated/prisma/client'
 import { normalizeEmail, validatePassword } from '@/lib/auth-input'
 import { prisma } from '@/lib/prisma'
 
-const TOKEN_TTL_MS = 60 * 60 * 1000 // 1 hour
+export const PASSWORD_RESET_TOKEN_TTL_MS = 60 * 60 * 1000 // 1 hour
+export const NEW_USER_PASSWORD_SETUP_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 
 export const forgotPasswordInputSchema = z.object({
   email: z.string().trim().email().transform(normalizeEmail),
@@ -23,10 +24,10 @@ export function hashPasswordResetToken(token: string) {
   return createHash('sha256').update(token).digest('hex')
 }
 
-export async function createPasswordResetToken(userId: string) {
+export async function createPasswordResetToken(userId: string, ttlMs: number) {
   const token = randomBytes(32).toString('hex')
   const tokenHash = hashPasswordResetToken(token)
-  const expiresAt = new Date(Date.now() + TOKEN_TTL_MS)
+  const expiresAt = new Date(Date.now() + ttlMs)
 
   await prisma.passwordResetToken.deleteMany({ where: { expiresAt: { lte: new Date() } } })
 
@@ -80,14 +81,14 @@ export function assertPasswordEmailAccepted(result: { error?: { message: string 
 
 async function sendPasswordSetupEmail(
   user: { id: string; email: string },
-  { subject, text }: { subject: string; text: string },
+  { subject, text, ttlMs }: { subject: string; text: string; ttlMs: number },
 ) {
   if (!hasPasswordResetEmailConfiguration()) {
     return
   }
 
   try {
-    const resetToken = await createPasswordResetToken(user.id)
+    const resetToken = await createPasswordResetToken(user.id, ttlMs)
     const resetUrl = new URL('/reset-password', process.env.HOSTNAME)
     resetUrl.searchParams.set('token', resetToken.token)
 
@@ -110,12 +111,14 @@ export async function sendPasswordResetEmail(user: { id: string; email: string }
   await sendPasswordSetupEmail(user, {
     subject: 'Reset your password',
     text: `We received a request to reset your password. This link expires in 1 hour:\n\n{{resetUrl}}\n\nIf you didn't request this, you can ignore this email.`,
+    ttlMs: PASSWORD_RESET_TOKEN_TTL_MS,
   })
 }
 
 export async function sendNewUserSetPasswordEmail(user: { id: string; email: string }) {
   await sendPasswordSetupEmail(user, {
     subject: 'Welcome to Lifestyle Organiser — set your password',
-    text: `An account has been created for you on Lifestyle Organiser. Set your password to get started — this link expires in 1 hour:\n\n{{resetUrl}}\n\nIf you weren't expecting this, you can ignore this email.`,
+    text: `An account has been created for you on Lifestyle Organiser. Set your password to get started — this link expires in 7 days:\n\n{{resetUrl}}\n\nIf you weren't expecting this, you can ignore this email.`,
+    ttlMs: NEW_USER_PASSWORD_SETUP_TOKEN_TTL_MS,
   })
 }
