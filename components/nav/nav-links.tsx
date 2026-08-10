@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bell, BookOpen, Calendar, ChefHat, Shield, Tv, type LucideIcon } from 'lucide-react'
+import { Bell, BookOpen, Calendar, ChefHat, Tv, type LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { SectionFlags } from '@/lib/household-sections'
 
@@ -14,16 +14,13 @@ const links: { href: string; label: string; section: keyof SectionFlags; icon: L
   { href: '/books', label: 'Books', section: 'books', icon: BookOpen },
 ]
 
-export function NavLinks({ isAdmin, sections }: { isAdmin?: boolean; sections: SectionFlags }) {
+export function NavLinks({ sections }: { sections: SectionFlags }) {
   const pathname = usePathname()
   const visibleLinks = links.filter((link) => sections[link.section])
-  const allLinks = isAdmin
-    ? [...visibleLinks, { href: '/admin', label: 'Admin', icon: Shield }]
-    : visibleLinks
 
   return (
-    <nav className="flex items-center gap-1 lg:gap-6">
-      {allLinks.map((link) => {
+    <nav className="flex w-max items-center gap-1 lg:gap-6">
+      {visibleLinks.map((link) => {
         const isActive = pathname.startsWith(link.href)
         const Icon = link.icon
         return (
@@ -33,13 +30,11 @@ export function NavLinks({ isAdmin, sections }: { isAdmin?: boolean; sections: S
             aria-current={isActive ? 'page' : undefined}
             aria-label={link.label}
             className={cn(
-              // Extra padding below `lg:` grows the tap target well past the bare 16px icon
-              // for touch — cancelled at `lg:` where labels appear and space is already tight.
-              'flex items-center gap-1.5 rounded-lg p-2 text-sm transition-colors hover:bg-muted lg:p-0 lg:hover:bg-transparent',
+              'flex size-11 shrink-0 items-center justify-center gap-1.5 rounded-lg text-sm transition-colors hover:bg-muted lg:size-auto lg:justify-start lg:hover:bg-transparent',
               isActive ? 'font-medium text-foreground' : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            <Icon className="size-4 shrink-0" />
+            <Icon className="size-5 shrink-0 lg:size-4" />
             <span className="hidden lg:inline">{link.label}</span>
           </Link>
         )

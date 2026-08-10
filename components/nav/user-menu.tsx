@@ -2,6 +2,8 @@
 
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
+import { Moon, Shield, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -26,13 +28,17 @@ function getInitials(name: string | null, email: string) {
 export function UserMenu({
   name,
   email,
+  isAdmin,
 }: {
   name: string | null
   email: string
+  isAdmin?: boolean
 }) {
+  const { resolvedTheme, setTheme } = useTheme()
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+      <DropdownMenuTrigger className="flex size-11 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50 lg:size-8">
         <Avatar>
           <AvatarFallback>{getInitials(name, email)}</AvatarFallback>
         </Avatar>
@@ -46,6 +52,21 @@ export function UserMenu({
         <DropdownMenuItem asChild>
           <Link href="/profile">Profile</Link>
         </DropdownMenuItem>
+        {isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin">
+              <Shield />
+              Admin
+            </Link>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}>
+          <Moon className="dark:hidden" />
+          <Sun className="hidden dark:block" />
+          Toggle theme
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/login' })}>
           Sign out
         </DropdownMenuItem>
