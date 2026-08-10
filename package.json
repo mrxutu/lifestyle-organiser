@@ -7,6 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "backup": "node scripts/backup.mjs",
+    "test": "node scripts/run-tests.mjs tests/unit",
+    "test:integration": "node scripts/run-tests.mjs --database --serial tests/integration",
+    "test:routes": "node scripts/run-tests.mjs --database --serial --module-mocks tests/routes",
+    "test:migrations": "node scripts/run-tests.mjs --database --serial tests/migrations",
+    "test:all": "npm test && npm run test:integration && npm run test:routes && npm run test:migrations",
+    "typecheck": "tsc --noEmit",
     "db:migrate:dev": "prisma migrate dev",
     "db:status:prod": "dotenv -e .env.production-migrate -- prisma migrate status",
     "db:migrate:prod": "dotenv -e .env.production-migrate -- prisma migrate deploy"

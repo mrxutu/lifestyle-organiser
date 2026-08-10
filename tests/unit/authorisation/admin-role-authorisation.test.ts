@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { getRoleScopedUserInput } from '../lib/admin-users'
+import { getRoleScopedUserInput } from '../../../lib/admin-users'
 
 type CurrentUserContext = { role: 'SUPER_ADMIN' | 'ADMIN' | 'MEMBER'; householdId?: string | null }
 

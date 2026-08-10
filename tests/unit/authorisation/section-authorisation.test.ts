@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { errorResponse } from '../lib/api-errors'
-import { assertSectionEnabled, ForbiddenError, requireApiSection } from '../lib/current-user'
-import { lookupManagementHousehold, requireHouseholdSection } from '../lib/lookup-authorisation'
-import type { SectionFlags, SectionKey } from '../lib/household-sections'
+import { errorResponse } from '../../../lib/api-errors'
+import { assertSectionEnabled, ForbiddenError, requireApiSection } from '../../../lib/current-user'
+import { lookupManagementHousehold, requireHouseholdSection } from '../../../lib/lookup-authorisation'
+import type { SectionFlags, SectionKey } from '../../../lib/household-sections'
 
 const allEnabled: SectionFlags = {
   calendar: true,

@@ -8,8 +8,8 @@ import {
   InvalidWatchlistSourceError,
   WatchlistSourceInUseError,
 } from '@/lib/watchlist'
-import { BookSourceInUseError, InvalidBookSourceError } from '@/lib/books'
-import { CannotDeleteSelfError, CannotDisableSelfError, LastAdminError, UserHasContentError } from '@/lib/admin-users'
+import { BookSourceInUseError, InvalidBookReaderError, InvalidBookSourceError } from '@/lib/books'
+import { CannotDeleteSelfError, CannotDisableSelfError, LastSuperAdminError, UserHasContentError } from '@/lib/admin-users'
 import { HouseholdInUseError } from '@/lib/admin-households'
 import { ForbiddenError } from '@/lib/current-user'
 import { InvalidChefError } from '@/lib/recipes'
@@ -30,12 +30,13 @@ export function errorResponse(error: unknown) {
   if (
     error instanceof CannotDeleteSelfError ||
     error instanceof CannotDisableSelfError ||
-    error instanceof LastAdminError ||
+    error instanceof LastSuperAdminError ||
     error instanceof InvalidAttendeesError ||
     error instanceof InvalidChefError ||
     error instanceof InvalidViewersError ||
     error instanceof InvalidEventTypeError ||
     error instanceof InvalidWatchlistSourceError ||
+    error instanceof InvalidBookReaderError ||
     error instanceof InvalidBookSourceError ||
     error instanceof InvalidImageError
   ) {

@@ -26,9 +26,24 @@ export class InvalidBookSourceError extends Error {
   }
 }
 
+export class InvalidBookReaderError extends Error {
+  constructor() {
+    super('The selected reader must be an active member of this household')
+    this.name = 'InvalidBookReaderError'
+  }
+}
+
 async function assertBookSourceInHousehold(householdId: string, sourceId: string) {
   const count = await prisma.bookSource.count({ where: { id: sourceId, householdId } })
   if (count !== 1) throw new InvalidBookSourceError()
+}
+
+async function assertBookReaderInHousehold(householdId: string, readerId: string) {
+  const reader = await prisma.user.findFirst({
+    where: { id: readerId, householdId, isActive: true },
+    select: { id: true },
+  })
+  if (!reader) throw new InvalidBookReaderError()
 }
 
 export async function listBooks(householdId: string) {
@@ -55,7 +70,10 @@ export async function getBook(householdId: string, bookId: string) {
 export type BookWithDetail = NonNullable<Awaited<ReturnType<typeof getBook>>>
 
 export async function createBook(householdId: string, input: BookInput, imageUrl: string | null) {
-  await assertBookSourceInHousehold(householdId, input.sourceId)
+  await Promise.all([
+    assertBookSourceInHousehold(householdId, input.sourceId),
+    assertBookReaderInHousehold(householdId, input.readerId),
+  ])
   return prisma.book.create({
     data: { ...input, imageUrl, householdId },
     include: {
@@ -66,7 +84,10 @@ export async function createBook(householdId: string, input: BookInput, imageUrl
 }
 
 export async function updateBook(householdId: string, bookId: string, input: BookInput, imageUrl: string | null) {
-  await assertBookSourceInHousehold(householdId, input.sourceId)
+  await Promise.all([
+    assertBookSourceInHousehold(householdId, input.sourceId),
+    assertBookReaderInHousehold(householdId, input.readerId),
+  ])
   const result = await prisma.book.updateMany({ where: { id: bookId, householdId }, data: { ...input, imageUrl } })
   if (result.count === 0) return null
 

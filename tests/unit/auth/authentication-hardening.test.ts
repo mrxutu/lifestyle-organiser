@@ -7,13 +7,13 @@ import {
   isAuthSessionCurrent,
   normalizeEmail,
   validatePassword,
-} from '../lib/auth-input'
+} from '../../../lib/auth-input'
 import {
   AUTH_RATE_LIMIT_POLICIES,
   getTrustedSourceIp,
   hashRateLimitIdentifier,
-} from '../lib/auth-rate-limit'
-import { assertPasswordEmailAccepted, hashPasswordResetToken } from '../lib/password-reset'
+} from '../../../lib/auth-rate-limit'
+import { assertPasswordEmailAccepted, hashPasswordResetToken } from '../../../lib/password-reset'
 
 test('email normalization is consistently trimmed and lowercased', () => {
   assert.equal(normalizeEmail('  Paul.Example@Example.COM  '), 'paul.example@example.com')
