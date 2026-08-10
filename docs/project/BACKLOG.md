@@ -223,11 +223,13 @@ Added a visible application version to the authenticated Profile page.
 
 ---
 
-## 14. Mobile Icon Sizing
+## 14. Mobile Icon Sizing - **Status:** Complete
 
-Review icon sizing on mobile and increase icons where appropriate for usability and touch presentation.
+Improved mobile and tablet navigation sizing and touch reliability.
 
-Prefer shared styling or components where possible rather than individual one-off changes. Desktop presentation should not be enlarged unnecessarily.
+- Primary household destinations use shared 44×44px targets and 20×20px icons below `lg`, while labelled desktop navigation retains its compact sizing.
+- Admin and Theme controls moved into the Profile dropdown, leaving primary navigation capacity for the future To-do destination.
+- The destination region supports up to six primary items, with isolated horizontal overflow at very narrow widths; a seventh destination requires a separate navigation-design review.
 
 ---
 
