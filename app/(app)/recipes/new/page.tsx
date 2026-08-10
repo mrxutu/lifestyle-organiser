@@ -1,4 +1,6 @@
 import { RecipeForm } from '@/components/recipes/recipe-form'
+import { Page } from '@/components/ui/page'
+import { PageHeader } from '@/components/ui/page-header'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 
 export default async function NewRecipePage() {
@@ -6,9 +8,9 @@ export default async function NewRecipePage() {
   const householdUsers = await listHouseholdUsers(householdId)
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Add recipe</h1>
+    <Page>
+      <PageHeader title="Add recipe" />
       <RecipeForm householdUsers={householdUsers} currentUserId={currentUserId} />
-    </div>
+    </Page>
   )
 }

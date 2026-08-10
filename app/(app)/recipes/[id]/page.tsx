@@ -4,6 +4,7 @@ import { ChefHat, Pencil } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { MethodView } from '@/components/recipes/method-view'
+import { Page } from '@/components/ui/page'
 import { requireSection } from '@/lib/current-user'
 import { getRecipe } from '@/lib/recipes'
 import { formatIngredientLine } from '@/lib/measurement-units'
@@ -22,9 +23,9 @@ export default async function RecipeViewPage({ params }: { params: Promise<{ id:
   ].filter(Boolean)
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
-        <h1 className="text-2xl font-semibold">{recipe.title}</h1>
+    <Page>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <h1 className="min-w-0 break-words text-2xl font-semibold">{recipe.title}</h1>
         <Button asChild size="sm" variant="outline">
           <Link href={`/recipes/${recipe.id}/edit`}>
             <Pencil /> Edit
@@ -78,6 +79,6 @@ export default async function RecipeViewPage({ params }: { params: Promise<{ id:
           <MethodView method={recipe.method} />
         </div>
       )}
-    </div>
+    </Page>
   )
 }

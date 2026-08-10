@@ -5,6 +5,7 @@ import { BookGrid } from '@/components/books/book-grid'
 import { BookSourceManagerDialog } from '@/components/books/book-source-manager-dialog'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
+import { Page } from '@/components/ui/page'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listBooks, listBookSources } from '@/lib/books'
 
@@ -17,7 +18,7 @@ export default async function BooksPage() {
   ])
 
   return (
-    <div className="flex flex-col gap-6">
+    <Page>
       <PageHeader
         title="Books"
         actions={
@@ -42,6 +43,6 @@ export default async function BooksPage() {
           currentUserId={currentUserId}
         />
       )}
-    </div>
+    </Page>
   )
 }

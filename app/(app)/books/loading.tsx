@@ -1,8 +1,9 @@
 import { Skeleton } from '@/components/ui/skeleton'
+import { Page } from '@/components/ui/page'
 
 export default function BooksLoading() {
   return (
-    <div className="flex flex-col gap-6">
+    <Page>
       <div className="flex items-center justify-between gap-2">
         <Skeleton className="h-8 w-24" />
         <div className="flex gap-2">
@@ -15,6 +16,6 @@ export default function BooksLoading() {
         <Skeleton className="h-24 w-full" />
         <Skeleton className="h-24 w-full" />
       </div>
-    </div>
+    </Page>
   )
 }

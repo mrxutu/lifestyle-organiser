@@ -244,11 +244,11 @@ Reminder-style records count as Events because Reminders share the Event model. 
 
 ---
 
-## 16. Consistent Page Layouts
+## 16. Consistent Page Layouts - **Status:** Complete
 
-Review application pages for duplicated or inconsistent page structure and introduce shared layout components or templates where they provide genuine consistency.
+Authenticated pages use a lightweight shared `Page` wrapper for their established vertical rhythm and the existing `PageHeader` supports optional introductory content. Calendar and Watchlist now have correct page-level headings, Watchlist page controls are separated from its embedded Profile content, and legitimate detail, Admin and Profile layouts remain feature-specific.
 
-Discovery should identify the existing patterns and determine the appropriate abstraction before implementation. Avoid creating abstraction merely for its own sake.
+The convention is documented for future feature work, including the To-do page. Initial empty states remain substantial, filtered-empty states remain concise, and Calendar retains its usable empty calendar with a lightweight inline message.
 
 ---
 
@@ -285,6 +285,14 @@ This is a destructive operation and requires detailed discovery before implement
 - retain server-side authorization and safeguards regardless of UI confirmation.
 
 Item 18 remains sequenced after Item 15 so the household statistics work can inform the deletion experience.
+
+---
+
+## 19. Keyboard Interaction Semantics
+
+Review clickable cards and table rows that rely on pointer click handlers, including Watchlist entries and Admin management rows.
+
+Ensure primary interactions are exposed through native interactive elements or equivalent keyboard-operable semantics, with visible focus and no duplicate or conflicting activation behaviour. Preserve the current visual presentation and responsive layouts.
 
 These entries are candidate work definitions. Their inclusion in the backlog does not pre-approve their implementation or final technical design. Each remains subject to the normal discovery and approval workflow.
 

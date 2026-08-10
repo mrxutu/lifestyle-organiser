@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 import { BookForm } from '@/components/books/book-form'
+import { Page } from '@/components/ui/page'
+import { PageHeader } from '@/components/ui/page-header'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { getBook, listBookSources } from '@/lib/books'
 
@@ -15,14 +17,14 @@ export default async function EditBookPage({ params }: { params: Promise<{ id: s
   if (!book) notFound()
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Edit book</h1>
+    <Page>
+      <PageHeader title="Edit book" />
       <BookForm
         initialBook={book}
         sources={sources}
         householdUsers={householdUsers}
         currentUserId={currentUserId}
       />
-    </div>
+    </Page>
   )
 }

@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 import { RecipeForm } from '@/components/recipes/recipe-form'
+import { Page } from '@/components/ui/page'
+import { PageHeader } from '@/components/ui/page-header'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { getRecipe } from '@/lib/recipes'
 
@@ -14,13 +16,13 @@ export default async function EditRecipePage({ params }: { params: Promise<{ id:
   if (!recipe) notFound()
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Edit recipe</h1>
+    <Page>
+      <PageHeader title="Edit recipe" />
       <RecipeForm
         initialRecipe={recipe}
         householdUsers={householdUsers}
         currentUserId={currentUserId}
       />
-    </div>
+    </Page>
   )
 }

@@ -1,6 +1,8 @@
 import { BellOff } from 'lucide-react'
 import { EmptyState } from '@/components/empty-state'
 import { RemindersBoard } from '@/components/reminders/reminders-board'
+import { Page } from '@/components/ui/page'
+import { PageHeader } from '@/components/ui/page-header'
 import { listHouseholdUsers, requireSection } from '@/lib/current-user'
 import { listUpcomingReminders } from '@/lib/events'
 import { listEventTypes } from '@/lib/event-types'
@@ -14,8 +16,8 @@ export default async function RemindersPage() {
   ])
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Reminders</h1>
+    <Page>
+      <PageHeader title="Reminders" />
       {reminders.length === 0 ? (
         <EmptyState
           icon={BellOff}
@@ -30,6 +32,6 @@ export default async function RemindersPage() {
           householdUsers={householdUsers}
         />
       )}
-    </div>
+    </Page>
   )
 }

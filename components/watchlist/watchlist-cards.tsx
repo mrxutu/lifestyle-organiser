@@ -33,23 +33,24 @@ type BoardState =
   | { mode: 'edit'; entry: WatchlistEntryWithSource }
   | { mode: 'manage-sources' }
 
-export function WatchlistCards({
-  entries,
-  sources,
-  householdUsers,
-  currentUserId,
-  showViewerFilter = true,
-  canManageLookups = false,
-}: {
+type WatchlistProps = {
   entries: WatchlistEntryWithSource[]
   sources: WatchlistSource[]
   householdUsers: { id: string; name: string | null }[]
   currentUserId: string
-  showViewerFilter?: boolean
-  canManageLookups?: boolean
+}
+
+function WatchlistContent({
+  entries,
+  sources,
+  householdUsers,
+  currentUserId,
+  includeViewerFilter,
+  onEdit,
+}: WatchlistProps & {
+  includeViewerFilter: boolean
+  onEdit: (entry: WatchlistEntryWithSource) => void
 }) {
-  const router = useRouter()
-  const [state, setState] = useState<BoardState>({ mode: 'closed' })
   const [statusFilter, setStatusFilter] = useState<string>(ALL_STATUSES)
   const [sourceFilter, setSourceFilter] = useState<string>(ALL_SOURCES)
   const [ratingFilter, setRatingFilter] = useState<string>(ALL_RATINGS)
@@ -60,41 +61,8 @@ export function WatchlistCards({
     [entries, statusFilter, sourceFilter, ratingFilter, viewerFilter]
   )
 
-  function close() {
-    setState({ mode: 'closed' })
-  }
-
-  function handleSuccess() {
-    close()
-    router.refresh()
-  }
-
-  const formOpen = state.mode === 'create' || state.mode === 'edit'
-
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader
-        title="Watchlist"
-        titleTag="h2"
-        actions={
-          <>
-            {canManageLookups && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setState({ mode: 'manage-sources' })}
-              >
-                Manage sources
-              </Button>
-            )}
-            <Button type="button" variant="default" size="sm" onClick={() => setState({ mode: 'create' })}>
-              Add entry
-            </Button>
-          </>
-        }
-      />
-
       <div className="flex flex-wrap items-center gap-3">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[160px]" aria-label="Filter by status">
@@ -139,7 +107,7 @@ export function WatchlistCards({
           </SelectContent>
         </Select>
 
-        {showViewerFilter && (
+        {includeViewerFilter && (
           <Select value={viewerFilter} onValueChange={setViewerFilter}>
             <SelectTrigger className="w-[160px]" aria-label="Filter by viewer">
               <SelectValue placeholder="All viewers" />
@@ -174,7 +142,7 @@ export function WatchlistCards({
             <Card
               key={entry.id}
               className="cursor-pointer"
-              onClick={() => setState({ mode: 'edit', entry })}
+              onClick={() => onEdit(entry)}
             >
               <CardContent className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-2">
@@ -201,17 +169,36 @@ export function WatchlistCards({
           ))}
         </div>
       )}
+    </div>
+  )
+}
 
+function WatchlistDialog({
+  state,
+  sources,
+  householdUsers,
+  currentUserId,
+  onClose,
+  onSuccess,
+}: WatchlistProps & {
+  state: BoardState
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const formOpen = state.mode === 'create' || state.mode === 'edit'
+
+  return (
+    <>
       <ResponsiveDialog
         open={formOpen}
-        onOpenChange={(open) => !open && close()}
+        onOpenChange={(open) => !open && onClose()}
         title={state.mode === 'edit' ? 'Edit watchlist entry' : 'Add to watchlist'}
       >
         <WatchlistForm
           sources={sources}
           initialEntry={state.mode === 'edit' ? state.entry : null}
-          onSuccess={handleSuccess}
-          onCancel={close}
+          onSuccess={onSuccess}
+          onCancel={onClose}
           householdUsers={householdUsers}
           currentUserId={currentUserId}
         />
@@ -219,11 +206,68 @@ export function WatchlistCards({
 
       <ResponsiveDialog
         open={state.mode === 'manage-sources'}
-        onOpenChange={(open) => !open && close()}
+        onOpenChange={(open) => !open && onClose()}
         title="Manage sources"
       >
         <WatchlistSourceManager sources={sources} />
       </ResponsiveDialog>
-    </div>
+    </>
+  )
+}
+
+export function WatchlistPage({ canManageLookups, ...props }: WatchlistProps & { canManageLookups: boolean }) {
+  const router = useRouter()
+  const [state, setState] = useState<BoardState>({ mode: 'closed' })
+
+  function close() {
+    setState({ mode: 'closed' })
+  }
+
+  function handleSuccess() {
+    close()
+    router.refresh()
+  }
+
+  return (
+    <>
+      <PageHeader
+        title="Watchlist"
+        actions={
+          <>
+            {canManageLookups && (
+              <Button type="button" variant="outline" size="sm" onClick={() => setState({ mode: 'manage-sources' })}>
+                Manage sources
+              </Button>
+            )}
+            <Button type="button" size="sm" onClick={() => setState({ mode: 'create' })}>
+              Add entry
+            </Button>
+          </>
+        }
+      />
+      <WatchlistContent {...props} includeViewerFilter onEdit={(entry) => setState({ mode: 'edit', entry })} />
+      <WatchlistDialog {...props} state={state} onClose={close} onSuccess={handleSuccess} />
+    </>
+  )
+}
+
+export function WatchlistCards(props: WatchlistProps) {
+  const router = useRouter()
+  const [state, setState] = useState<BoardState>({ mode: 'closed' })
+
+  function close() {
+    setState({ mode: 'closed' })
+  }
+
+  function handleSuccess() {
+    close()
+    router.refresh()
+  }
+
+  return (
+    <>
+      <WatchlistContent {...props} includeViewerFilter={false} onEdit={(entry) => setState({ mode: 'edit', entry })} />
+      <WatchlistDialog {...props} state={state} onClose={close} onSuccess={handleSuccess} />
+    </>
   )
 }

@@ -4,6 +4,7 @@ import { BookOpen, Pencil } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { StarRating } from '@/components/star-rating'
+import { Page } from '@/components/ui/page'
 import { bookStatusBadgeVariant, bookStatusLabel } from '@/lib/book-status'
 import type { Rating } from '@/lib/rating'
 import { formatFriendlyDate } from '@/lib/format-datetime'
@@ -18,9 +19,9 @@ export default async function BookViewPage({ params }: { params: Promise<{ id: s
   if (!book) notFound()
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
+    <Page>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-start gap-4">
           {book.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -33,12 +34,12 @@ export default async function BookViewPage({ params }: { params: Promise<{ id: s
               <BookOpen className="h-8 w-8 text-muted-foreground" />
             </div>
           )}
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-semibold">{book.title}</h1>
+          <div className="flex min-w-0 flex-col gap-1">
+            <h1 className="break-words text-2xl font-semibold">{book.title}</h1>
             <p className="text-muted-foreground">{book.author}</p>
           </div>
         </div>
-        <Button asChild size="sm" variant="outline">
+        <Button asChild size="sm" variant="outline" className="self-start">
           <Link href={`/books/${book.id}/edit`}>
             <Pencil /> Edit
           </Link>
@@ -69,6 +70,6 @@ export default async function BookViewPage({ params }: { params: Promise<{ id: s
           <p className="whitespace-pre-line text-muted-foreground">{book.notes}</p>
         </div>
       )}
-    </div>
+    </Page>
   )
 }
