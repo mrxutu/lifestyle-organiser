@@ -202,9 +202,13 @@ No other unintended diagnostic endpoints were identified.
 
 ---
 
-## 12. Review Generated Prisma Strategy
+## 12. Review Generated Prisma Strategy - **Status:** Complete
 
-Periodically review generated Prisma output and repository strategy after Prisma upgrades.
+Reviewed the generated Prisma output and repository strategy.
+
+- Retained `generated/prisma/` as committed, reproducible generated output because the current install, build and test commands do not generate it automatically.
+- Retained the existing generator output path and application imports.
+- Reconsider this strategy if a reliable generation stage is added to the build or deployment pipeline.
 
 ---
 
