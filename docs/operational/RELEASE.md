@@ -16,13 +16,19 @@ Before release, the repository owner confirms that:
 
 The repository owner controls commits, merges and pushes.
 
-## 2. Approve the release sequence
+## 2. Approve the application version
+
+Once the exact release contents are known, determine one version increment using the highest applicable category: major for a significant product direction, compatibility, data-model or architecture change; minor for a new user-facing feature or meaningful product enhancement; or patch for a bug fix, small UI or technical improvement, or repository or documentation correction included in the release.
+
+The repository owner approves the version. Update the root `package.json` version and the corresponding root package version fields in `package-lock.json` as part of the release-ready source before deployment, then run the normal release verification. Feature branches retain the current released version during normal development.
+
+## 3. Approve the release sequence
 
 Decide whether the release contains database migrations and approve the order of migration and code deployment based on compatibility. Prefer changes that keep old and new application versions compatible during deployment.
 
 Do not assume that every release has a migration or that code must always deploy before the database changes. If safe ordering is unclear, stop and resolve it before touching production.
 
-## 3. Prepare production migrations
+## 4. Prepare production migrations
 
 Production commands read `DATABASE_URL` from the ignored `.env.production-migrate` file. Confirm the exact production target without printing credentials.
 
@@ -38,7 +44,7 @@ npm run db:status:prod
 
 Never use `prisma migrate dev`, `db push`, reset commands or development seeds against production.
 
-## 4. Execute the approved release
+## 5. Execute the approved release
 
 The repository owner performs the approved code deployment and, when required, applies checked-in migrations with:
 
@@ -50,7 +56,7 @@ npm run db:migrate:prod
 
 After migration, run `npm run db:status:prod` again and confirm that the expected migrations succeeded. Do not continue past an unexpected migration or deployment result.
 
-## 5. Smoke test
+## 6. Smoke test
 
 Verify at minimum:
 
@@ -63,7 +69,7 @@ Verify at minimum:
 
 Avoid leaving unnecessary test data in production.
 
-## 6. Complete the release
+## 7. Complete the release
 
 After production verification, the repository owner performs any branch synchronization or cleanup appropriate to the repository’s configured branch model. Do not hardcode or assume a branch topology.
 

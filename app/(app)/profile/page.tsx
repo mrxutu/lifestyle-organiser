@@ -5,6 +5,7 @@ import { listEventTypes } from '@/lib/event-types'
 import { listRecipes } from '@/lib/recipes'
 import { listWatchlistEntries, listWatchlistSources } from '@/lib/watchlist'
 import { listBooks } from '@/lib/books'
+import { applicationVersionLabel } from '@/lib/application-version'
 
 export default async function ProfilePage() {
   const { id: currentUserId, householdId, sections } = await getCurrentUser()
@@ -43,6 +44,7 @@ export default async function ProfilePage() {
         watchlistSources={watchlistSources}
         myBooks={myBooks}
       />
+      <p className="text-center text-xs text-muted-foreground">{applicationVersionLabel}</p>
     </div>
   )
 }
