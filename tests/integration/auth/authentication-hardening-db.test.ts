@@ -9,6 +9,8 @@ import {
   createPasswordResetToken,
   findValidPasswordResetToken,
   hashPasswordResetToken,
+  NEW_USER_PASSWORD_SETUP_TOKEN_TTL_MS,
+  PASSWORD_RESET_TOKEN_TTL_MS,
 } from '../../../lib/password-reset'
 import { prisma } from '../../../lib/prisma'
 import { POST as forgotPasswordPost } from '../../../app/api/auth/forgot-password/route'
@@ -16,6 +18,32 @@ import { POST as resetPasswordPost } from '../../../app/api/auth/reset-password/
 import { GENERIC_FORGOT_PASSWORD_MESSAGE } from '../../../lib/auth-input'
 import { updateUser } from '../../../lib/admin-users'
 import { handlers } from '../../../lib/auth'
+
+async function assertGeneratedTokenTtl(ttlMs: number) {
+  const suffix = randomUUID()
+  const user = await prisma.user.create({
+    data: { email: `auth-expiry-${suffix}@example.test`, name: 'Auth expiry test' },
+  })
+  const issuedAfter = Date.now()
+
+  try {
+    const issued = await createPasswordResetToken(user.id, ttlMs)
+    const issuedBefore = Date.now()
+
+    assert.ok(issued.expiresAt.getTime() >= issuedAfter + ttlMs)
+    assert.ok(issued.expiresAt.getTime() <= issuedBefore + ttlMs)
+  } finally {
+    await prisma.user.delete({ where: { id: user.id } })
+  }
+}
+
+test('forgotten-password tokens are generated with a one-hour expiry', async () => {
+  await assertGeneratedTokenTtl(PASSWORD_RESET_TOKEN_TTL_MS)
+})
+
+test('new-user password-setup tokens are generated with a seven-day expiry', async () => {
+  await assertGeneratedTokenTtl(NEW_USER_PASSWORD_SETUP_TOKEN_TTL_MS)
+})
 
 test('real PostgreSQL token issuance remains atomic under eight concurrent requests', async () => {
   const suffix = randomUUID()
@@ -25,7 +53,7 @@ test('real PostgreSQL token issuance remains atomic under eight concurrent reque
 
   try {
     const issued = await Promise.all(
-      Array.from({ length: 8 }, () => createPasswordResetToken(user.id)),
+      Array.from({ length: 8 }, () => createPasswordResetToken(user.id, PASSWORD_RESET_TOKEN_TTL_MS)),
     )
     const stored = await prisma.passwordResetToken.findMany({ where: { userId: user.id } })
     const valid = await Promise.all(issued.map(({ token }) => findValidPasswordResetToken(token)))
@@ -45,7 +73,7 @@ test('real PostgreSQL token consumption has exactly one winner and revokes sessi
   })
 
   try {
-    const { token } = await createPasswordResetToken(user.id)
+    const { token } = await createPasswordResetToken(user.id, PASSWORD_RESET_TOKEN_TTL_MS)
     const results = await Promise.all(
       Array.from({ length: 8 }, (_, index) => consumePasswordResetToken(token, `test-hash-${index}`)),
     )
@@ -171,7 +199,7 @@ test('reset-password route consumes a token once, updates the password, and revo
   const user = await prisma.user.create({
     data: { email: `reset-route-${suffix}@example.test`, passwordHash: oldHash },
   })
-  const { token } = await createPasswordResetToken(user.id)
+  const { token } = await createPasswordResetToken(user.id, PASSWORD_RESET_TOKEN_TTL_MS)
   const request = () => new NextRequest('http://localhost/api/auth/reset-password', {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-vercel-forwarded-for': ip },
@@ -210,7 +238,7 @@ test('reset-password route rejects an expired token without changing the account
   const user = await prisma.user.create({
     data: { email: `expired-reset-${suffix}@example.test`, passwordHash: oldHash },
   })
-  const { token } = await createPasswordResetToken(user.id)
+  const { token } = await createPasswordResetToken(user.id, PASSWORD_RESET_TOKEN_TTL_MS)
   await prisma.passwordResetToken.update({
     where: { userId: user.id },
     data: { expiresAt: new Date(Date.now() - 1_000) },
