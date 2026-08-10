@@ -277,13 +277,11 @@ Managed Recipe and Book image references are collected before the transaction de
 
 ---
 
-## 19. Keyboard Interaction Semantics
+## 19. Keyboard Interaction Semantics - **Status:** Complete
 
-Review clickable cards and table rows that rely on pointer click handlers, including Watchlist entries and Admin management rows.
+Watchlist entries now expose an explicit native Edit button with an entry-specific accessible name instead of relying on a pointer-only card click handler. Admin user names are native, visibly focusable Edit buttons while the existing row click remains available as a pointer convenience without duplicate activation.
 
-Ensure primary interactions are exposed through native interactive elements or equivalent keyboard-operable semantics, with visible focus and no duplicate or conflicting activation behaviour. Preserve the current visual presentation and responsive layouts.
-
-These entries are candidate work definitions. Their inclusion in the backlog does not pre-approve their implementation or final technical design. Each remains subject to the normal discovery and approval workflow.
+The audit confirmed that Admin household rows/cards, Recipe cards, Book cards, Reminder rows/cards, To-do cards and lookup-management rows already expose equivalent native controls and need no Item 19 changes.
 
 ---
 

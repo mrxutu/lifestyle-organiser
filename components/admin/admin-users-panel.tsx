@@ -67,7 +67,19 @@ export function AdminUsersPanel({
                 className="cursor-pointer"
                 onClick={() => setState({ mode: 'edit', user })}
               >
-                <TableCell className="font-medium">{user.name ?? '—'}</TableCell>
+                <TableCell className="font-medium">
+                  <button
+                    type="button"
+                    className="rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    aria-label={`Edit ${user.name ?? user.email}`}
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      setState({ mode: 'edit', user })
+                    }}
+                  >
+                    {user.name ?? '—'}
+                  </button>
+                </TableCell>
                 <TableCell className="text-muted-foreground">{user.email}</TableCell>
                 <TableCell className="text-muted-foreground">{user.household?.name ?? '—'}</TableCell>
                 {canManageGlobal && (
